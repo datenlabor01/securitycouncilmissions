@@ -21,7 +21,7 @@ st.set_page_config(
 # --------------------------------------------------
 
 TOR_FILE = missions_tor.txt
-REPORTS_FILE = missions_report.txt"
+REPORTS_FILE = missions_report.txt
 
 # --------------------------------------------------
 # Custom CSS
