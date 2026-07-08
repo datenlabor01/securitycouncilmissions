@@ -20,8 +20,8 @@ st.set_page_config(
 # File paths
 # --------------------------------------------------
 
-TOR_FILE = missions_tor.txt
-REPORTS_FILE = missions_report.txt
+TOR_FILE = /mount/src/securitycouncilmissions/missions_tor.txt
+REPORTS_FILE = /mount/src/securitycouncilmissions/missions_report.txt
 
 # --------------------------------------------------
 # Custom CSS
