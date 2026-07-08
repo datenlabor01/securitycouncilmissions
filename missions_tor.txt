@@ -1,0 +1,434 @@
+[
+{
+"mission_title": "Security Council field mission to Lebanon and the Syrian Arab Republic in December 2025",
+"document_symbol": "S/2025/801",
+"document_date": "10 December 2025",
+"mission_country_or_region": "Lebanon and the Syrian Arab Republic",
+"objectives": [
+{
+"objective_id": 1,
+"objective_text": "To reaffirm the unequivocal commitment of the Security Council to stability in Lebanon and the wider region, in particular through the full implementation of resolution 1701 (2006) and other relevant resolutions;",
+"verb": "reaffirm",
+"objective_type": "Political Signalling",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Ceasefire / Cessation of Hostilities"
+]
+},
+{
+"objective_id": 2,
+"objective_text": "To reiterate its strong support for the territorial integrity, sovereignty and political independence of Lebanon;",
+"verb": "reiterate",
+"objective_type": "Political Signalling",
+"primary_theme": "Sovereignty / Territorial Integrity",
+"secondary_themes": []
+},
+{
+"objective_id": 3,
+"objective_text": "To discuss the impact of and the progress made in implementing the cessation of hostilities agreement concluded on 26 November (S/2024/870);",
+"verb": "discuss",
+"objective_type": "Implementation Monitoring",
+"primary_theme": "Ceasefire / Cessation of Hostilities",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 4,
+"objective_text": "To observe the efforts of the United Nations Interim Force in Lebanon (UNIFIL) and the Office of the United Nations Special Coordinator for Lebanon in supporting de-escalation and the full implementation of Council resolution 1701 (2006) and in advancing sustainable solutions;",
+"verb": "observe",
+"objective_type": "Mandate Oversight",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Ceasefire / Cessation of Hostilities",
+"Security / Stability"
+]
+},
+{
+"objective_id": 5,
+"objective_text": "To review and assess the efforts undertaken by the Government of Lebanon towards the full implementation of resolution 1701 (2006) and to gain a deeper understanding of the challenges that it faces in this regard, including in relation to fulfilling its recent commitment to bringing all weapons under the control of the Lebanese State;",
+"verb": "review",
+"objective_type": "Implementation Monitoring",
+"primary_theme": "State Authority / Armed Groups / Weapons",
+"secondary_themes": [
+"Security / Stability",
+"Sovereignty / Territorial Integrity"
+]
+},
+{
+"objective_id": 6,
+"objective_text": "To reiterate its support for enhanced diplomatic efforts to resolve any dispute or reservation pertaining to the international border between Israel and Lebanon with the support of the Office of the United Nations Special Coordinator for Lebanon and UNIFIL, when relevant;",
+"verb": "reiterate",
+"objective_type": "Political Signalling",
+"primary_theme": "Border / Regional Issues",
+"secondary_themes": [
+"Sovereignty / Territorial Integrity",
+"UN Mission Mandate"
+]
+}
+]
+},
+{
+"mission_title": "Security Council mission to Ethiopia, 16 and 17 October 2025",
+"document_symbol": "S/2025/700",
+"document_date": "31 October 2025",
+"mission_country_or_region": "Ethiopia",
+"objectives": [
+{
+"objective_id": 1,
+"objective_text": "to strengthen partnership and enhance cooperation between the two Councils through the exchange of views on matters of mutual concern in the maintenance of international peace and security, with a particular focus on Africa.",
+"verb": "strengthen",
+"objective_type": "Support / Encouragement",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 2,
+"objective_text": "enhancing and supporting African Union-led peace support operations, in particular the African Union Support and Stabilization Mission in Somalia (AUSSOM);",
+"verb": "supporting",
+"objective_type": "Support / Encouragement",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 3,
+"objective_text": "the Sahel region and Lake Chad basin, including technical assistance to countries in the Gulf of Guinea in countering challenges affecting maritime security;",
+"verb": "exchange views",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Border / Regional Issues",
+"Regional Cooperation"
+]
+},
+{
+"objective_id": 4,
+"objective_text": "the situations in the Horn of Africa (Sudan and South Sudan) and in the Great Lakes region (eastern Democratic Republic of the Congo).",
+"verb": "exchange views",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Border / Regional Issues",
+"Regional Cooperation"
+]
+},
+{
+"objective_id": 5,
+"objective_text": "the women and peace and security agenda: 25 years of resolution 1325 (2000);",
+"verb": "exchange views",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Women, Peace and Security",
+"secondary_themes": [
+"Regional Cooperation"
+]
+},
+{
+"objective_id": 6,
+"objective_text": "joint African Union-United Nations efforts in addressing terrorism and violent extremism, conducive to terrorism, in Africa;",
+"verb": "exchange views",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 7,
+"objective_text": "the implementation of resolution 2719 (2023).",
+"verb": "exchange views",
+"objective_type": "Implementation Monitoring",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Security / Stability"
+]
+}
+]
+},
+{
+"mission_title": "Security Council mission to Colombia, 7 to 11 February 2024",
+"document_symbol": "S/2024/165",
+"document_date": "14 February 2024",
+"mission_country_or_region": "Colombia",
+"objectives": [
+{
+"objective_id": 1,
+"objective_text": "To demonstrate the full commitment of the Security Council to peace in Colombia, in particular its support for the implementation of the Final Agreement for Ending the Conflict and Building a Stable and Lasting Peace, signed in 2016, and the Bilateral, National and Temporary Ceasefire Agreement between the Government of the Republic of Colombia and the Ejército de Liberación Nacional (ELN);",
+"verb": "demonstrate",
+"objective_type": "Political Signalling",
+"primary_theme": "Peace Agreement Implementation",
+"secondary_themes": [
+"Ceasefire / Cessation of Hostilities",
+"Security / Stability"
+]
+},
+{
+"objective_id": 2,
+"objective_text": "To observe and support the efforts of the United Nations Verification Mission in Colombia to implement its mandate, in line with Council resolutions 2366 (2017), 2377 (2017), 2435 (2018), 2487 (2019), 2545 (2020), 2574 (2021), 2603 (2021), 2655 (2022), 2673 (2023), 2694 (2023) and 2704 (2023);",
+"verb": "observe",
+"objective_type": "Mandate Oversight",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Peace Agreement Implementation",
+"Ceasefire / Cessation of Hostilities"
+]
+},
+{
+"objective_id": 3,
+"objective_text": "To observe and support the implementation of the aforementioned Agreements, to understand the challenges and opportunities associated with the implementation of the Agreements, and to identify successes, as well as instances where those opportunities could be better harnessed to improve implementation;",
+"verb": "observe",
+"objective_type": "Implementation Monitoring",
+"primary_theme": "Peace Agreement Implementation",
+"secondary_themes": [
+"Ceasefire / Cessation of Hostilities",
+"Security / Stability"
+]
+},
+{
+"objective_id": 4,
+"objective_text": null,
+"verb": "acknowledge",
+"objective_type": "Political Signalling",
+"primary_theme": "Peace Agreement Implementation",
+"secondary_themes": []
+}
+]
+},
+{
+"mission_title": "Security Council mission to Ethiopia, 5 and 6 October 2023",
+"document_symbol": "S/2023/710",
+"document_date": "27 September 2023",
+"mission_country_or_region": "Ethiopia",
+"objectives": [
+{
+"objective_id": 1,
+"objective_text": "Exchange of views on financing African Union-led peace support operations.",
+"verb": "exchange views",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 2,
+"objective_text": "Discussion on enhancing cooperation between the Security Council and the Peace and Security Council of the African Union (working methods).",
+"verb": "discuss",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": []
+},
+{
+"objective_id": 3,
+"objective_text": "Discussion on youth and peace and security.",
+"verb": "discuss",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Youth, Peace and Security",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 4,
+"objective_text": "Discussion on the situation in the Sudan.",
+"verb": "discuss",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Political Process",
+"Humanitarian Issues"
+]
+},
+{
+"objective_id": 5,
+"objective_text": "Discussion on the situation in the Sahel region.",
+"verb": "discuss",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Border / Regional Issues",
+"Regional Cooperation"
+]
+},
+{
+"objective_id": 6,
+"objective_text": "Discussion on the situation in Somalia and activities of the African Union Transition Mission in Somalia.",
+"verb": "discuss",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"UN Mission Mandate",
+"Regional Cooperation"
+]
+},
+{
+"objective_id": 7,
+"objective_text": "Discussion on the situation in the eastern Democratic Republic of the Congo.",
+"verb": "discuss",
+"objective_type": "Diplomatic Engagement",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Border / Regional Issues",
+"Humanitarian Issues"
+]
+}
+]
+},
+{
+"mission_title": "Security Council mission to Mali and the Niger, 23 to 25 October 2021",
+"document_symbol": "S/2021/917",
+"document_date": "22 October 2021",
+"mission_country_or_region": "Mali and the Niger",
+"objectives": [
+{
+"objective_id": 1,
+"objective_text": "To assess the political, security, humanitarian and development efforts carried out by the Transitional Government of Mali, and to assess the human rights challenges in Mali and the mechanisms in place to monitor and address those;",
+"verb": "assess",
+"objective_type": "Fact-Finding / Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Political Process",
+"Humanitarian Issues",
+"Human Rights"
+]
+},
+{
+"objective_id": 2,
+"objective_text": "To assess the preparation for the holding of free and fair elections, within the established 18-month timeline, in accordance with the Transition Charter, including the presidential election on 27 February 2022, and the full realization of the political transition in Mali;",
+"verb": "assess",
+"objective_type": "Implementation Monitoring",
+"primary_theme": "Political Process",
+"secondary_themes": []
+},
+{
+"objective_id": 3,
+"objective_text": "To assess the implementation by the Transitional Government of Mali and the signatory armed groups of the priority measures of the Agreement on Peace and Reconciliation in Mali referenced in paragraph 4 of resolution 2584 (2021) and to enquire about steps envisaged by them for the fulfilment of those measures by the end of the current mandate of MINUSMA;",
+"verb": "assess",
+"objective_type": "Implementation Monitoring",
+"primary_theme": "Peace Agreement Implementation",
+"secondary_themes": [
+"UN Mission Mandate",
+"State Authority / Armed Groups / Weapons"
+]
+},
+{
+"objective_id": 4,
+"objective_text": "To assess the current situation in Central Mali, be informed of the measures taken by the Malian authorities in implementing a comprehensive politically led strategy to protect civilians, reduce intercommunal violence and re-establish State presence;",
+"verb": "assess",
+"objective_type": "Fact-Finding / Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"State Authority / Armed Groups / Weapons",
+"Human Rights"
+]
+},
+{
+"objective_id": 5,
+"objective_text": "To assess the efforts of the United Nations Multidimensional Integrated Stabilization Mission in Mali (MINUSMA) to implement its mandate;",
+"verb": "assess",
+"objective_type": "Mandate Oversight",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 6,
+"objective_text": "To take stock of the operationalization of the Joint Force of the Group of Five for the Sahel and discuss possible ways to strengthen the effectiveness of the tools put in place by the international community to support the Joint Force;",
+"verb": "take stock",
+"objective_type": "Fact-Finding / Assessment",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 7,
+"objective_text": "To take stock of the challenges faced by the Niger in the security, development and humanitarian domains, to learn from its experience with regard to the consolidation of peace and the strengthening of democratization, and to exchange views on how the Council can provide support in facing the ongoing challenges in the Niger and the broader Sahel region.",
+"verb": "take stock",
+"objective_type": "Fact-Finding / Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Humanitarian Issues",
+"Political Process",
+"Regional Cooperation"
+]
+}
+]
+},
+{
+"mission_title": "Security Council mission to South Sudan, 19 to 23 October 2019",
+"document_symbol": "S/2019/825",
+"document_date": "30 October 2019",
+"mission_country_or_region": "South Sudan",
+"objectives": [
+{
+"objective_id": 1,
+"objective_text": "To demonstrate the Security Council’s support for the peace process in South Sudan and to urge parties to the Revitalized Agreement on the Resolution of the Conflict in the Republic of South Sudan to resolve outstanding issues in order to allow for the peaceful formation of a Revitalized Transitional Government of National Unity;",
+"verb": "demonstrate",
+"objective_type": "Political Signalling",
+"primary_theme": "Peace Agreement Implementation",
+"secondary_themes": [
+"Political Process",
+"Security / Stability"
+]
+},
+{
+"objective_id": 2,
+"objective_text": "To express support for the efforts of regional organizations and actors working to facilitate the peace process, as well as the efforts of the Ceasefire and Transitional Security Arrangements Monitoring and Verification Mechanism and the reconstituted Joint Monitoring and Evaluation Commission;",
+"verb": "express support",
+"objective_type": "Political Signalling",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Peace Agreement Implementation",
+"Ceasefire / Cessation of Hostilities"
+]
+},
+{
+"objective_id": 3,
+"objective_text": "To reinforce the messages contained in Council resolution 2459 (2019) and the statement by the President of the Council dated 8 October 2019 (S/PRST/2019/11);",
+"verb": "reinforce",
+"objective_type": "Political Signalling",
+"primary_theme": "Peace Agreement Implementation",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 4,
+"objective_text": "To observe and support the efforts of the United Nations Mission in South Sudan (UNMISS) to implement its mandate in line with resolution 2459 (2019) and other related Council resolutions;",
+"verb": "observe",
+"objective_type": "Mandate Oversight",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Security / Stability"
+]
+},
+{
+"objective_id": 5,
+"objective_text": "To highlight the urgent need to improve the dire humanitarian, human rights and economic situation in South Sudan;",
+"verb": "highlight",
+"objective_type": "Political Signalling",
+"primary_theme": "Humanitarian Issues",
+"secondary_themes": [
+"Human Rights",
+"Security / Stability"
+]
+},
+{
+"objective_id": 6,
+"objective_text": "To reiterate the Council’s consistent call upon the Government of South Sudan to comply with the obligations set out in the status-of-forces agreement and to remove all obstructions to UNMISS in the performance of its mandate;",
+"verb": "reiterate",
+"objective_type": "Political Signalling",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Operational Awareness",
+"Security / Stability"
+]
+}
+]
+}
+]

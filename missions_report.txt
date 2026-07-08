@@ -1,0 +1,2443 @@
+[
+{
+"mission_title": "Report of the Security Council mission to Lebanon and the Syrian Arab Republic, 3–7 December 2025",
+"document_symbol": "S/2026/257",
+"document_date": "31 March 2026",
+"mission_country_or_region": "Lebanon and the Syrian Arab Republic",
+"related_tor_document_symbol": "S/2025/801",
+"mission_analytics": {
+"mission_type": "Mixed / Hybrid",
+"mission_subtype": "Political engagement, field assessment and mandate-relevant consultation mission",
+"field_exposure": "Moderate",
+"actor_diversity_assessment": "High",
+"overall_character": "Mixed political-security",
+"main_themes": [
+"Political Process",
+"Security / Stability",
+"Sovereignty / Territorial Integrity",
+"Humanitarian Issues",
+"UN Mission Mandate",
+"State Authority / Armed Groups / Weapons",
+"Women, Peace and Security",
+"Regional Cooperation"
+],
+"main_risks": [
+"Fragile security conditions and continuing terrorist, sectarian, criminal and armed-group activity in the Syrian Arab Republic",
+"Dire humanitarian conditions, overstretched basic services and diminishing funding for essential programmes",
+"Unresolved displacement, housing, land and property issues affecting recovery and voluntary return",
+"Continued instability that could undermine progress in the Syrian Arab Republic",
+"Tensions affecting Lebanon, including implementation challenges related to resolution 1701, weapons outside State authority and regional spillover risks",
+"Economic and institutional fragility affecting State authority and service delivery"
+],
+"main_commitments": [
+"The United Nations indicated readiness to support the Syrian Arab Republic on its path from relief to recovery through institution-building, inclusive development, human rights, reconciliation, transitional justice and reform where requested",
+"Security Council members undertook direct engagement with national authorities, United Nations presences, civil society and affected communities in Lebanon and the Syrian Arab Republic",
+"The mission reinforced the need for sustained United Nations engagement and mandate-relevant follow-up on Lebanon, Syria, UNIFIL and regional stability"
+],
+"main_policy_signals": [
+"The mission signalled Security Council attention to Lebanon and the Syrian Arab Republic through the Council’s first visit to both countries",
+"United Nations interlocutors emphasized that human rights, accountability and participation of women and youth should remain central to rebuilding the social contract in the Syrian Arab Republic",
+"United Nations interlocutors appealed for comprehensive sanctions relief, sustained funding and political space, especially for civil society, to support a transition to sustainable peace",
+"The mission underscored the Council’s concern with security, sovereignty, territorial integrity, political transition, humanitarian conditions and mandate implementation"
+],
+"summary_assessment": "The mission combined political engagement, security assessment, humanitarian observation and mandate-relevant consultations in Lebanon and the Syrian Arab Republic. The report presents both country contexts as politically and institutionally fragile, with Syria facing unresolved consequences of prolonged conflict, humanitarian distress, security fragmentation and recovery challenges, while Lebanon remained affected by questions of State authority, regional tensions and implementation of Council-mandated arrangements. The mission’s analytical thrust was that progress depends on improved security, inclusive political processes, respect for sovereignty and territorial integrity, sustained humanitarian and recovery support, human rights, accountability, and continued United Nations engagement."
+},
+"activities": [
+{
+"activity_id": 1,
+"activity_type": "Briefing",
+"activity_description": "The Deputy Special Envoy of the Secretary-General for Syria briefed members of the Security Council on the status of the political transition and the situation on the ground in the Syrian Arab Republic."
+},
+{
+"activity_id": 2,
+"activity_type": "Briefing",
+"activity_description": "The Department of Safety and Security delivered a briefing on the security situation in the Syrian Arab Republic."
+},
+{
+"activity_id": 3,
+"activity_type": "Meeting",
+"activity_description": "The mission held discussions with Syrian authorities during the visit to the Syrian Arab Republic."
+},
+{
+"activity_id": 4,
+"activity_type": "Engagement Session",
+"activity_description": "The mission engaged with communities affected by violence in the coastal region and Al-Suwayda governorate."
+},
+{
+"activity_id": 5,
+"activity_type": "Meeting",
+"activity_description": "The mission met Lebanese authorities during the visit to Lebanon."
+},
+{
+"activity_id": 6,
+"activity_type": "Briefing",
+"activity_description": "The mission received information on the political, security and economic situation in Lebanon."
+},
+{
+"activity_id": 7,
+"activity_type": "Consultation",
+"activity_description": "The mission consulted United Nations interlocutors in relation to mandate-relevant issues in Lebanon and the Syrian Arab Republic."
+}
+],
+"actors_met": [
+{
+"actor_id": 1,
+"actor_name": "Deputy Special Envoy of the Secretary-General for Syria, Najat Rochdi",
+"actor_category": "UN Secretariat / Special Envoy"
+},
+{
+"actor_id": 2,
+"actor_name": "Department of Safety and Security",
+"actor_category": "UN Secretariat / Special Envoy"
+},
+{
+"actor_id": 3,
+"actor_name": "Syrian authorities",
+"actor_category": "Government"
+},
+{
+"actor_id": 4,
+"actor_name": "Lebanese authorities",
+"actor_category": "Government"
+},
+{
+"actor_id": 5,
+"actor_name": "Communities affected by violence in the coastal region",
+"actor_category": "Affected Community"
+},
+{
+"actor_id": 6,
+"actor_name": "Communities affected by violence in Al-Suwayda governorate",
+"actor_category": "Affected Community"
+},
+{
+"actor_id": 7,
+"actor_name": "United Nations interlocutors in Lebanon and the Syrian Arab Republic",
+"actor_category": "UN Mission"
+},
+{
+"actor_id": 8,
+"actor_name": "Civil society actors",
+"actor_category": "Civil Society"
+}
+],
+"records": [
+{
+"record_id": 1,
+"record_text": "Security Council members carried out a mission to Lebanon and the Syrian Arab Republic from 3 to 7 December 2025, co-led by Algeria, Denmark and Slovenia.",
+"verb": "carried out",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Regional Cooperation"
+],
+"geographic_scope": "Lebanon and the Syrian Arab Republic",
+"actor_source": "Security Council members",
+"actor_target": "Lebanon and the Syrian Arab Republic",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": "The Council undertook direct field engagement with both countries.",
+"policy_implication": "The mission provided a basis for direct Council assessment and follow-up."
+},
+{
+"record_id": 2,
+"record_text": "The terms of reference for the mission are contained in annexes I and II to document S/2025/801, which also contains the composition of the mission.",
+"verb": "contained",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [],
+"geographic_scope": "Lebanon and the Syrian Arab Republic",
+"actor_source": "Security Council",
+"actor_target": "Mission",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": null,
+"policy_implication": "The mission was conducted under documented Council terms of reference."
+},
+{
+"record_id": 3,
+"record_text": "The mission was the first visit by the Security Council to Lebanon and the Syrian Arab Republic.",
+"verb": "was",
+"report_record_type": "Political Signalling",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Political Process",
+"Regional Cooperation"
+],
+"geographic_scope": "Lebanon and the Syrian Arab Republic",
+"actor_source": "Security Council",
+"actor_target": "Lebanon and the Syrian Arab Republic",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Consensus",
+"action_orientation": "Political Signalling",
+"political_signal": "The Council signalled heightened and direct attention to Lebanon and the Syrian Arab Republic.",
+"policy_implication": "The visit may frame future Council engagement on both files."
+},
+{
+"record_id": 4,
+"record_text": "The Deputy Special Envoy of the Secretary-General for Syria provided members of the Security Council with an overview of the status of the political transition and the situation on the ground in the Syrian Arab Republic.",
+"verb": "provided",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "Political Process",
+"secondary_themes": [
+"Security / Stability"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Security Council members",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": null,
+"policy_implication": "The briefing informed Council assessment of Syria’s political transition and ground conditions."
+},
+{
+"record_id": 5,
+"record_text": "The situation on the ground in the Syrian Arab Republic included challenges to security and stability, as well as to the country’s sovereignty and territorial integrity.",
+"verb": "included",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Sovereignty / Territorial Integrity"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Syrian Arab Republic",
+"level_of_concern": "High",
+"degree_of_consensus": "Unclear",
+"action_orientation": "Assessment",
+"political_signal": null,
+"policy_implication": "Security and sovereignty considerations remain central to Council engagement on Syria."
+},
+{
+"record_id": 6,
+"record_text": "Fourteen years of conflict had left deep institutional scars, widespread destruction of infrastructure and unresolved housing and property issues.",
+"verb": "left",
+"report_record_type": "Situation Assessment",
+"primary_theme": "Humanitarian Issues",
+"secondary_themes": [
+"Rule of Law / Justice",
+"Security / Stability"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Syrian Arab Republic",
+"level_of_concern": "High",
+"degree_of_consensus": "Unclear",
+"action_orientation": "Assessment",
+"political_signal": null,
+"policy_implication": "Recovery planning must address institutional damage, infrastructure destruction and housing, land and property issues."
+},
+{
+"record_id": 7,
+"record_text": "The humanitarian situation remained dire, with some communities, including in the south of the country, absorbing new waves of displaced persons, while basic services were overstretched and funding for essential programmes was diminishing.",
+"verb": "remained",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Humanitarian Issues",
+"secondary_themes": [
+"Security / Stability"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Affected communities in the Syrian Arab Republic",
+"level_of_concern": "High",
+"degree_of_consensus": "Unclear",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Sustained humanitarian funding and support for basic services remain necessary."
+},
+{
+"record_id": 8,
+"record_text": "Without tangible improvements in living conditions, the prospects for voluntary return and national recovery remained bleak.",
+"verb": "remained",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Humanitarian Issues",
+"secondary_themes": [
+"Political Process"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Displaced persons and Syrian national recovery",
+"level_of_concern": "High",
+"degree_of_consensus": "Unclear",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Improving living conditions is linked to voluntary return and recovery prospects."
+},
+{
+"record_id": 9,
+"record_text": "Continued instability risked undermining the progress achieved thus far.",
+"verb": "risked",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Political Process"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Progress achieved in the Syrian Arab Republic",
+"level_of_concern": "High",
+"degree_of_consensus": "Unclear",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Stabilization remains necessary to protect political and recovery gains."
+},
+{
+"record_id": 10,
+"record_text": "The United Nations was ready to support the Syrian Arab Republic on its path from relief to recovery by leveraging the Organization’s comparative advantage in institution-building, inclusive development and human rights.",
+"verb": "support",
+"report_record_type": "Recommendation / Call for Action",
+"primary_theme": "Humanitarian Issues",
+"secondary_themes": [
+"Human Rights",
+"Political Process"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Syrian Arab Republic",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Commitment",
+"political_signal": "The United Nations signalled willingness to accompany Syria’s transition from relief to recovery.",
+"policy_implication": "UN support could focus on institution-building, inclusive development and human rights-based recovery."
+},
+{
+"record_id": 11,
+"record_text": "The United Nations was ready to support reconciliation efforts, transitional justice and reform where requested.",
+"verb": "support",
+"report_record_type": "Recommendation / Call for Action",
+"primary_theme": "Rule of Law / Justice",
+"secondary_themes": [
+"Human Rights",
+"Political Process"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Syrian Arab Republic",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Commitment",
+"political_signal": "The United Nations signalled readiness to assist national reconciliation and justice-related reform if requested.",
+"policy_implication": "Future UN assistance may depend on Syrian requests for reconciliation, transitional justice and reform support."
+},
+{
+"record_id": 12,
+"record_text": "Human rights, accountability and the participation of women and youth must remain at the core of rebuilding the social contract.",
+"verb": "remain",
+"report_record_type": "Recommendation / Call for Action",
+"primary_theme": "Human Rights",
+"secondary_themes": [
+"Women, Peace and Security",
+"Youth, Peace and Security",
+"Rule of Law / Justice"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Syrian Arab Republic",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Recommendation",
+"political_signal": "The United Nations emphasized a rights-based and inclusive approach to rebuilding the social contract.",
+"policy_implication": "Council and UN engagement should prioritize human rights, accountability, women’s participation and youth participation."
+},
+{
+"record_id": 13,
+"record_text": "The Deputy Special Envoy appealed for comprehensive sanctions relief, sustained funding and political space, especially for civil society, so that the Syrian Arab Republic could transition to sustainable peace.",
+"verb": "appealed",
+"report_record_type": "Recommendation / Call for Action",
+"primary_theme": "Political Process",
+"secondary_themes": [
+"Humanitarian Issues",
+"Civil Society",
+"Human Rights"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Deputy Special Envoy of the Secretary-General for Syria",
+"actor_target": "Security Council members and international stakeholders",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Request",
+"political_signal": "The appeal linked sanctions relief, funding and civic space to sustainable peace.",
+"policy_implication": "International policy discussions may need to address sanctions, financing and civil society operating space."
+},
+{
+"record_id": 14,
+"record_text": "The Department of Safety and Security highlighted the overall fragility of conditions and the multiplicity of challenges across the Syrian Arab Republic.",
+"verb": "highlighted",
+"report_record_type": "Situation Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Humanitarian Issues"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Security Council members",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Assessment",
+"political_signal": null,
+"policy_implication": "Security fragility should inform Council risk assessment and mission planning."
+},
+{
+"record_id": 15,
+"record_text": "The main hotspots identified included Aleppo, the coastal region, Homs, Dayr al-Zawr, Rif Dimashq and the south.",
+"verb": "included",
+"report_record_type": "Mission Observation",
+"primary_theme": "Security / Stability",
+"secondary_themes": [],
+"geographic_scope": "Aleppo, coastal region, Homs, Dayr al-Zawr, Rif Dimashq and southern Syrian Arab Republic",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Security Council members",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": null,
+"policy_implication": "Security monitoring should give particular attention to identified hotspot areas."
+},
+{
+"record_id": 16,
+"record_text": "The activities of Ansar al-Sunnah, Da’esh and other terrorist groups remained of concern.",
+"verb": "remained",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"State Authority / Armed Groups / Weapons"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Ansar al-Sunnah, Da’esh and other terrorist groups",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Counter-terrorism and stabilization concerns remain relevant to Syria-related Council engagement."
+},
+{
+"record_id": 17,
+"record_text": "In northern Syrian Arab Republic, clashes between the Syrian Democratic Forces and Syrian security forces continued, even within the city of Aleppo.",
+"verb": "continued",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"State Authority / Armed Groups / Weapons"
+],
+"geographic_scope": "Northern Syrian Arab Republic and Aleppo",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Syrian Democratic Forces and Syrian security forces",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Clashes involving armed and security actors remain a direct threat to stabilization."
+},
+{
+"record_id": 18,
+"record_text": "The security environment in the coastal region had stabilized somewhat since the violence that had occurred in March 2025.",
+"verb": "stabilized",
+"report_record_type": "Progress Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [],
+"geographic_scope": "Coastal region of the Syrian Arab Republic",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Coastal region",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Assessment",
+"political_signal": null,
+"policy_implication": "Security improvements in the coastal region appear partial and should continue to be monitored."
+},
+{
+"record_id": 19,
+"record_text": "The central region had seen sectarian violence and criminality.",
+"verb": "seen",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Human Rights",
+"Rule of Law / Justice"
+],
+"geographic_scope": "Central Syrian Arab Republic",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Central region",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Sectarian violence and criminality highlight needs for protection, accountability and rule-of-law responses."
+},
+{
+"record_id": 20,
+"record_text": "Dayr al-Zawr was described as particularly volatile, with Da’esh activity and the highest concentration of explosive remnants of war in the country.",
+"verb": "described",
+"report_record_type": "Challenge / Risk",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Humanitarian Issues",
+"State Authority / Armed Groups / Weapons"
+],
+"geographic_scope": "Dayr al-Zawr",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Dayr al-Zawr",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Warning",
+"political_signal": null,
+"policy_implication": "Dayr al-Zawr requires heightened attention to terrorism risks and explosive remnants of war."
+},
+{
+"record_id": 21,
+"record_text": "Crimes constituted the largest category of incidents, with terrorism accounting for approximately 7.2 per cent of incidents.",
+"verb": "constituted",
+"report_record_type": "Situation Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [
+"Rule of Law / Justice"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Security incidents",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Assessment",
+"political_signal": null,
+"policy_implication": "Law-and-order challenges, not only terrorism, are central to the security picture."
+},
+{
+"record_id": 22,
+"record_text": "Damascus was assessed as being relatively stable, though isolated incidents had occurred.",
+"verb": "assessed",
+"report_record_type": "Situation Assessment",
+"primary_theme": "Security / Stability",
+"secondary_themes": [],
+"geographic_scope": "Damascus",
+"actor_source": "Department of Safety and Security",
+"actor_target": "Damascus",
+"level_of_concern": "Low",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Assessment",
+"political_signal": null,
+"policy_implication": "Relative stability in Damascus does not eliminate localized security risks."
+},
+{
+"record_id": 23,
+"record_text": "The mission engaged on the situation of communities affected by violence in the coastal region and Al-Suwayda governorate.",
+"verb": "engaged",
+"report_record_type": "Mission Observation",
+"primary_theme": "Human Rights",
+"secondary_themes": [
+"Humanitarian Issues",
+"Security / Stability"
+],
+"geographic_scope": "Coastal region and Al-Suwayda governorate",
+"actor_source": "Security Council mission",
+"actor_target": "Affected communities",
+"level_of_concern": "High",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": "The mission signalled attention to communities directly affected by violence.",
+"policy_implication": "Protection, accountability and community recovery issues may require continued follow-up."
+},
+{
+"record_id": 24,
+"record_text": "The mission addressed the political, security and economic situation in Lebanon.",
+"verb": "addressed",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "Political Process",
+"secondary_themes": [
+"Security / Stability",
+"Humanitarian Issues"
+],
+"geographic_scope": "Lebanon",
+"actor_source": "Security Council mission",
+"actor_target": "Lebanon",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": "The Council linked Lebanon’s political, security and economic tracks in its engagement.",
+"policy_implication": "Council consideration of Lebanon may need to integrate political, security and economic dimensions."
+},
+{
+"record_id": 25,
+"record_text": "The mission met with Lebanese authorities.",
+"verb": "met",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "Political Process",
+"secondary_themes": [
+"UN Mission Mandate"
+],
+"geographic_scope": "Lebanon",
+"actor_source": "Security Council mission",
+"actor_target": "Lebanese authorities",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": "The Council maintained direct engagement with Lebanese State institutions.",
+"policy_implication": "The mission’s findings are informed by consultations with national authorities."
+},
+{
+"record_id": 26,
+"record_text": "The mission’s Lebanon-related agenda included issues concerning Israel-Lebanon, the Middle East situation and the United Nations Interim Force in Lebanon.",
+"verb": "included",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Security / Stability",
+"Border / Regional Issues"
+],
+"geographic_scope": "Lebanon and the Israel-Lebanon context",
+"actor_source": "Security Council mission",
+"actor_target": "Lebanon and UNIFIL-related files",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": "Lebanon was addressed in relation to both domestic conditions and regional security dynamics.",
+"policy_implication": "Mandate implementation and regional de-escalation remain part of the Council’s Lebanon agenda."
+},
+{
+"record_id": 27,
+"record_text": "The mission’s Syria-related agenda concerned the situation in the Syrian Arab Republic.",
+"verb": "concerned",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "Political Process",
+"secondary_themes": [
+"Security / Stability",
+"Humanitarian Issues"
+],
+"geographic_scope": "Syrian Arab Republic",
+"actor_source": "Security Council mission",
+"actor_target": "Syrian Arab Republic",
+"level_of_concern": "Moderate",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": "The Council treated Syria’s political, security and humanitarian issues as central to the visit.",
+"policy_implication": "Syria-related Council engagement may remain multi-dimensional."
+},
+{
+"record_id": 28,
+"record_text": "The mission engaged both Lebanon and the Syrian Arab Republic in a single regional visit.",
+"verb": "engaged",
+"report_record_type": "Political Signalling",
+"primary_theme": "Regional Cooperation",
+"secondary_themes": [
+"Border / Regional Issues",
+"Security / Stability"
+],
+"geographic_scope": "Lebanon and the Syrian Arab Republic",
+"actor_source": "Security Council mission",
+"actor_target": "Lebanon and the Syrian Arab Republic",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Consensus",
+"action_orientation": "Political Signalling",
+"political_signal": "The Council signalled that Lebanon and Syria are connected to broader regional security and political dynamics.",
+"policy_implication": "Future Council analysis may benefit from attention to cross-border and regional linkages."
+},
+{
+"record_id": 29,
+"record_text": "The report identifies Lebanon’s political conditions, Israel-Lebanon, the Middle East situation, UNIFIL and the situation in the Syrian Arab Republic as agenda matters.",
+"verb": "identifies",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Political Process",
+"Security / Stability",
+"Border / Regional Issues"
+],
+"geographic_scope": "Lebanon, Israel-Lebanon, Middle East and Syrian Arab Republic",
+"actor_source": "Report metadata",
+"actor_target": "Security Council agenda",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": null,
+"policy_implication": "The mission report sits across several Security Council agenda items."
+},
+{
+"record_id": 30,
+"record_text": "The mission addressed security situation in Syria, talks with Syrian authorities, situations of affected communities, Lebanon’s political, security and economic situation, and meetings with Lebanese authorities.",
+"verb": "addressed",
+"report_record_type": "Mandate-Relevant Reporting",
+"primary_theme": "UN Mission Mandate",
+"secondary_themes": [
+"Security / Stability",
+"Political Process",
+"Humanitarian Issues"
+],
+"geographic_scope": "Lebanon and the Syrian Arab Republic",
+"actor_source": "Report description",
+"actor_target": "Security Council mission activities",
+"level_of_concern": "Not Applicable",
+"degree_of_consensus": "Not Applicable",
+"action_orientation": "Observation",
+"political_signal": null,
+"policy_implication": "The mission’s reporting base combined official consultations, security analysis and affected-community perspectives."
+}
+]
+},
+{
+  "mission_title": "Report of the Security Council mission to Ethiopia, 16 and 17 October 2025",
+  "document_symbol": "S/2025/860",
+  "document_date": "30 December 2025",
+  "mission_country_or_region": "Ethiopia (African Union consultations with regional focus on Africa)",
+  "related_tor_document_symbol": "S/2025/700",
+  "mission_analytics": {
+    "mission_type": "Regional Consultation Mission",
+    "mission_subtype": "Security Council-African Union Peace and Security Council consultative mission",
+    "field_exposure": "Limited",
+    "actor_diversity_assessment": "Moderate",
+    "overall_character": "Primarily political",
+    "main_themes": [
+      "Regional Cooperation",
+      "Political Process",
+      "Security / Stability",
+      "UN Mission Mandate",
+      "Women, Peace and Security",
+      "State Authority / Armed Groups / Weapons"
+    ],
+    "main_risks": [
+      "Precarious financing of AUSSOM",
+      "Lack of unity among domestic stakeholders and neighbouring States in relation to Sudan",
+      "Risk of further instability in East Africa",
+      "Poverty, unemployment, weak State institutions and social media dynamics contributing to societal discontent",
+      "Conditions conducive to unconstitutional changes of government",
+      "Continuing conflicts in Sudan, South Sudan and eastern Democratic Republic of the Congo",
+      "Regional effects of the Sahel crisis"
+    ],
+    "main_commitments": [
+      "Security Council and African Union Peace and Security Council agreed to convene the eleventh informal joint seminar and twentieth annual joint consultative meeting in New York",
+      "Participants emphasized strengthening the African Union-United Nations partnership",
+      "Participants discussed continued cooperation on peace support operations and regional security challenges"
+    ],
+    "main_policy_signals": [
+      "Strong support for an enhanced African Union-United Nations partnership on peace and security",
+      "Recognition of the importance of sustainable financing for African Union-led peace support operations",
+      "Call for restarting a political process in Sudan",
+      "Emphasis on conflict prevention and coordination between the United Nations and the African Union"
+    ],
+    "summary_assessment": "The mission centered on institutional engagement between the Security Council and the African Union Peace and Security Council. Discussions focused on African peace and security challenges, including Sudan, South Sudan, Somalia, the eastern Democratic Republic of the Congo, the Sahel and East Africa. The mission highlighted support for African Union-United Nations cooperation, concern regarding conflict dynamics and instability across multiple regions, and the importance of financing peace support operations, conflict prevention and coordinated political engagement."
+  },
+  "activities": [
+    {
+      "activity_id": 1,
+      "activity_type": "Roundtable",
+      "activity_description": "Participation in the tenth informal joint seminar between members of the Security Council and the Peace and Security Council of the African Union."
+    },
+    {
+      "activity_id": 2,
+      "activity_type": "Consultation",
+      "activity_description": "Participation in the nineteenth annual joint consultative meeting between members of the Security Council and the Peace and Security Council of the African Union."
+    },
+    {
+      "activity_id": 3,
+      "activity_type": "Briefing",
+      "activity_description": "Briefing by the African Union Commissioner for Political Affairs, Peace and Security, Bankole Adeoye."
+    },
+    {
+      "activity_id": 4,
+      "activity_type": "Briefing",
+      "activity_description": "Briefing by the Special Representative of the Secretary-General to the African Union and Head of the United Nations Office to the African Union, Parfait Onanga-Anyanga."
+    },
+    {
+      "activity_id": 5,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Special Representative of the Secretary-General to the African Union and the Special Envoy of the Secretary-General for the Horn of Africa."
+    },
+    {
+      "activity_id": 6,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Chairperson of the African Union Commission and senior African Union officials."
+    },
+    {
+      "activity_id": 7,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Minister for Foreign Affairs of Ethiopia on regional developments."
+    },
+    {
+      "activity_id": 8,
+      "activity_type": "Press Conference",
+      "activity_description": "Issuance of a joint press statement by members of the Security Council and the Peace and Security Council of the African Union."
+    }
+  ],
+  "actors_met": [
+    {
+      "actor_id": 1,
+      "actor_name": "Peace and Security Council of the African Union",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 2,
+      "actor_name": "Bankole Adeoye, African Union Commissioner for Political Affairs, Peace and Security",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 3,
+      "actor_name": "Parfait Onanga-Anyanga, Special Representative of the Secretary-General to the African Union",
+      "actor_category": "UN Secretariat / Special Envoy"
+    },
+    {
+      "actor_id": 4,
+      "actor_name": "Guang Cong, Special Envoy of the Secretary-General for the Horn of Africa",
+      "actor_category": "UN Secretariat / Special Envoy"
+    },
+    {
+      "actor_id": 5,
+      "actor_name": "Mahmoud Ali Youssouf, Chairperson of the African Union Commission",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 6,
+      "actor_name": "Selma Malika Haddadi, Deputy Chairperson of the African Union Commission",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 7,
+      "actor_name": "Gedion Timethewos Hessebon, Minister for Foreign Affairs of Ethiopia",
+      "actor_category": "Government"
+    }
+  ],
+  "records": [
+    {
+      "record_id": 1,
+      "record_text": "The general objective of the annual joint consultative meeting is to strengthen partnership and enhance cooperation between the two Councils through the exchange of views on matters of mutual concern in the maintenance of international peace and security, with a particular focus on Africa.",
+      "verb": "strengthen",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "UN Mission Mandate"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Security Council and African Union Peace and Security Council",
+      "actor_target": "Partnership between the two Councils",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Commitment to stronger Security Council-African Union cooperation.",
+      "policy_implication": "Supports deeper institutional coordination."
+    },
+    {
+      "record_id": 2,
+      "record_text": "The agenda included enhancing and supporting African Union-led peace support operations, in particular AUSSOM.",
+      "verb": "supporting",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Somalia",
+      "actor_source": "Security Council and AU PSC",
+      "actor_target": "AUSSOM",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Peace support operations remain a common priority."
+    },
+    {
+      "record_id": 3,
+      "record_text": "The agenda included the Sahel region and Lake Chad basin, including technical assistance to countries in the Gulf of Guinea in countering challenges affecting maritime security.",
+      "verb": "included",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Sahel, Lake Chad Basin and Gulf of Guinea",
+      "actor_source": "Security Council and AU PSC",
+      "actor_target": "Regional security challenges",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Regional capacity support remains important."
+    },
+    {
+      "record_id": 4,
+      "record_text": "The agenda included the situations in the Horn of Africa and in the Great Lakes region.",
+      "verb": "included",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Horn of Africa and Great Lakes region",
+      "actor_source": "Security Council and AU PSC",
+      "actor_target": "Regional situations",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Regional crises remain common priorities."
+    },
+    {
+      "record_id": 5,
+      "record_text": "The seminar exchanged views on the women and peace and security agenda: 25 years of resolution 1325 (2000).",
+      "verb": "exchanged",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Women, Peace and Security",
+      "secondary_themes": [],
+      "geographic_scope": "Africa",
+      "actor_source": "Security Council and AU PSC",
+      "actor_target": "Women, peace and security agenda",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Continued relevance of WPS implementation."
+    },
+    {
+      "record_id": 6,
+      "record_text": "The seminar exchanged views on joint African Union-United Nations efforts in addressing terrorism and violent extremism conducive to terrorism in Africa.",
+      "verb": "addressing",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Security Council and AU PSC",
+      "actor_target": "Terrorism and violent extremism",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Counter-terrorism cooperation remains a priority."
+    },
+    {
+      "record_id": 7,
+      "record_text": "Participants exchanged views on strengthening the African Union-United Nations partnership in peace and security.",
+      "verb": "strengthening",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [],
+      "geographic_scope": "Africa",
+      "actor_source": "Participants",
+      "actor_target": "AU-UN partnership",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Support for stronger AU-UN cooperation.",
+      "policy_implication": "Institutional partnership likely to remain a priority."
+    },
+    {
+      "record_id": 8,
+      "record_text": "Council members expressed support for a strong partnership with the African Union to address the complex and multidimensional conflicts in the Sudan, South Sudan and the eastern Democratic Republic of the Congo.",
+      "verb": "expressed",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Political Process",
+        "Security / Stability"
+      ],
+      "geographic_scope": "Sudan, South Sudan and eastern Democratic Republic of the Congo",
+      "actor_source": "Security Council members",
+      "actor_target": "African Union",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Support for AU partnership on African conflicts.",
+      "policy_implication": "Joint approaches are encouraged."
+    },
+    {
+      "record_id": 9,
+      "record_text": "There was discussion about the situation in Madagascar and tensions between Eritrea and Ethiopia.",
+      "verb": "discussed",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Madagascar, Eritrea and Ethiopia",
+      "actor_source": "Meeting participants",
+      "actor_target": "Regional situations",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Regional tensions remain on the Council's agenda."
+    },
+    {
+      "record_id": 10,
+      "record_text": "Council members commended the role of the three African members of the Security Council in strengthening coordination with the Peace and Security Council of the African Union.",
+      "verb": "commended",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [],
+      "geographic_scope": "Africa",
+      "actor_source": "Security Council members",
+      "actor_target": "African members of the Council",
+      "level_of_concern": "None",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Recognition of stronger coordination mechanisms.",
+      "policy_implication": "Supports continued coordination roles."
+    },
+    {
+      "record_id": 11,
+      "record_text": "The Chairperson of the African Union Commission noted that continent-wide challenges required enhanced coordination, mutual understanding and sustained engagement.",
+      "verb": "required",
+      "report_record_type": "Stakeholder Position",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Chairperson of the African Union Commission",
+      "actor_target": "Security Council and AU PSC",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Advocacy for deeper institutional engagement.",
+      "policy_implication": "May drive more structured AU-UN coordination."
+    },
+    {
+      "record_id": 12,
+      "record_text": "The Chairperson highlighted the precarious financial situation of AUSSOM and noted that the recent pledges would not be sufficient for its effective operation.",
+      "verb": "highlighted",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Somalia",
+      "actor_source": "Chairperson of the African Union Commission",
+      "actor_target": "AUSSOM",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Warning",
+      "political_signal": null,
+      "policy_implication": "Additional financing may be required."
+    },
+    {
+      "record_id": 13,
+      "record_text": "The Chairperson underscored the urgency of restarting a political process in the Sudan amid a lack of unity among domestic stakeholders and neighbouring States.",
+      "verb": "underscored",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Sudan",
+      "actor_source": "Chairperson of the African Union Commission",
+      "actor_target": "Sudanese stakeholders and international actors",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Emphasis on renewed political engagement in Sudan.",
+      "policy_implication": "Diplomatic efforts should prioritize political process revival."
+    },
+    {
+      "record_id": 14,
+      "record_text": "The Chairperson underscored the importance of avoiding further instability in East Africa.",
+      "verb": "underscored",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "East Africa",
+      "actor_source": "Chairperson of the African Union Commission",
+      "actor_target": "Regional actors",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": null,
+      "policy_implication": "Preventive diplomacy remains important."
+    },
+    {
+      "record_id": 15,
+      "record_text": "Poverty, unemployment, weak State institutions and social media dynamics fueled societal discontent, in particular among youth, creating the conditions for unconstitutional changes of government.",
+      "verb": "fueled",
+      "report_record_type": "Situation Assessment",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Youth, Peace and Security",
+        "Security / Stability"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Chairperson of the African Union Commission",
+      "actor_target": "African societies",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Conflict prevention requires addressing governance and socioeconomic drivers."
+    },
+    {
+      "record_id": 16,
+      "record_text": "The African Union reviews of the African Peace and Security Architecture and the African Governance Architecture were aimed at prioritizing the prevention of conflict.",
+      "verb": "prioritizing",
+      "report_record_type": "Progress Assessment",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "African Union",
+      "actor_target": "Institutional architecture",
+      "level_of_concern": "Low",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Follow-up Action",
+      "political_signal": null,
+      "policy_implication": "Institutional reform is being directed toward prevention."
+    },
+    {
+      "record_id": 17,
+      "record_text": "The Chairperson expressed appreciation for diplomatic and good offices initiatives of the United Nations and the Security Council and underscored the importance of coordination and harmonization with the African Union.",
+      "verb": "underscored",
+      "report_record_type": "Stakeholder Position",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Chairperson of the African Union Commission",
+      "actor_target": "United Nations and Security Council",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Preference for coordinated AU-UN diplomacy.",
+      "policy_implication": "Future initiatives should be harmonized."
+    },
+    {
+      "record_id": 18,
+      "record_text": "Participants expressed concern over the situation in several countries neighbouring Ethiopia.",
+      "verb": "expressed",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Horn of Africa",
+      "actor_source": "Participants",
+      "actor_target": "Neighbouring countries of Ethiopia",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Warning",
+      "political_signal": null,
+      "policy_implication": "Regional instability remains a concern."
+    },
+    {
+      "record_id": 19,
+      "record_text": "Regarding the Sudan, participants emphasized the need to address the precarious situation on the ground and noted the challenges posed by multiple mediation initiatives.",
+      "verb": "emphasized",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Sudan",
+      "actor_source": "Participants",
+      "actor_target": "Sudan-related mediation efforts",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Warning",
+      "political_signal": null,
+      "policy_implication": "Greater mediation coherence may be needed."
+    },
+    {
+      "record_id": 20,
+      "record_text": "Participants discussed efforts to advance peace in South Sudan.",
+      "verb": "advance",
+      "report_record_type": "Progress Assessment",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "South Sudan",
+      "actor_source": "Participants",
+      "actor_target": "South Sudan peace efforts",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Peace efforts remain an active policy priority."
+    },
+    {
+      "record_id": 21,
+      "record_text": "Security Council members acknowledged the significant progress achieved on the political and security fronts in Somalia, as well as the remaining substantial challenges.",
+      "verb": "acknowledged",
+      "report_record_type": "Progress Assessment",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Somalia",
+      "actor_source": "Security Council members",
+      "actor_target": "Somalia",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Progress exists but continued support remains necessary."
+    },
+    {
+      "record_id": 22,
+      "record_text": "Substantial challenges remained regarding adequate funding support to AUSSOM and the responsibilities of the international community in that regard.",
+      "verb": "remained",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Somalia",
+      "actor_source": "Security Council members",
+      "actor_target": "AUSSOM",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Warning",
+      "political_signal": null,
+      "policy_implication": "Sustainable financing remains unresolved."
+    },
+    {
+      "record_id": 23,
+      "record_text": "Participants discussed the impact of the crisis in the Sahel on other regions and the importance of close cooperation of the two Councils to address the manifold challenges facing the region.",
+      "verb": "discussed",
+      "report_record_type": "Stakeholder Position",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Sahel and Africa",
+      "actor_source": "Participants",
+      "actor_target": "Security Council and AU PSC",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Call for closer cooperation in response to regional spillover effects.",
+      "policy_implication": "Cross-regional approaches may be required."
+    },
+    {
+      "record_id": 24,
+      "record_text": "The members of the Security Council and the Peace and Security Council of the African Union agreed to convene their eleventh informal joint seminar and twentieth annual joint consultative meeting in New York.",
+      "verb": "agreed",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "UN Mission Mandate"
+      ],
+      "geographic_scope": "United Nations and African Union",
+      "actor_source": "Security Council and AU PSC",
+      "actor_target": "Future consultative processes",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Commitment",
+      "political_signal": "Commitment to continue institutional dialogue.",
+      "policy_implication": "Future AU-UN consultations are planned."
+    }
+  ]
+},
+{
+  "mission_title": "Report of the Security Council mission to Colombia, 7–11 February 2024",
+  "document_symbol": "S/2024/258",
+  "document_date": "22 March 2024",
+  "mission_country_or_region": "Colombia",
+  "related_tor_document_symbol": "S/2024/165",
+  "mission_analytics": {
+    "mission_type": "Peace Process Support Mission",
+    "mission_subtype": "Field assessment and political engagement mission",
+    "field_exposure": "Moderate",
+    "actor_diversity_assessment": "High",
+    "overall_character": "Mixed political-security",
+    "main_themes": [
+      "Peace Agreement Implementation",
+      "Political Process",
+      "Security / Stability",
+      "Women, Peace and Security",
+      "Rule of Law / Justice",
+      "DDR / Reintegration",
+      "Human Rights"
+    ],
+    "main_risks": [
+      "Persistent violence affecting implementation of the Final Agreement",
+      "Security threats in conflict-affected territories",
+      "Risks to former combatants, social leaders and communities",
+      "Challenges in implementing peace commitments and territorial transformation"
+    ],
+    "main_commitments": [
+      "Continued implementation of the 2016 Final Agreement",
+      "Support for ongoing peace dialogues and the total peace policy",
+      "Continued engagement by the United Nations Verification Mission and the Security Council"
+    ],
+    "main_policy_signals": [
+      "Strong Security Council support for the peace process",
+      "Recognition of political will to consolidate peace",
+      "Support for comprehensive implementation of the Final Agreement",
+      "Interest in hearing directly from affected communities, women and peace signatories"
+    ],
+    "summary_assessment": "The mission assessed implementation of the 2016 Final Agreement through consultations with national authorities, peace signatories, judicial institutions, civil society, women leaders, the United Nations and conflict-affected communities. Members found significant political commitment to peace but noted that continuing violence remained the principal obstacle to full implementation. The mission emphasized security guarantees, territorial transformation, reintegration, transitional justice and inclusion of women and communities affected by conflict."
+  },
+  "activities": [
+    {
+      "activity_id": 1,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with President Gustavo Petro."
+    },
+    {
+      "activity_id": 2,
+      "activity_type": "Meeting",
+      "activity_description": "Meetings with Government representatives responsible for peace implementation."
+    },
+    {
+      "activity_id": 3,
+      "activity_type": "Meeting",
+      "activity_description": "Meetings with peace signatories."
+    },
+    {
+      "activity_id": 4,
+      "activity_type": "Meeting",
+      "activity_description": "Meetings with heads of Government delegations to peace dialogues."
+    },
+    {
+      "activity_id": 5,
+      "activity_type": "Meeting",
+      "activity_description": "Meetings with magistrates of the Special Jurisdiction for Peace."
+    },
+    {
+      "activity_id": 6,
+      "activity_type": "Meeting",
+      "activity_description": "Meetings with members of Congress."
+    },
+    {
+      "activity_id": 7,
+      "activity_type": "Engagement Session",
+      "activity_description": "Engagement with civil society leaders."
+    },
+    {
+      "activity_id": 8,
+      "activity_type": "Engagement Session",
+      "activity_description": "Engagement with representatives of women's organizations."
+    },
+    {
+      "activity_id": 9,
+      "activity_type": "Briefing",
+      "activity_description": "Briefing by the Special Representative of the Secretary-General and Head of the United Nations Verification Mission in Colombia."
+    },
+    {
+      "activity_id": 10,
+      "activity_type": "Briefing",
+      "activity_description": "Briefing by the Resident Coordinator and United Nations country team."
+    },
+    {
+      "activity_id": 11,
+      "activity_type": "Field Visit",
+      "activity_description": "Visit to a former territorial area for training and reintegration in Caquetá Department."
+    },
+    {
+      "activity_id": 12,
+      "activity_type": "Field Visit",
+      "activity_description": "Visit to Buenaventura, Valle del Cauca Department."
+    },
+    {
+      "activity_id": 13,
+      "activity_type": "Briefing",
+      "activity_description": "Security Council briefing following the mission on 22 February 2024."
+    }
+  ],
+  "actors_met": [
+    {
+      "actor_id": 1,
+      "actor_name": "President Gustavo Petro",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 2,
+      "actor_name": "Government representatives responsible for peace implementation",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 3,
+      "actor_name": "Peace signatories",
+      "actor_category": "Other"
+    },
+    {
+      "actor_id": 4,
+      "actor_name": "Heads of Government delegations to peace dialogues",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 5,
+      "actor_name": "Magistrates of the Special Jurisdiction for Peace",
+      "actor_category": "Other"
+    },
+    {
+      "actor_id": 6,
+      "actor_name": "Members of Congress",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 7,
+      "actor_name": "Civil society leaders",
+      "actor_category": "Civil Society"
+    },
+    {
+      "actor_id": 8,
+      "actor_name": "Representatives of women's organizations",
+      "actor_category": "Women's Organization"
+    },
+    {
+      "actor_id": 9,
+      "actor_name": "Carlos Ruiz Massieu",
+      "actor_category": "UN Mission"
+    },
+    {
+      "actor_id": 10,
+      "actor_name": "United Nations country team",
+      "actor_category": "UN Country Team"
+    },
+    {
+      "actor_id": 11,
+      "actor_name": "Communities in Caquetá",
+      "actor_category": "Affected Community"
+    },
+    {
+      "actor_id": 12,
+      "actor_name": "Communities in Buenaventura",
+      "actor_category": "Affected Community"
+    }
+  ],
+  "records": [
+    {
+      "record_id": 1,
+      "record_text": "Members of the Security Council carried out a mission to Colombia from 7 to 11 February 2024.",
+      "verb": "carried out",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [],
+      "geographic_scope": "Colombia",
+      "actor_source": "Security Council members",
+      "actor_target": "Colombia",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": null
+    },
+    {
+      "record_id": 2,
+      "record_text": "The mission was the Security Council’s third visit to Colombia since the signing of the Final Agreement in 2016.",
+      "verb": "was",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Peace Agreement Implementation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "Security Council",
+      "actor_target": "Colombia peace process",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Continued Council attention to implementation of the Final Agreement.",
+      "policy_implication": "Peace implementation remains a Security Council priority."
+    },
+    {
+      "record_id": 3,
+      "record_text": "The Special Representative underscored that, notwithstanding challenges, there was a strong political will and commitment to further consolidate peace.",
+      "verb": "underscored",
+      "report_record_type": "Progress Assessment",
+      "primary_theme": "Peace Agreement Implementation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "Special Representative of the Secretary-General",
+      "actor_target": "Peace process",
+      "level_of_concern": "Low",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Political support for implementation remains significant."
+    },
+    {
+      "record_id": 4,
+      "record_text": "Violence remained the main obstacle to the implementation of the Final Agreement.",
+      "verb": "remained",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Peace Agreement Implementation"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "Special Representative of the Secretary-General",
+      "actor_target": "Implementation of the Final Agreement",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Warning",
+      "political_signal": null,
+      "policy_implication": "Addressing violence is essential to successful implementation."
+    },
+    {
+      "record_id": 5,
+      "record_text": "The ongoing ceasefires were yielding some positive results.",
+      "verb": "yielding",
+      "report_record_type": "Progress Assessment",
+      "primary_theme": "Ceasefire / Cessation of Hostilities",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "Special Representative of the Secretary-General",
+      "actor_target": "Ceasefire arrangements",
+      "level_of_concern": "Low",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Ceasefire mechanisms can contribute to improving security conditions."
+    },
+    {
+      "record_id": 6,
+      "record_text": "The mission included field visits to conflict-affected areas in Caquetá and Buenaventura.",
+      "verb": "included",
+      "report_record_type": "Mission Observation",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "DDR / Reintegration"
+      ],
+      "geographic_scope": "Caquetá and Buenaventura",
+      "actor_source": "Security Council mission",
+      "actor_target": "Conflict-affected communities",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Mission findings were informed by field-level engagement."
+    },
+    {
+      "record_id": 7,
+      "record_text": "The mission met representatives of women's organizations.",
+      "verb": "met",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Women, Peace and Security",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "Security Council mission",
+      "actor_target": "Women's organizations",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": "The mission sought perspectives from women peacebuilders.",
+      "policy_implication": "Women's participation remains relevant to peace implementation."
+    },
+    {
+      "record_id": 8,
+      "record_text": "The mission met peace signatories and visited a former territorial area for training and reintegration.",
+      "verb": "met",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "DDR / Reintegration",
+      "secondary_themes": [
+        "Peace Agreement Implementation"
+      ],
+      "geographic_scope": "Caquetá",
+      "actor_source": "Security Council mission",
+      "actor_target": "Peace signatories",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Reintegration remains a core implementation component."
+    },
+    {
+      "record_id": 9,
+      "record_text": "The mission engaged with civil society leaders.",
+      "verb": "engaged",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Human Rights"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "Security Council mission",
+      "actor_target": "Civil society leaders",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Civil society perspectives informed mission assessments."
+    },
+    {
+      "record_id": 10,
+      "record_text": "The mission received human rights, humanitarian and development perspectives from the United Nations country team.",
+      "verb": "received",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Human Rights",
+      "secondary_themes": [
+        "Humanitarian Issues",
+        "Political Process"
+      ],
+      "geographic_scope": "Colombia",
+      "actor_source": "United Nations country team",
+      "actor_target": "Security Council mission",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Mission analysis incorporated humanitarian, human rights and development perspectives."
+    }
+  ]
+},
+{
+  "mission_title": "Report of the Security Council mission to Ethiopia, 5 and 6 October 2023",
+  "document_symbol": "S/2024/130",
+  "document_date": "2 February 2024",
+  "mission_country_or_region": "Ethiopia",
+  "related_tor_document_symbol": "S/2023/710",
+  "mission_analytics": {
+    "mission_type": "Regional Consultation Mission",
+    "mission_subtype": "Security Council-African Union Peace and Security Council consultative mission",
+    "field_exposure": "Limited",
+    "actor_diversity_assessment": "Moderate",
+    "overall_character": "Primarily political",
+    "main_themes": [
+      "Regional Cooperation",
+      "Security / Stability",
+      "Political Process",
+      "UN Mission Mandate"
+    ],
+    "main_risks": [
+      "Conflict in Sudan",
+      "Instability in the Sahel region",
+      "Security challenges in Somalia",
+      "Security situation in eastern Democratic Republic of the Congo",
+      "Financing and sustainability challenges for African Union-led peace operations"
+    ],
+    "main_commitments": [
+      "Strengthening cooperation between the Security Council and the African Union Peace and Security Council",
+      "Continued dialogue on Sudan, Somalia, the Sahel and eastern Democratic Republic of the Congo",
+      "Continued annual consultative meetings and informal seminars"
+    ],
+    "main_policy_signals": [
+      "Strong support for AU-UN partnership",
+      "Recognition of African Union leadership in addressing African peace and security challenges",
+      "Support for African Union peace support operations"
+    ],
+    "summary_assessment": "The mission focused on institutional cooperation between the Security Council and the African Union Peace and Security Council. Discussions centered on Sudan, the Sahel, Somalia including ATMIS, and eastern Democratic Republic of the Congo. The report emphasized partnership, coordination, conflict prevention, regional stability and support for African-led peace and security initiatives."
+  },
+  "activities": [
+    {
+      "activity_id": 1,
+      "activity_type": "Roundtable",
+      "activity_description": "Participation in the eighth informal joint seminar between members of the Security Council and the Peace and Security Council of the African Union."
+    },
+    {
+      "activity_id": 2,
+      "activity_type": "Consultation",
+      "activity_description": "Participation in the seventeenth annual joint consultative meeting between members of the Security Council and the Peace and Security Council of the African Union."
+    },
+    {
+      "activity_id": 3,
+      "activity_type": "Dialogue",
+      "activity_description": "Exchange of views on the situations in Sudan, the Sahel region, Somalia and eastern Democratic Republic of the Congo."
+    }
+  ],
+  "actors_met": [
+    {
+      "actor_id": 1,
+      "actor_name": "Peace and Security Council of the African Union",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 2,
+      "actor_name": "African Union Commission",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 3,
+      "actor_name": "Members of the Security Council",
+      "actor_category": "Other"
+    }
+  ],
+  "records": [
+    {
+      "record_id": 1,
+      "record_text": "The members of the Security Council participated in the eighth informal joint seminar and the seventeenth annual joint consultative meeting with the Peace and Security Council at the headquarters of the African Union in Addis Ababa on 5 and 6 October 2023.",
+      "verb": "participated",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Ethiopia",
+      "actor_source": "Security Council members",
+      "actor_target": "Peace and Security Council of the African Union",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": null
+    },
+    {
+      "record_id": 2,
+      "record_text": "The general objective of the annual joint consultative meeting is to strengthen partnership and enhance cooperation between the two Councils through an exchange of views on issues of interest to both bodies in the areas of maintenance of international peace and security, particularly in Africa.",
+      "verb": "strengthen",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "UN Mission Mandate"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Security Council and African Union Peace and Security Council",
+      "actor_target": "Partnership between the two Councils",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "The two Councils emphasized strengthening partnership and cooperation.",
+      "policy_implication": "Continued institutional cooperation is a strategic priority."
+    },
+    {
+      "record_id": 3,
+      "record_text": "The specific objective of the seventeenth annual joint consultative meeting was for the two Councils to exchange views on the situations in the Sudan and the Sahel region, the situation in Somalia and the activities of the African Union Transition Mission in Somalia (ATMIS), and the situation in the eastern Democratic Republic of the Congo.",
+      "verb": "exchange",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Africa",
+      "actor_source": "Security Council and African Union Peace and Security Council",
+      "actor_target": "Regional situations",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Regional conflicts remained the principal focus of consultations."
+    },
+    {
+      "record_id": 4,
+      "record_text": "Participants discussed the situation in the Sudan.",
+      "verb": "discussed",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Sudan",
+      "actor_source": "Meeting participants",
+      "actor_target": "Sudan",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Sudan remained a major regional concern."
+    },
+    {
+      "record_id": 5,
+      "record_text": "Participants discussed the situation in the Sahel region.",
+      "verb": "discussed",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Sahel",
+      "actor_source": "Meeting participants",
+      "actor_target": "Sahel region",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Persistent instability in the Sahel remained a focus of concern."
+    },
+    {
+      "record_id": 6,
+      "record_text": "Participants discussed the situation in Somalia and the activities of the African Union Transition Mission in Somalia (ATMIS).",
+      "verb": "discussed",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Somalia",
+      "actor_source": "Meeting participants",
+      "actor_target": "ATMIS",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Support for Somalia stabilization and ATMIS remained important."
+    },
+    {
+      "record_id": 7,
+      "record_text": "Participants discussed the situation in the eastern Democratic Republic of the Congo.",
+      "verb": "discussed",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Eastern Democratic Republic of the Congo",
+      "actor_source": "Meeting participants",
+      "actor_target": "Eastern Democratic Republic of the Congo",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "The eastern DRC remained a significant regional security issue."
+    },
+    {
+      "record_id": 8,
+      "record_text": "The mission was co-led by Brazil and Mozambique.",
+      "verb": "co-led",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [],
+      "geographic_scope": "Ethiopia",
+      "actor_source": "Security Council mission",
+      "actor_target": "Mission",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": null
+    },
+    {
+      "record_id": 9,
+      "record_text": "The mission was conducted at the headquarters of the African Union in Addis Ababa.",
+      "verb": "conducted",
+      "report_record_type": "Mission Observation",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "UN Mission Mandate"
+      ],
+      "geographic_scope": "Addis Ababa, Ethiopia",
+      "actor_source": "Security Council mission",
+      "actor_target": "African Union",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": "The Security Council engaged directly with the African Union institutional framework.",
+      "policy_implication": "African Union-United Nations coordination remains operationally important."
+    }
+  ]
+},
+{
+  "mission_title": "Report of the Security Council mission to the Democratic Republic of the Congo, 9–12 March 2023",
+  "document_symbol": "S/2023/430",
+  "document_date": "13 June 2023",
+  "mission_country_or_region": "Democratic Republic of the Congo",
+  "related_tor_document_symbol": "S/2023/186",
+  "mission_analytics": {
+    "mission_type": "Field Assessment Mission",
+    "mission_subtype": "Political and security assessment mission",
+    "field_exposure": "Moderate",
+    "actor_diversity_assessment": "High",
+    "overall_character": "Mixed political-security",
+    "main_themes": [
+      "Security / Stability",
+      "Political Process",
+      "Regional Cooperation",
+      "UN Mission Mandate",
+      "Humanitarian Issues",
+      "State Authority / Armed Groups / Weapons"
+    ],
+    "main_risks": [
+      "Deteriorating security situation in eastern Democratic Republic of the Congo",
+      "Continued expansion of M23",
+      "Regional tensions involving Rwanda",
+      "Worsening humanitarian conditions",
+      "Risks to stabilization and electoral processes"
+    ],
+    "main_commitments": [
+      "Support for the Nairobi and Luanda processes",
+      "Continued engagement by MONUSCO and the United Nations",
+      "Support for a political solution to the crisis"
+    ],
+    "main_policy_signals": [
+      "Security Council members supported a political solution to the eastern DRC crisis",
+      "Support for Nairobi and Luanda regional peace processes",
+      "Recognition of the need for international engagement on humanitarian and security challenges"
+    ],
+    "summary_assessment": "The mission focused on the deteriorating security situation in eastern Democratic Republic of the Congo, regional dynamics surrounding M23, the role of MONUSCO, the electoral process and humanitarian conditions. Security Council members received strong messages from United Nations officials and Congolese stakeholders regarding insecurity, regional tensions and the need for coordinated political solutions. The mission emphasized support for regional peace initiatives and concern over worsening humanitarian and security conditions."
+  },
+  "activities": [
+    {
+      "activity_id": 1,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with MONUSCO leadership."
+    },
+    {
+      "activity_id": 2,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the United Nations country team."
+    },
+    {
+      "activity_id": 3,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Special Envoy of the Secretary-General for the Great Lakes Region."
+    },
+    {
+      "activity_id": 4,
+      "activity_type": "Consultation",
+      "activity_description": "Discussions on implementation of the MONUSCO mandate, the electoral process, regional peace initiatives and the future United Nations presence."
+    }
+  ],
+  "actors_met": [
+    {
+      "actor_id": 1,
+      "actor_name": "MONUSCO leadership",
+      "actor_category": "UN Mission"
+    },
+    {
+      "actor_id": 2,
+      "actor_name": "United Nations country team",
+      "actor_category": "UN Country Team"
+    },
+    {
+      "actor_id": 3,
+      "actor_name": "Special Envoy of the Secretary-General for the Great Lakes Region",
+      "actor_category": "UN Secretariat / Special Envoy"
+    },
+    {
+      "actor_id": 4,
+      "actor_name": "Congolese authorities",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 5,
+      "actor_name": "Congolese population representatives",
+      "actor_category": "Affected Community"
+    }
+  ],
+  "records": [
+    {
+      "record_id": 1,
+      "record_text": "The Security Council decided to send a mission to the Democratic Republic of the Congo from 9 to 12 March 2023.",
+      "verb": "send",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [],
+      "geographic_scope": "Democratic Republic of the Congo",
+      "actor_source": "Security Council",
+      "actor_target": "Democratic Republic of the Congo",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": null
+    },
+    {
+      "record_id": 2,
+      "record_text": "Discussions revolved around the implementation of the mandate of MONUSCO, the electoral process, ongoing regional processes and the future of the United Nations in the country.",
+      "verb": "revolved",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [
+        "Political Process",
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Democratic Republic of the Congo",
+      "actor_source": "Mission participants",
+      "actor_target": "MONUSCO and related processes",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "Mission attention focused on mandate implementation and political developments."
+    },
+    {
+      "record_id": 3,
+      "record_text": "United Nations representatives presented the deterioration of the security situation in the eastern provinces, marked by the continued expansion of the Mouvement du 23 mars (M23).",
+      "verb": "presented",
+      "report_record_type": "Challenge / Risk",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "State Authority / Armed Groups / Weapons"
+      ],
+      "geographic_scope": "Eastern Democratic Republic of the Congo",
+      "actor_source": "United Nations representatives",
+      "actor_target": "Security Council mission",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Warning",
+      "political_signal": null,
+      "policy_implication": "Continued armed-group expansion threatens stability."
+    },
+    {
+      "record_id": 4,
+      "record_text": "Congolese authorities and people said they expected the international community to condemn and impose sanctions on Rwanda.",
+      "verb": "expected",
+      "report_record_type": "Stakeholder Position",
+      "primary_theme": "Border / Regional Issues",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Democratic Republic of the Congo and Rwanda",
+      "actor_source": "Congolese authorities and people",
+      "actor_target": "International community",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Divergence",
+      "action_orientation": "Request",
+      "political_signal": "Congolese stakeholders sought stronger international action regarding Rwanda.",
+      "policy_implication": "Regional tensions remained politically significant."
+    },
+    {
+      "record_id": 5,
+      "record_text": "United Nations representatives underscored the need for a political solution to the crisis.",
+      "verb": "underscored",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Eastern Democratic Republic of the Congo",
+      "actor_source": "United Nations representatives",
+      "actor_target": "Parties to the conflict",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Preference for political rather than military resolution.",
+      "policy_implication": "Diplomatic engagement should remain central."
+    },
+    {
+      "record_id": 6,
+      "record_text": "United Nations representatives underscored the need for concerted support for the Nairobi and Luanda processes as complementary regional initiatives.",
+      "verb": "underscored",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Great Lakes region",
+      "actor_source": "United Nations representatives",
+      "actor_target": "International and regional stakeholders",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Support for regional mediation mechanisms.",
+      "policy_implication": "Regional initiatives were viewed as complementary pathways toward peace."
+    },
+    {
+      "record_id": 7,
+      "record_text": "Security Council mission members said that the solution to the crisis should be political.",
+      "verb": "said",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Eastern Democratic Republic of the Congo",
+      "actor_source": "Security Council mission members",
+      "actor_target": "Parties to the crisis",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Council members endorsed a political resolution of the conflict.",
+      "policy_implication": "Negotiated approaches remain preferred."
+    },
+    {
+      "record_id": 8,
+      "record_text": "Security Council mission members said that ongoing efforts to implement decisions made under the Nairobi and Luanda processes should be further supported.",
+      "verb": "supported",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Great Lakes region",
+      "actor_source": "Security Council mission members",
+      "actor_target": "Regional peace processes",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Recommendation",
+      "political_signal": "Security Council support for existing regional peace frameworks.",
+      "policy_implication": "Implementation of regional commitments should continue."
+    },
+    {
+      "record_id": 9,
+      "record_text": "United Nations representatives advocated in favour of support to fund the humanitarian response plan in the light of the worsening of the humanitarian situation in the country.",
+      "verb": "advocated",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Humanitarian Issues",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Democratic Republic of the Congo",
+      "actor_source": "United Nations representatives",
+      "actor_target": "International donors",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Request",
+      "political_signal": null,
+      "policy_implication": "Additional humanitarian funding was considered necessary."
+    }
+  ]
+},
+{
+  "mission_title": "Report of the Security Council mission to Mali and the Niger, 23–25 October 2021",
+  "document_symbol": "S/2021/1106",
+  "document_date": "4 January 2022",
+  "mission_country_or_region": "Mali and the Niger",
+  "related_tor_document_symbol": null,
+  "mission_analytics": {
+    "mission_type": "Mixed / Hybrid",
+    "mission_subtype": "Political engagement and field assessment mission",
+    "field_exposure": "Moderate",
+    "actor_diversity_assessment": "High",
+    "overall_character": "Mixed political-security",
+    "main_themes": [
+      "Peace Agreement Implementation",
+      "Security / Stability",
+      "Political Process",
+      "Regional Cooperation",
+      "Humanitarian Issues",
+      "State Authority / Armed Groups / Weapons",
+      "UN Mission Mandate"
+    ],
+    "main_risks": [
+      "Delays and uncertainty regarding the political transition in Mali",
+      "Persistent terrorist violence in Mali and the Sahel",
+      "Growing insecurity in central Mali",
+      "Humanitarian pressures and displacement",
+      "Weak State presence in conflict-affected areas",
+      "Regional instability affecting the wider Sahel"
+    ],
+    "main_commitments": [
+      "Malian transitional authorities reiterated commitment to a return to constitutional order",
+      "Support for implementation of the Agreement on Peace and Reconciliation in Mali",
+      "Continued international support for MINUSMA and the G5 Sahel Joint Force",
+      "Continued engagement with Niger on stabilization, democratization and regional security"
+    ],
+    "main_policy_signals": [
+      "Security Council support for the Malian transition and peace agreement implementation",
+      "Support for regional approaches to insecurity in the Sahel",
+      "Recognition of Niger as an important partner in addressing regional instability",
+      "Emphasis on restoring State authority and improving governance"
+    ],
+    "summary_assessment": "The mission assessed political, security and humanitarian developments in Mali and the Niger. Council members focused on Mali's transition, implementation of the 2015 Peace Agreement, stabilization of central Mali, terrorist threats and the effectiveness of international security mechanisms. In the Niger, the mission examined democratic consolidation, security challenges and humanitarian pressures. The report reflected strong concern over insecurity across the Sahel while signaling continued support for political transition, peace implementation and regional cooperation."
+  },
+  "activities": [
+    {
+      "activity_id": 1,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the transitional President of Mali, Colonel Assimi Goïta."
+    },
+    {
+      "activity_id": 2,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Prime Minister of Mali, Choguel Maïga."
+    },
+    {
+      "activity_id": 3,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with signatory armed groups in Mali."
+    },
+    {
+      "activity_id": 4,
+      "activity_type": "Engagement Session",
+      "activity_description": "Engagement with representatives of civil society in Mali."
+    },
+    {
+      "activity_id": 5,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Special Representative of the Secretary-General for Mali and Head of MINUSMA."
+    },
+    {
+      "activity_id": 6,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with representatives of the United Nations country team in Mali."
+    },
+    {
+      "activity_id": 7,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the President of the Niger, Mohamed Bazoum."
+    },
+    {
+      "activity_id": 8,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Prime Minister of the Niger, Mahamadou Ouhoumoudou."
+    },
+    {
+      "activity_id": 9,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Minister for Foreign Affairs of the Niger, Hassoumi Massoudou."
+    },
+    {
+      "activity_id": 10,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the Commander of the G5 Sahel Joint Force, Major General Oumar Bikimo."
+    },
+    {
+      "activity_id": 11,
+      "activity_type": "Meeting",
+      "activity_description": "Meeting with the United Nations country team in the Niger."
+    },
+    {
+      "activity_id": 12,
+      "activity_type": "Other",
+      "activity_description": "Ceremony in tribute to those who had lost their lives combating terrorism in Niamey."
+    }
+  ],
+  "actors_met": [
+    {
+      "actor_id": 1,
+      "actor_name": "Colonel Assimi Goïta",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 2,
+      "actor_name": "Choguel Maïga",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 3,
+      "actor_name": "Signatory armed groups",
+      "actor_category": "Armed Group / Non-State Actor"
+    },
+    {
+      "actor_id": 4,
+      "actor_name": "Civil society representatives",
+      "actor_category": "Civil Society"
+    },
+    {
+      "actor_id": 5,
+      "actor_name": "El Ghassim Wane, Special Representative of the Secretary-General and Head of MINUSMA",
+      "actor_category": "UN Mission"
+    },
+    {
+      "actor_id": 6,
+      "actor_name": "United Nations country team (Mali)",
+      "actor_category": "UN Country Team"
+    },
+    {
+      "actor_id": 7,
+      "actor_name": "Mohamed Bazoum",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 8,
+      "actor_name": "Mahamadou Ouhoumoudou",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 9,
+      "actor_name": "Hassoumi Massoudou",
+      "actor_category": "Government"
+    },
+    {
+      "actor_id": 10,
+      "actor_name": "Major General Oumar Bikimo",
+      "actor_category": "Regional Organization"
+    },
+    {
+      "actor_id": 11,
+      "actor_name": "United Nations country team (Niger)",
+      "actor_category": "UN Country Team"
+    }
+  ],
+  "records": [
+    {
+      "record_id": 1,
+      "record_text": "The members of the Security Council carried out a mission to Mali and the Niger from 23 to 25 October 2021.",
+      "verb": "carried out",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [],
+      "geographic_scope": "Mali and the Niger",
+      "actor_source": "Security Council members",
+      "actor_target": "Mali and the Niger",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": null
+    },
+    {
+      "record_id": 2,
+      "record_text": "The trip was the first since the beginning of the coronavirus disease (COVID-19) pandemic.",
+      "verb": "was",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "UN Mission Mandate",
+      "secondary_themes": [],
+      "geographic_scope": "Mali and the Niger",
+      "actor_source": "Security Council",
+      "actor_target": "Mission",
+      "level_of_concern": "Not Applicable",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Security Council resumed field engagement despite pandemic disruptions.",
+      "policy_implication": null
+    },
+    {
+      "record_id": 3,
+      "record_text": "The primary purpose of the Security Council mission to Mali was to reiterate the Council’s support for the political transition in the country.",
+      "verb": "reiterate",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Peace Agreement Implementation"
+      ],
+      "geographic_scope": "Mali",
+      "actor_source": "Security Council",
+      "actor_target": "Transitional authorities of Mali",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Council support for the transition process.",
+      "policy_implication": "International legitimacy remained linked to transition progress."
+    },
+    {
+      "record_id": 4,
+      "record_text": "The purpose of the mission was to reiterate support for the implementation of the Agreement on Peace and Reconciliation in Mali.",
+      "verb": "reiterate",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Peace Agreement Implementation",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Mali",
+      "actor_source": "Security Council",
+      "actor_target": "Parties to the Agreement",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Council support for implementation of the peace agreement.",
+      "policy_implication": "Agreement implementation remained a central benchmark."
+    },
+    {
+      "record_id": 5,
+      "record_text": "The visit was aimed at taking stock of the operationalization of the Joint Force of the Group of Five for the Sahel.",
+      "verb": "taking",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Sahel",
+      "actor_source": "Security Council mission",
+      "actor_target": "G5 Sahel Joint Force",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": "The effectiveness of regional security mechanisms remained under review."
+    },
+    {
+      "record_id": 6,
+      "record_text": "The transitional President expressed his Government’s commitment to the return of constitutional rule in the country.",
+      "verb": "expressed",
+      "report_record_type": "Stakeholder Position",
+      "primary_theme": "Political Process",
+      "secondary_themes": [],
+      "geographic_scope": "Mali",
+      "actor_source": "Transitional President of Mali",
+      "actor_target": "Security Council mission",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Commitment",
+      "political_signal": "Commitment to restoring constitutional order.",
+      "policy_implication": "Transition timelines remained politically significant."
+    },
+    {
+      "record_id": 7,
+      "record_text": "Gaining the confidence of the Malian people and promoting reconciliation would be the priority.",
+      "verb": "would be",
+      "report_record_type": "Stakeholder Position",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Peace Agreement Implementation"
+      ],
+      "geographic_scope": "Mali",
+      "actor_source": "Transitional President of Mali",
+      "actor_target": "Malian population",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Unclear",
+      "action_orientation": "Commitment",
+      "political_signal": null,
+      "policy_implication": "Reconciliation was presented as a key transition objective."
+    },
+    {
+      "record_id": 8,
+      "record_text": "Improving the security situation was identified as necessary for reconciliation and public confidence.",
+      "verb": "identified",
+      "report_record_type": "Situation Assessment",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Political Process"
+      ],
+      "geographic_scope": "Mali",
+      "actor_source": "Transitional authorities",
+      "actor_target": "National reconciliation efforts",
+      "level_of_concern": "High",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Assessment",
+      "political_signal": null,
+      "policy_implication": "Security improvements were viewed as essential to political progress."
+    },
+    {
+      "record_id": 9,
+      "record_text": "The mission sought to take stock of the challenges faced by the Niger in the security, development and humanitarian domains.",
+      "verb": "take stock",
+      "report_record_type": "Mandate-Relevant Reporting",
+      "primary_theme": "Humanitarian Issues",
+      "secondary_themes": [
+        "Security / Stability",
+        "Political Process"
+      ],
+      "geographic_scope": "Niger",
+      "actor_source": "Security Council mission",
+      "actor_target": "Niger",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Observation",
+      "political_signal": null,
+      "policy_implication": null
+    },
+    {
+      "record_id": 10,
+      "record_text": "The mission aimed to learn from the experience of the Niger with regard to the consolidation of peace and the strengthening of democratization.",
+      "verb": "learn",
+      "report_record_type": "Progress Assessment",
+      "primary_theme": "Political Process",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Niger",
+      "actor_source": "Security Council mission",
+      "actor_target": "Niger",
+      "level_of_concern": "Low",
+      "degree_of_consensus": "Not Applicable",
+      "action_orientation": "Assessment",
+      "political_signal": "Niger was presented as a relevant example of democratic consolidation.",
+      "policy_implication": "Positive governance experience was considered regionally relevant."
+    },
+    {
+      "record_id": 11,
+      "record_text": "The mission aimed to exchange views on how the Council could provide support in facing ongoing challenges in the Niger and the broader Sahel region.",
+      "verb": "provide",
+      "report_record_type": "Recommendation / Call for Action",
+      "primary_theme": "Regional Cooperation",
+      "secondary_themes": [
+        "Security / Stability"
+      ],
+      "geographic_scope": "Niger and Sahel",
+      "actor_source": "Security Council mission",
+      "actor_target": "Security Council",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Partial Consensus",
+      "action_orientation": "Follow-up Action",
+      "political_signal": null,
+      "policy_implication": "Continued Council engagement in the Sahel was anticipated."
+    },
+    {
+      "record_id": 12,
+      "record_text": "A ceremony in tribute to those who had lost their lives combating terrorism was held in Niamey.",
+      "verb": "held",
+      "report_record_type": "Political Signalling",
+      "primary_theme": "Security / Stability",
+      "secondary_themes": [
+        "Regional Cooperation"
+      ],
+      "geographic_scope": "Niamey, Niger",
+      "actor_source": "Security Council mission",
+      "actor_target": "Victims of terrorism",
+      "level_of_concern": "Moderate",
+      "degree_of_consensus": "Consensus",
+      "action_orientation": "Political Signalling",
+      "political_signal": "Recognition of sacrifices made in combating terrorism.",
+      "policy_implication": "Counter-terrorism remained central to international engagement."
+    }
+  ]
+}
+]
