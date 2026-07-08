@@ -20,9 +20,8 @@ st.set_page_config(
 # File paths
 # --------------------------------------------------
 
-TOR_FILE = r"C:\Users\PKOULOUBAN\OneDrive - United Nations\Documents\PycharmProjects\Security Council Missions\missions_tor.txt"
-
-REPORTS_FILE = r"C:\Users\PKOULOUBAN\OneDrive - United Nations\Documents\PycharmProjects\Security Council Missions\missions_report.txt"
+TOR_FILE = missions_tor.txt
+REPORTS_FILE = missions_report.txt"
 
 # --------------------------------------------------
 # Custom CSS
