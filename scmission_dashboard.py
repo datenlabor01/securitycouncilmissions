@@ -1790,10 +1790,13 @@ def render_reports_dashboard():
                 c1, c2 = st.columns(2)
 
                 with c1:
-                    st.plotly_chart(make_record_type_donut(mission_records), use_container_width=True)
+                    st.plotly_chart(make_record_type_donut(mission_records), use_container_width=True,
+                                    key=f"reports_record_type_donut_deep_dive_{selected_symbol}")
 
                 with c2:
-                    st.plotly_chart(make_concern_chart(mission_records), use_container_width=True)
+                    st.plotly_chart(make_concern_chart(mission_records),
+                                    use_container_width=True,
+                                    key=f"reports_concern_chart_deep_dive_{selected_symbol}")
 
                 cols = [
                     "record_id",
