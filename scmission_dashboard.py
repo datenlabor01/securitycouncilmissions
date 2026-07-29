@@ -1,3 +1,4 @@
+import networkx as nx
 import streamlit as st
 import pandas as pd
 import json
@@ -5,6 +6,9 @@ from pathlib import Path
 import plotly.express as px
 import plotly.graph_objects as go
 import re
+from pyvis.network import Network
+import streamlit.components.v1 as components
+import html
 
 # --------------------------------------------------
 # Page setup
@@ -1318,6 +1322,397 @@ def make_actor_chart(actors_df):
     fig.update_traces(textposition="outside", cliponaxis=False)
     return fig
 
+ACTOR_CATEGORY_COLORS = {
+    "Government": "#F97316",
+    "UN Secretariat / Special Envoy": "#2563EB",
+    "UN Country Team": "#0891B2",
+    "UN Mission": "#7C3AED",
+    "Civil Society": "#16A34A",
+    "Affected Community": "#DB2777",
+    "Other": "#64748B",
+    "Regional Organization": "#9333EA",
+    "Armed Group": "#111827",
+    "Donor / International Partner": "#EAB308",
+    "Private Sector": "#0F766E",
+    "Media": "#EC4899",
+    "Religious / Community Leader": "#84CC16",
+    "Opposition / Political Actor": "#DC2626",
+}
+
+def make_pyvis_actor_network_html(
+    missions_df,
+    actors_df,
+    selected_symbols,
+    max_actors_per_category=5
+):
+    """
+    PyVis interactive network:
+
+    Selected missions -> Actor categories -> Actual actors
+
+    Features:
+    - draggable nodes
+    - full-screen width in Streamlit
+    - category-specific colors
+    - capped actors per category
+    - full actor names available on hover
+    """
+
+    if missions_df.empty or actors_df.empty or not selected_symbols:
+        return None
+
+    selected_symbols = selected_symbols[:5]
+
+    mission_df = missions_df.copy()
+    actor_df = actors_df.copy()
+
+    mission_df["document_symbol"] = mission_df["document_symbol"].fillna("Unknown mission")
+    mission_df["mission_title"] = mission_df["mission_title"].fillna(mission_df["document_symbol"])
+
+    actor_df["document_symbol"] = actor_df["document_symbol"].fillna("Unknown mission")
+    actor_df["mission_title"] = actor_df["mission_title"].fillna(actor_df["document_symbol"])
+    actor_df["actor_category"] = actor_df["actor_category"].fillna("Unknown")
+    actor_df["actor_name"] = actor_df["actor_name"].fillna("Unnamed actor")
+
+    actor_df = actor_df[actor_df["document_symbol"].isin(selected_symbols)].copy()
+    mission_df = mission_df[mission_df["document_symbol"].isin(selected_symbols)].copy()
+
+    if actor_df.empty:
+        return None
+
+    def short_label(value, max_chars=34):
+        value = str(value)
+        if len(value) <= max_chars:
+            return value
+        return value[:max_chars - 1] + "…"
+
+    mission_lookup = (
+        mission_df
+        .drop_duplicates(subset=["document_symbol"])
+        .set_index("document_symbol")
+        .to_dict(orient="index")
+    )
+
+    mission_order = [
+        symbol for symbol in selected_symbols
+        if symbol in actor_df["document_symbol"].unique()
+    ]
+
+    category_counts = (
+        actor_df
+        .groupby("actor_category")
+        .size()
+        .sort_values(ascending=False)
+    )
+
+    category_order = category_counts.index.tolist()
+
+    # Limit actors per category across selected missions
+    limited_actor_rows = []
+
+    for category in category_order:
+        sub = actor_df[actor_df["actor_category"] == category].copy()
+
+        actor_summary = (
+            sub
+            .groupby(["actor_category", "actor_name"])
+            .agg(
+                count=("actor_name", "count"),
+                missions=("document_symbol", lambda x: ", ".join(sorted(x.dropna().astype(str).unique())))
+            )
+            .reset_index()
+            .sort_values(["count", "actor_name"], ascending=[False, True])
+            .head(max_actors_per_category)
+        )
+
+        limited_actor_rows.extend(actor_summary.to_dict(orient="records"))
+
+    limited_actor_df = pd.DataFrame(limited_actor_rows)
+
+    if limited_actor_df.empty:
+        return None
+
+    mission_category_df = (
+        actor_df
+        .groupby(["document_symbol", "actor_category"])
+        .size()
+        .reset_index(name="count")
+    )
+
+    # --------------------------------------------------
+    # Create PyVis network
+    # --------------------------------------------------
+
+    net = Network(
+        height="760px",
+        width="100%",
+        bgcolor="#ffffff",
+        font_color="#000000",
+        directed=False,
+        cdn_resources="in_line"
+    )
+
+    # Turn off physics by default so the layout stays clean.
+    # Users can still drag nodes.
+    net.set_options(
+        """
+        {
+          "physics": {
+            "enabled": false
+          },
+          "interaction": {
+            "dragNodes": true,
+            "dragView": true,
+            "zoomView": true,
+            "hover": true,
+            "navigationButtons": true,
+            "keyboard": true
+          },
+          "nodes": {
+            "font": {
+              "color": "#000000",
+              "size": 16,
+              "face": "Arial",
+              "strokeWidth": 3,
+              "strokeColor": "#ffffff"
+            },
+            "borderWidth": 2,
+            "shadow": {
+              "enabled": true,
+              "color": "rgba(15, 23, 42, 0.18)",
+              "size": 8,
+              "x": 2,
+              "y": 2
+            }
+          },
+          "edges": {
+            "smooth": {
+              "enabled": true,
+              "type": "continuous",
+              "roundness": 0.35
+            },
+            "color": {
+              "inherit": false
+            },
+            "selectionWidth": 2
+          }
+        }
+        """
+    )
+
+    # --------------------------------------------------
+    # Fixed initial positions: missions left, categories center, actors right
+    # Nodes remain draggable.
+    # --------------------------------------------------
+
+    def spread(items, top=260, bottom=-260):
+        if not items:
+            return {}
+
+        if len(items) == 1:
+            return {items[0]: 0}
+
+        step = (top - bottom) / (len(items) - 1)
+
+        return {
+            item: top - i * step
+            for i, item in enumerate(items)
+        }
+
+    mission_y = spread(mission_order, top=220, bottom=-220)
+    category_y = spread(category_order, top=260, bottom=-260)
+
+    # --------------------------------------------------
+    # Mission nodes
+    # --------------------------------------------------
+
+    for mission in mission_order:
+        meta = mission_lookup.get(mission, {})
+        actor_count = actor_df[actor_df["document_symbol"] == mission].shape[0]
+
+        title = (
+            f"<b>{html.escape(mission)}</b><br>"
+            f"{html.escape(str(meta.get('mission_title', '')))}<br><br>"
+            f"<b>Country/Region:</b> {html.escape(str(meta.get('mission_country_or_region', 'N/A')))}<br>"
+            f"<b>Mission type:</b> {html.escape(str(meta.get('mission_type', 'N/A')))}<br>"
+            f"<b>Actors met:</b> {actor_count}"
+        )
+
+        net.add_node(
+            f"MISSION::{mission}",
+            label=mission,
+            title=title,
+            x=-520,
+            y=mission_y.get(mission, 0),
+            size=18,
+            color={
+                "background": "#2563EB",
+                "border": "#1D4ED8",
+                "highlight": {
+                    "background": "#1D4ED8",
+                    "border": "#1E40AF"
+                }
+            },
+            shape="dot",
+            font={
+                "color": "#000000",
+                "size": 17,
+                "face": "Arial",
+                "strokeWidth": 4,
+                "strokeColor": "#ffffff"
+            }
+        )
+
+    # --------------------------------------------------
+    # Category nodes
+    # --------------------------------------------------
+
+    for category in category_order:
+        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+        count = int(category_counts[category])
+
+        title = (
+            f"<b>{html.escape(category)}</b><br>"
+            f"<b>Actors across selected missions:</b> {count}"
+        )
+
+        net.add_node(
+            f"CATEGORY::{category}",
+            label=short_label(category, 28),
+            title=title,
+            x=0,
+            y=category_y.get(category, 0),
+            size=16,
+            color={
+                "background": color,
+                "border": color,
+                "highlight": {
+                    "background": color,
+                    "border": "#111827"
+                }
+            },
+            shape="diamond",
+            font={
+                "color": "#000000",
+                "size": 15,
+                "face": "Arial",
+                "strokeWidth": 4,
+                "strokeColor": "#ffffff"
+            }
+        )
+
+    # --------------------------------------------------
+    # Actor nodes
+    # --------------------------------------------------
+
+    actor_positions = {}
+
+    for category in category_order:
+        sub = limited_actor_df[limited_actor_df["actor_category"] == category]
+        actors = sub["actor_name"].drop_duplicates().tolist()
+
+        center_y = category_y.get(category, 0)
+
+        if len(actors) == 1:
+            offsets = [0]
+        else:
+            local_step = min(52, 260 / max(len(actors) - 1, 1))
+            offsets = [
+                ((len(actors) - 1) / 2 - i) * local_step
+                for i in range(len(actors))
+            ]
+
+        for actor_name, offset in zip(actors, offsets):
+            actor_positions[(category, actor_name)] = {
+                "x": 520,
+                "y": center_y + offset
+            }
+
+    for _, row in limited_actor_df.iterrows():
+        category = row["actor_category"]
+        actor_name = row["actor_name"]
+        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+
+        coords = actor_positions.get((category, actor_name), {"x": 520, "y": 0})
+
+        title = (
+            f"<b>{html.escape(str(actor_name))}</b><br>"
+            f"<b>Category:</b> {html.escape(str(category))}<br>"
+            f"<b>Missions:</b> {html.escape(str(row.get('missions', '')))}"
+        )
+
+        net.add_node(
+            f"ACTOR::{category}::{actor_name}",
+            label=short_label(actor_name, 42),
+            title=title,
+            x=coords["x"],
+            y=coords["y"],
+            size=8,
+            color={
+                "background": color,
+                "border": color,
+                "highlight": {
+                    "background": color,
+                    "border": "#111827"
+                }
+            },
+            shape="dot",
+            font={
+                "color": "#000000",
+                "size": 13,
+                "face": "Arial",
+                "strokeWidth": 4,
+                "strokeColor": "#ffffff"
+            }
+        )
+
+    # --------------------------------------------------
+    # Mission -> Category edges
+    # --------------------------------------------------
+
+    for _, row in mission_category_df.iterrows():
+        mission = row["document_symbol"]
+        category = row["actor_category"]
+        count = int(row["count"])
+
+        if mission not in mission_order or category not in category_order:
+            continue
+
+        net.add_edge(
+            f"MISSION::{mission}",
+            f"CATEGORY::{category}",
+            value=max(1, min(count, 8)),
+            width=max(1, min(count * 0.45, 4)),
+            color="rgba(100, 116, 139, 0.35)",
+            title=(
+                f"<b>{html.escape(str(mission))}</b> → "
+                f"<b>{html.escape(str(category))}</b><br>"
+                f"Actors in category: {count}"
+            )
+        )
+
+    # --------------------------------------------------
+    # Category -> Actor edges
+    # --------------------------------------------------
+
+    for _, row in limited_actor_df.iterrows():
+        category = row["actor_category"]
+        actor_name = row["actor_name"]
+        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+
+        net.add_edge(
+            f"CATEGORY::{category}",
+            f"ACTOR::{category}::{actor_name}",
+            width=1.2,
+            color=color,
+            title=(
+                f"<b>{html.escape(str(category))}</b> → "
+                f"<b>{html.escape(str(actor_name))}</b><br>"
+                f"Missions: {html.escape(str(row.get('missions', '')))}"
+            )
+        )
+
+    return net.generate_html()
 
 def make_activity_chart(activities_df):
     df = (
@@ -1342,6 +1737,686 @@ def make_activity_chart(activities_df):
         showlegend=False,
         margin=dict(l=10, r=20, t=60, b=20),
         paper_bgcolor="white",
+    )
+
+    return fig
+
+def make_multi_mission_actor_network(
+    missions_df,
+    actors_df,
+    selected_symbols,
+    max_actors_per_category=6
+):
+    """
+    Compact readable network:
+
+    Selected missions -> actor categories -> actors met
+
+    - Supports up to 5 selected missions.
+    - Actor categories have distinct colors.
+    - Actors are aggregated across selected missions.
+    - Actor nodes show the missions in which they appeared on hover.
+    """
+
+    if missions_df.empty or actors_df.empty or not selected_symbols:
+        return None
+
+    selected_symbols = selected_symbols[:5]
+
+    mission_df = missions_df.copy()
+    actor_df = actors_df.copy()
+
+    mission_df["document_symbol"] = mission_df["document_symbol"].fillna("Unknown mission")
+    mission_df["mission_title"] = mission_df["mission_title"].fillna(mission_df["document_symbol"])
+
+    actor_df["document_symbol"] = actor_df["document_symbol"].fillna("Unknown mission")
+    actor_df["mission_title"] = actor_df["mission_title"].fillna(actor_df["document_symbol"])
+    actor_df["actor_category"] = actor_df["actor_category"].fillna("Unknown")
+    actor_df["actor_name"] = actor_df["actor_name"].fillna("Unnamed actor")
+
+    actor_df = actor_df[actor_df["document_symbol"].isin(selected_symbols)].copy()
+    mission_df = mission_df[mission_df["document_symbol"].isin(selected_symbols)].copy()
+
+    if actor_df.empty:
+        return None
+
+    # Mission order follows user selection
+    mission_order = [
+        symbol for symbol in selected_symbols
+        if symbol in actor_df["document_symbol"].unique()
+    ]
+
+    # Category counts across selected missions
+    category_counts = (
+        actor_df
+        .groupby("actor_category")
+        .size()
+        .sort_values(ascending=False)
+    )
+
+    category_order = category_counts.index.tolist()
+
+    # Limit actors per category across selected missions
+    limited_actor_rows = []
+
+    for category in category_order:
+        sub = actor_df[actor_df["actor_category"] == category].copy()
+
+        actor_summary = (
+            sub
+            .groupby(["actor_category", "actor_name"])
+            .agg(
+                count=("actor_name", "count"),
+                missions=("document_symbol", lambda x: ", ".join(sorted(x.dropna().astype(str).unique())))
+            )
+            .reset_index()
+            .sort_values(["count", "actor_name"], ascending=[False, True])
+            .head(max_actors_per_category)
+        )
+
+        limited_actor_rows.extend(actor_summary.to_dict(orient="records"))
+
+    limited_actor_df = pd.DataFrame(limited_actor_rows)
+
+    if limited_actor_df.empty:
+        return None
+
+    # Mission -> category edges
+    mission_category_df = (
+        actor_df
+        .groupby(["document_symbol", "actor_category"])
+        .size()
+        .reset_index(name="count")
+    )
+
+    # Category -> actor edges
+    category_actor_df = limited_actor_df.copy()
+
+    # Mission metadata lookup
+    mission_lookup = (
+        mission_df
+        .drop_duplicates(subset=["document_symbol"])
+        .set_index("document_symbol")
+        .to_dict(orient="index")
+    )
+
+    # -----------------------------
+    # Fixed compact three-column layout
+    # -----------------------------
+    pos = {}
+
+    def spread(items, top=0.85, bottom=-0.85):
+        if not items:
+            return {}
+
+        if len(items) == 1:
+            return {items[0]: 0}
+
+        step = (top - bottom) / (len(items) - 1)
+
+        return {
+            item: top - i * step
+            for i, item in enumerate(items)
+        }
+
+    mission_y = spread(mission_order)
+    category_y = spread(category_order)
+
+    for mission in mission_order:
+        pos[f"MISSION::{mission}"] = (-1.05, mission_y[mission])
+
+    for category in category_order:
+        pos[f"CATEGORY::{category}"] = (0, category_y[category])
+
+    actor_positions = {}
+
+    for category in category_order:
+        actors = (
+            category_actor_df[category_actor_df["actor_category"] == category]["actor_name"]
+            .drop_duplicates()
+            .tolist()
+        )
+
+        center_y = category_y[category]
+
+        if len(actors) == 1:
+            offsets = [0]
+        else:
+            local_step = min(0.12, 0.48 / max(len(actors) - 1, 1))
+            offsets = [
+                ((len(actors) - 1) / 2 - i) * local_step
+                for i in range(len(actors))
+            ]
+
+        for actor_name, offset in zip(actors, offsets):
+            actor_node = f"ACTOR::{category}::{actor_name}"
+            pos[actor_node] = (1.05, center_y + offset)
+            actor_positions[(category, actor_name)] = actor_node
+
+    # -----------------------------
+    # Edges
+    # -----------------------------
+    edge_traces = []
+
+    # Mission -> category edges
+    for _, row in mission_category_df.iterrows():
+        mission = row["document_symbol"]
+        category = row["actor_category"]
+
+        mission_node = f"MISSION::{mission}"
+        category_node = f"CATEGORY::{category}"
+
+        if mission_node not in pos or category_node not in pos:
+            continue
+
+        x0, y0 = pos[mission_node]
+        x1, y1 = pos[category_node]
+
+        edge_traces.append(
+            go.Scatter(
+                x=[x0, x1, None],
+                y=[y0, y1, None],
+                mode="lines",
+                line=dict(
+                    width=max(1.2, min(row["count"] * 0.55, 6)),
+                    color="rgba(100,116,139,0.25)"
+                ),
+                hoverinfo="text",
+                hovertext=(
+                    f"<b>{mission}</b> → <b>{category}</b><br>"
+                    f"Actors in category: {row['count']}"
+                ),
+                showlegend=False
+            )
+        )
+
+    # Category -> actor edges
+    for _, row in category_actor_df.iterrows():
+        category = row["actor_category"]
+        actor_name = row["actor_name"]
+
+        category_node = f"CATEGORY::{category}"
+        actor_node = actor_positions.get((category, actor_name))
+
+        if category_node not in pos or actor_node not in pos:
+            continue
+
+        x0, y0 = pos[category_node]
+        x1, y1 = pos[actor_node]
+
+        category_color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+
+        edge_traces.append(
+            go.Scatter(
+                x=[x0, x1, None],
+                y=[y0, y1, None],
+                mode="lines",
+                line=dict(
+                    width=1.5,
+                    color=category_color
+                ),
+                opacity=0.32,
+                hoverinfo="text",
+                hovertext=(
+                    f"<b>{category}</b> → <b>{actor_name}</b><br>"
+                    f"Missions: {row['missions']}"
+                ),
+                showlegend=False
+            )
+        )
+
+    # -----------------------------
+    # Mission nodes
+    # -----------------------------
+    mission_x = []
+    mission_y_vals = []
+    mission_labels = []
+    mission_hover = []
+    mission_sizes = []
+
+    def short_label(text, max_chars=34):
+        text = str(text)
+        if len(text) <= max_chars:
+            return text
+        return text[:max_chars - 1] + "…"
+
+    for mission in mission_order:
+        node = f"MISSION::{mission}"
+
+        if node not in pos:
+            continue
+
+        x, y = pos[node]
+        meta = mission_lookup.get(mission, {})
+        actor_count = actor_df[actor_df["document_symbol"] == mission].shape[0]
+
+        mission_x.append(x)
+        mission_y_vals.append(y)
+        mission_labels.append(mission)
+        mission_sizes.append(34 + min(actor_count * 0.6, 18))
+
+        mission_hover.append(
+            f"<b>{mission}</b><br>"
+            f"{meta.get('mission_title', '')}<br><br>"
+            f"Country/Region: {meta.get('mission_country_or_region', 'N/A')}<br>"
+            f"Mission type: {meta.get('mission_type', 'N/A')}<br>"
+            f"Actors met: {actor_count}"
+        )
+
+    mission_trace = go.Scatter(
+        x=mission_x,
+        y=mission_y_vals,
+        mode="markers+text",
+        text=mission_labels,
+        textposition="middle left",
+        textfont=dict(color = "black", size = 11, family = "Arial"),
+        hoverinfo="text",
+        hovertext=mission_hover,
+        name="Mission reports",
+        marker=dict(
+            size=[24 + min(size * 0.15, 8) for size in mission_sizes],
+            color="#2563EB",
+            line=dict(width=1.5, color="white"),
+            opacity=0.95
+        )
+    )
+
+    # -----------------------------
+    # Category nodes
+    # -----------------------------
+    category_traces = []
+
+    for category in category_order:
+        node = f"CATEGORY::{category}"
+
+        if node not in pos:
+            continue
+
+        x, y = pos[node]
+        count = int(category_counts[category])
+        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+
+        category_traces.append(
+            go.Scatter(
+                x=[x],
+                y=[y],
+                mode="markers+text",
+                text=[f"<b>{short_label(category, 28)}</b>"],
+                textposition="middle center",
+                textfont=dict(
+                    color="black",
+                    size=10,
+                    family="Arial"
+                ),
+                hoverinfo="text",
+                hovertext=[
+                    f"<b>{category}</b><br>"
+                    f"Actors across selected missions: {count}"
+                ],
+                name=category,
+                marker=dict(
+                    size=22 + min(count * 0.35, 10),
+                    color=color,
+                    symbol="diamond",
+                    line=dict(width=1.5, color="white"),
+                    opacity=0.96
+                )
+            )
+        )
+
+    # -----------------------------
+    # Actor nodes
+    # -----------------------------
+    actor_traces = []
+
+    for category in category_order:
+        sub = category_actor_df[category_actor_df["actor_category"] == category]
+        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+
+        xs = []
+        ys = []
+        labels = []
+        hovers = []
+
+        for _, row in sub.iterrows():
+            actor_name = row["actor_name"]
+            actor_node = actor_positions.get((category, actor_name))
+
+            if actor_node not in pos:
+                continue
+
+            x, y = pos[actor_node]
+
+            xs.append(x)
+            ys.append(y)
+            labels.append(actor_name)
+            hovers.append(
+                f"<b>{actor_name}</b><br>"
+                f"Category: {category}<br>"
+                f"Missions: {row['missions']}"
+            )
+
+        actor_traces.append(
+            go.Scatter(
+                x=xs,
+                y=ys,
+                mode="markers+text",
+                text=labels,
+                textposition="middle right",
+                hoverinfo="text",
+                hovertext=hovers,
+                name=f"{category} actors",
+                marker=dict(
+                    size=13,
+                    color=color,
+                    opacity=0.75,
+                    line=dict(width=1, color="white")
+                ),
+                showlegend=False
+            )
+        )
+
+    fig = go.Figure(
+        data=edge_traces + [mission_trace] + category_traces + actor_traces
+    )
+
+    fig.update_layout(
+        title="Mission Actor Network",
+        height=720,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=30, r=80, t=70, b=30),
+        showlegend=False,
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False,
+            range=[-1.35, 1.45]
+        ),
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False,
+            range=[-1.05, 1.05]
+        ),
+        annotations=[
+            dict(x=-1.05, y=1.02, text="<b>Missions</b>", showarrow=False, font=dict(size=13)),
+            dict(x=0, y=1.02, text="<b>Categories</b>", showarrow=False, font=dict(size=13)),
+            dict(x=1.05, y=1.02, text="<b>Actors</b>", showarrow=False, font=dict(size=13)),
+        ]
+    )
+
+    return fig
+
+def make_mission_actor_category_network(missions_df, actors_df):
+    """
+    Network graph:
+    - Mission reports are blue circular nodes.
+    - Actor categories are orange diamond nodes.
+    - Edges connect each mission to the actor categories it engaged.
+    - Edge weight = number of actors in that category for that mission.
+    """
+
+    if missions_df.empty or actors_df.empty:
+        return None
+
+    df = actors_df.copy()
+
+    df["document_symbol"] = df["document_symbol"].fillna("Unknown mission")
+    df["mission_title"] = df["mission_title"].fillna(df["document_symbol"])
+    df["actor_category"] = df["actor_category"].fillna("Unknown")
+    df["actor_name"] = df["actor_name"].fillna("Unnamed actor")
+
+    edge_df = (
+        df.groupby(["document_symbol", "mission_title", "actor_category"])
+        .agg(
+            actor_count=("actor_name", "count"),
+            actor_names=("actor_name", lambda x: "<br>".join(sorted(x.astype(str).unique())[:12]))
+        )
+        .reset_index()
+    )
+
+    if edge_df.empty:
+        return None
+
+    G = nx.Graph()
+
+    mission_meta = missions_df.copy()
+
+    if "records_count" in mission_meta.columns:
+        mission_meta["records_count"] = pd.to_numeric(
+            mission_meta["records_count"],
+            errors="coerce"
+        ).fillna(0)
+    else:
+        mission_meta["records_count"] = 0
+
+    if "actors_count" in mission_meta.columns:
+        mission_meta["actors_count"] = pd.to_numeric(
+            mission_meta["actors_count"],
+            errors="coerce"
+        ).fillna(0)
+    else:
+        mission_meta["actors_count"] = 0
+
+    mission_lookup = (
+        mission_meta
+        .drop_duplicates(subset=["document_symbol"])
+        .set_index("document_symbol")
+        .to_dict(orient="index")
+    )
+
+    for _, row in edge_df.iterrows():
+        document_symbol = row["document_symbol"]
+        mission_title = row["mission_title"]
+        actor_category = row["actor_category"]
+        actor_count = int(row["actor_count"])
+        actor_names = row["actor_names"]
+
+        mission_node = f"MISSION::{document_symbol}"
+        category_node = f"CATEGORY::{actor_category}"
+
+        meta = mission_lookup.get(document_symbol, {})
+
+        G.add_node(
+            mission_node,
+            label=document_symbol,
+            node_type="Mission",
+            hover=(
+                f"<b>{document_symbol}</b><br>"
+                f"{mission_title}<br><br>"
+                f"Country/Region: {meta.get('mission_country_or_region', 'N/A')}<br>"
+                f"Mission type: {meta.get('mission_type', 'N/A')}<br>"
+                f"Records: {int(meta.get('records_count', 0))}<br>"
+                f"Actors met: {int(meta.get('actors_count', 0))}"
+            )
+        )
+
+        G.add_node(
+            category_node,
+            label=actor_category,
+            node_type="Actor Category",
+            hover=(
+                f"<b>{actor_category}</b><br>"
+                f"Actor category"
+            )
+        )
+
+        G.add_edge(
+            mission_node,
+            category_node,
+            weight=actor_count,
+            hover=(
+                f"<b>{document_symbol}</b> → <b>{actor_category}</b><br>"
+                f"Actors in category: {actor_count}<br><br>"
+                f"{actor_names}"
+            )
+        )
+
+    if len(G.nodes) == 0:
+        return None
+
+    mission_nodes = [
+        n for n, attrs in G.nodes(data=True)
+        if attrs["node_type"] == "Mission"
+    ]
+
+    actor_nodes = [
+        n for n, attrs in G.nodes(data=True)
+        if attrs["node_type"] == "Actor Category"
+    ]
+
+    pos = {}
+
+    # Missions on left
+    for i, node in enumerate(sorted(mission_nodes)):
+        pos[node] = (-1, -i)
+
+    # Actor categories on right
+    for i, node in enumerate(sorted(actor_nodes)):
+        pos[node] = (1, -i)
+
+    edge_x = []
+    edge_y = []
+
+    edge_hover_x = []
+    edge_hover_y = []
+    edge_hover_text = []
+
+    for source, target, attrs in G.edges(data=True):
+        x0, y0 = pos[source]
+        x1, y1 = pos[target]
+
+        edge_x.extend([x0, x1, None])
+        edge_y.extend([y0, y1, None])
+
+        edge_hover_x.append((x0 + x1) / 2)
+        edge_hover_y.append((y0 + y1) / 2)
+        edge_hover_text.append(attrs.get("hover", ""))
+
+    edge_trace = go.Scatter(
+        x=edge_x,
+        y=edge_y,
+        mode="lines",
+        line=dict(
+            width=1.6,
+            color="rgba(100, 116, 139, 0.35)"
+        ),
+        hoverinfo="none",
+        showlegend=False
+    )
+
+    edge_hover_trace = go.Scatter(
+        x=edge_hover_x,
+        y=edge_hover_y,
+        mode="markers",
+        marker=dict(
+            size=14,
+            color="rgba(0,0,0,0)"
+        ),
+        hoverinfo="text",
+        hovertext=edge_hover_text,
+        showlegend=False
+    )
+
+    mission_x = []
+    mission_y = []
+    mission_labels = []
+    mission_hover = []
+    mission_sizes = []
+
+    category_x = []
+    category_y = []
+    category_labels = []
+    category_hover = []
+    category_sizes = []
+
+    for node, attrs in G.nodes(data=True):
+        x, y = pos[node]
+        weighted_degree = G.degree(node, weight="weight")
+
+        if attrs["node_type"] == "Mission":
+            mission_x.append(x)
+            mission_y.append(y)
+            mission_labels.append(attrs["label"])
+            mission_hover.append(attrs["hover"])
+            mission_sizes.append(34 + min(weighted_degree * 1.4, 36))
+
+        else:
+            category_x.append(x)
+            category_y.append(y)
+            category_labels.append(attrs["label"])
+            category_hover.append(attrs["hover"])
+            category_sizes.append(24 + min(weighted_degree * 1.1, 34))
+
+    mission_trace = go.Scatter(
+        x=mission_x,
+        y=mission_y,
+        mode="markers+text",
+        text=mission_labels,
+        textposition="top center",
+        hoverinfo="text",
+        hovertext=mission_hover,
+        name="Mission reports",
+        marker=dict(
+            size=mission_sizes,
+            color="#2563EB",
+            line=dict(width=2, color="white"),
+            opacity=0.95
+        )
+    )
+
+    category_trace = go.Scatter(
+        x=category_x,
+        y=category_y,
+        mode="markers+text",
+        text=category_labels,
+        textposition="bottom center",
+        hoverinfo="text",
+        hovertext=category_hover,
+        name="Actor categories",
+        marker=dict(
+            size=category_sizes,
+            color="#F97316",
+            symbol="diamond",
+            line=dict(width=2, color="white"),
+            opacity=0.92
+        )
+    )
+
+    fig = go.Figure(
+        data=[
+            edge_trace,
+            edge_hover_trace,
+            mission_trace,
+            category_trace
+        ]
+    )
+
+    fig.update_layout(
+        title="Mission–Actor Category Network",
+        height=720,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=10, r=10, t=70, b=10),
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False
+        ),
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False
+        )
     )
 
     return fig
@@ -1917,7 +2992,109 @@ def render_reports_dashboard():
     # --------------------------------------------------
 
     with actors_tab:
+
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="section-title">Interactive Mission Actor Network</div>',
+            unsafe_allow_html=True
+        )
+
+        network_missions = (
+            filtered_actors["document_symbol"]
+            .dropna()
+            .drop_duplicates()
+            .tolist()
+        )
+
+        if not network_missions:
+            st.info("No actor network data available for the current filters.")
+        else:
+            default_network_missions = network_missions[:1]
+
+            selected_network_missions = st.multiselect(
+                "Select up to 5 missions for the actor network",
+                options=network_missions,
+                default=default_network_missions,
+                max_selections=5,
+                key="pyvis_actor_network_mission_select"
+            )
+
+            max_actors_per_category = st.slider(
+                "Maximum actors shown per category",
+                min_value=3,
+                max_value=10,
+                value=5,
+                step=1,
+                key="pyvis_max_actors_per_category"
+            )
+
+            network_html = make_pyvis_actor_network_html(
+                filtered_missions,
+                filtered_actors,
+                selected_network_missions,
+                max_actors_per_category=max_actors_per_category
+            )
+
+            if network_html is not None:
+                components.html(
+                    network_html,
+                    height=820,
+                    scrolling=True
+                )
+
+                st.caption(
+                    "Drag nodes to rearrange the network. Missions appear on the left, "
+                    "actor categories in the center, and selected actors on the right. "
+                    "Hover over nodes or edges for full details."
+                )
+            else:
+                st.info("Select at least one mission with actor data to display the network.")
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
         c1, c2 = st.columns(2)
+
+        with c1:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+            if not filtered_actors.empty:
+                st.plotly_chart(
+                    make_actor_chart(filtered_actors),
+                    use_container_width=True,
+                    key="actor_category_bar_chart"
+                )
+            else:
+                st.info("No actor data available.")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c2:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+            if not filtered_activities.empty:
+                st.plotly_chart(
+                    make_activity_chart(filtered_activities),
+                    use_container_width=True,
+                    key="activity_type_chart"
+                )
+            else:
+                st.info("No activity data available.")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+            if not filtered_actors.empty:
+                st.plotly_chart(make_actor_chart(filtered_actors), width='content', key = "networkactors")
+            else:
+                st.info("No actor data available.")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c2:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+            if not filtered_activities.empty:
+                st.plotly_chart(make_activity_chart(filtered_activities), width='content', key = "activitychart")
+            else:
+                st.info("No activity data available.")
+            st.markdown("</div>", unsafe_allow_html=True)
 
         with c1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
