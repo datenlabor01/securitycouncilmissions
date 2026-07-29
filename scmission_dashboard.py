@@ -20,9 +20,9 @@ st.set_page_config(
 # File paths
 # --------------------------------------------------
 
-TOR_FILE = tor_output_with_regions.json
+TOR_FILE = "tor_output_with_regions.json"
 
-REPORTS_FILE = report_output.json
+REPORTS_FILE = "report_output.json"
 
 # --------------------------------------------------
 # Custom CSS
