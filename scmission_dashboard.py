@@ -20,8 +20,9 @@ st.set_page_config(
 # File paths
 # --------------------------------------------------
 
-TOR_FILE = "missions_tor.txt"
-REPORTS_FILE = "missions_report.txt"
+TOR_FILE = "tor_output_with_regions.json"
+
+REPORTS_FILE = "report_output.json"
 
 # --------------------------------------------------
 # Custom CSS
@@ -251,7 +252,13 @@ def flatten_missions(data):
 
             rows.append({
                 "Mission": mission.get("mission_title"),
-                "Country/Region": mission.get("mission_country_or_region"),
+                "Country": mission.get("mission_country_or_region"),
+                "Regions": mission.get("regions", []),
+                "Primary Region": (
+                    mission.get("regions", [None])[0]
+                    if mission.get("regions")
+                    else None
+                ),
                 "Document Symbol": mission.get("document_symbol"),
                 "Document Date": mission.get("document_date"),
                 "Objective ID": obj.get("objective_id"),
@@ -281,7 +288,8 @@ def build_mission_level_df(df):
         df.groupby(
             [
                 "Mission",
-                "Country/Region",
+                "Country",
+                "Primary Region",
                 "Document Symbol",
                 "Document Date",
                 "Document Date Parsed",
@@ -359,7 +367,7 @@ def build_map_df(mission_df):
     rows = []
 
     for _, row in mission_df.iterrows():
-        countries = split_country_region(row["Country/Region"])
+        countries = split_country_region(row["Country"])
 
         for country in countries:
             coords = country_coordinates.get(country)
@@ -368,7 +376,6 @@ def build_map_df(mission_df):
                 rows.append({
                     "Country": country,
                     "Mission": row["Mission"],
-                    "Country/Region": row["Country/Region"],
                     "Document Symbol": row["Document Symbol"],
                     "Year": row["Year"],
                     "Objectives": row["Objectives"],
@@ -399,20 +406,41 @@ def render_tor_dashboard():
     st.sidebar.title("Filters")
     st.sidebar.markdown("Use the filters below to explore Security Council field mission objectives.")
 
-    country_options = sorted(df["Country/Region"].dropna().unique())
+    country_options = sorted(df["Country"].dropna().unique())
+    region_options = sorted(
+        {
+            region
+            for regions in df["Regions"]
+            for region in regions
+        }
+    )
 
     selected_countries = st.sidebar.multiselect(
-        "Country or Region",
+        "Countries",
         options=country_options,
         default=[],
-        placeholder="All countries / regions",
+        placeholder="All countries",
         key="tor_country_filter"
     )
 
+    selected_regions = st.sidebar.multiselect(
+        "Region",
+        options=region_options,
+        default=[],
+        key="tor_region_filter"
+    )
+
     if selected_countries:
-        country_filtered_df = df[df["Country/Region"].isin(selected_countries)]
+        country_filtered_df = df[df["Country"].isin(selected_countries)]
     else:
         country_filtered_df = df.copy()
+
+    if selected_regions:
+        country_filtered_df = country_filtered_df[
+            country_filtered_df["Regions"].apply(
+                lambda x: any(r in x for r in selected_regions)
+            )
+        ]
 
     dynamic_theme_options = sorted(
         country_filtered_df["Primary Theme"].dropna().unique()
@@ -459,13 +487,13 @@ def render_tor_dashboard():
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
     with kpi1:
-        metric_card("Missions", filtered_df["Mission"].nunique())
+        metric_card("Missions (with written ToRs)", filtered_df["Mission"].nunique())
 
     with kpi2:
         metric_card("Objectives", len(filtered_df))
 
     with kpi3:
-        metric_card("Countries / Regions", filtered_df["Country/Region"].nunique())
+        metric_card("Countries", filtered_df["Country"].nunique())
 
     with kpi4:
         metric_card("Primary Themes", filtered_df["Primary Theme"].nunique())
@@ -485,28 +513,33 @@ def render_tor_dashboard():
         temporal_df = (
             mission_df
             .dropna(subset=["Year"])
-            .groupby("Year")
+            .groupby(["Year", "Primary Region"])
             .agg(
                 Missions=("Mission", "nunique"),
                 Objectives=("Objectives", "sum")
             )
             .reset_index()
-            .sort_values("Year")
         )
 
-        fig_time = px.line(
+        REGION_COLORS = {
+            "Africa": "#2563EB",
+            "Asia": "#14B8A6",
+            "Europe": "#8B5CF6",
+            "Americas": "#F97316",
+            "Middle East": "#DC2626"
+        }
+
+        fig_time = px.area(
             temporal_df,
             x="Year",
             y="Missions",
-            markers=True,
-            text="Missions"
+            color="Primary Region",
+            color_discrete_map=REGION_COLORS
         )
 
+
         fig_time.update_traces(
-            line=dict(width=4, color="#1f77b4"),
-            marker=dict(size=10),
-            textposition="top center"
-        )
+            opacity=0.45)
 
         fig_time.update_layout(
             height=430,
@@ -518,7 +551,7 @@ def render_tor_dashboard():
             hovermode="x unified"
         )
 
-        st.plotly_chart(fig_time, use_container_width=True)
+        st.plotly_chart(fig_time, width='content')
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -587,7 +620,7 @@ def render_tor_dashboard():
                 )
             )
 
-            st.plotly_chart(fig_map, use_container_width=True)
+            st.plotly_chart(fig_map, width='content')
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -633,7 +666,7 @@ def render_tor_dashboard():
             marker_line_width=0
         )
 
-        st.plotly_chart(fig_theme, use_container_width=True)
+        st.plotly_chart(fig_theme, width='content')
         st.markdown("</div>", unsafe_allow_html=True)
 
     with chart_col2:
@@ -669,7 +702,7 @@ def render_tor_dashboard():
             )
         )
 
-        st.plotly_chart(fig_type, use_container_width=True)
+        st.plotly_chart(fig_type, width='content')
         st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------
@@ -686,6 +719,7 @@ def render_tor_dashboard():
             filtered_df["Verb"]
             .fillna("Unknown")
             .str.strip()
+            .str.lower()
             .value_counts()
             .reset_index()
         )
@@ -716,7 +750,7 @@ def render_tor_dashboard():
             marker_line_width=0
         )
 
-        st.plotly_chart(fig_verbs, use_container_width=True)
+        st.plotly_chart(fig_verbs, width='content')
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -726,7 +760,7 @@ def render_tor_dashboard():
 
         verb_type_df = (
             filtered_df
-            .assign(Verb=filtered_df["Verb"].fillna("Unknown").str.strip())
+            .assign(Verb=filtered_df["Verb"].fillna("Unknown").str.strip().str.lower())
             .groupby(["Objective Type", "Verb"])
             .size()
             .reset_index(name="Objectives")
@@ -746,7 +780,7 @@ def render_tor_dashboard():
             paper_bgcolor="white"
         )
 
-        st.plotly_chart(fig_verb_type, use_container_width=True)
+        st.plotly_chart(fig_verb_type, width='content')
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -763,7 +797,7 @@ def render_tor_dashboard():
         [
             [
                 "Mission",
-                "Country/Region",
+                "Country",
                 "Document Symbol",
                 "Document Date",
                 "Objectives",
@@ -775,7 +809,7 @@ def render_tor_dashboard():
 
     st.dataframe(
         mission_summary,
-        use_container_width=True,
+        width='content',
         hide_index=True
     )
 
@@ -813,7 +847,7 @@ def render_tor_dashboard():
         yaxis_title=None
     )
 
-    st.plotly_chart(fig_heatmap, use_container_width=True)
+    st.plotly_chart(fig_heatmap, width='content')
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -845,7 +879,7 @@ def render_tor_dashboard():
 
     display_columns = [
         "Mission",
-        "Country/Region",
+        "Country",
         "Document Symbol",
         "Document Date",
         "Objective ID",
@@ -858,7 +892,7 @@ def render_tor_dashboard():
 
     st.dataframe(
         table_df[display_columns],
-        use_container_width=True,
+        width='content',
         hide_index=True,
         height=520
     )
@@ -1188,7 +1222,7 @@ def make_report_timeline(missions_df):
     fig = px.scatter(
         df,
         x="document_date",
-        y="mission_country_or_region",
+        y="document_symbol",
         size="records_count",
         color="overall_character",
         hover_name="mission_title",
@@ -1312,6 +1346,49 @@ def make_activity_chart(activities_df):
 
     return fig
 
+def make_parallel(records_df):
+    df = records_df.copy()
+
+    cols = [
+        "report_record_type",
+        "primary_theme",
+        "action_orientation"
+    ]
+
+    for col in cols:
+        df[col] = df[col].fillna("Unknown")
+
+    # Keep only top themes
+    top_themes = (
+        df["primary_theme"]
+        .value_counts()
+        .head(10)
+        .index
+    )
+
+    df["primary_theme"] = df["primary_theme"].where(
+        df["primary_theme"].isin(top_themes),
+        "Other"
+    )
+
+    fig = px.parallel_categories(
+        df,
+        dimensions=[
+            "report_record_type",
+            "primary_theme",
+            "action_orientation"
+        ],
+        color=df["primary_theme"].astype("category").cat.codes,
+        color_continuous_scale=px.colors.sequential.Blues
+    )
+
+    fig.update_layout(
+        height=650,
+        paper_bgcolor="white",
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+
+    return fig
 
 def make_sankey(records_df):
     df = records_df.copy()
@@ -1356,9 +1433,9 @@ def make_sankey(records_df):
         go.Sankey(
             arrangement="snap",
             node=dict(
-                pad=18,
-                thickness=18,
-                line=dict(color="rgba(15,23,42,0.25)", width=0.5),
+                pad=25,
+                thickness=70,
+                line=dict(color="rgba(15,23,42,0.5)", width=1.5),
                 label=labels,
                 color="#7DD3FC",
             ),
@@ -1366,7 +1443,7 @@ def make_sankey(records_df):
                 source=sources,
                 target=targets,
                 value=values,
-                color="rgba(37, 99, 235, 0.18)",
+                color="rgba(37, 99, 235, 0.08)",
             ),
         )
     )
@@ -1589,7 +1666,7 @@ def render_records_explorer(records_df):
 
     st.dataframe(
         df[display_cols],
-        use_container_width=True,
+        width='content',
         hide_index=True,
         height=520,
     )
@@ -1686,7 +1763,7 @@ def render_reports_dashboard():
         with c1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_records.empty:
-                st.plotly_chart(make_report_theme_bar(filtered_records), use_container_width=True)
+                st.plotly_chart(make_report_theme_bar(filtered_records), width='content', key = "1")
             else:
                 st.info("No records available for the current filters.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1694,7 +1771,7 @@ def render_reports_dashboard():
         with c2:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_records.empty:
-                st.plotly_chart(make_record_type_donut(filtered_records), use_container_width=True)
+                st.plotly_chart(make_record_type_donut(filtered_records), width='content', key = "2")
             else:
                 st.info("No record-type data available.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1705,7 +1782,7 @@ def render_reports_dashboard():
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             fig = make_report_timeline(filtered_missions)
             if fig is not None:
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='content')
             else:
                 st.info("No mission dates available for timeline.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1713,7 +1790,7 @@ def render_reports_dashboard():
         with c4:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_records.empty:
-                st.plotly_chart(make_concern_chart(filtered_records), use_container_width=True)
+                st.plotly_chart(make_concern_chart(filtered_records), width='content')
             else:
                 st.info("No concern data available.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1728,7 +1805,7 @@ def render_reports_dashboard():
         with c1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_records.empty:
-                st.plotly_chart(make_action_treemap(filtered_records), use_container_width=True)
+                st.plotly_chart(make_action_treemap(filtered_records), width='content')
             else:
                 st.info("No analytical records available.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1737,14 +1814,14 @@ def render_reports_dashboard():
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             fig = make_theme_heatmap(filtered_records)
             if fig is not None:
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='content')
             else:
                 st.info("No heatmap data available.")
             st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         if not filtered_records.empty:
-            st.plotly_chart(make_sankey(filtered_records), use_container_width=True)
+            st.plotly_chart(make_sankey(filtered_records), width='content')
         else:
             st.info("No Sankey data available.")
         st.markdown("</div>", unsafe_allow_html=True)
@@ -1790,13 +1867,10 @@ def render_reports_dashboard():
                 c1, c2 = st.columns(2)
 
                 with c1:
-                    st.plotly_chart(make_record_type_donut(mission_records), use_container_width=True,
-                                    key=f"reports_record_type_donut_deep_dive_{selected_symbol}")
+                    st.plotly_chart(make_record_type_donut(mission_records), width='content')
 
                 with c2:
-                    st.plotly_chart(make_concern_chart(mission_records),
-                                    use_container_width=True,
-                                    key=f"reports_concern_chart_deep_dive_{selected_symbol}")
+                    st.plotly_chart(make_concern_chart(mission_records), width='content')
 
                 cols = [
                     "record_id",
@@ -1809,9 +1883,17 @@ def render_reports_dashboard():
 
                 st.dataframe(
                     mission_records[cols],
+                    column_config={
+                        "record_id": st.column_config.NumberColumn(width="small"),
+                        "report_record_type": st.column_config.TextColumn(width="small"),
+                        "primary_theme": st.column_config.TextColumn(width="small"),
+                        "level_of_concern": st.column_config.TextColumn(width="small"),
+                        "action_orientation": st.column_config.TextColumn(width="small"),
+                        "record_text": st.column_config.TextColumn(width="large"),
+                    },
                     use_container_width=True,
                     hide_index=True,
-                    height=420,
+                    height=500,
                 )
             else:
                 st.info("No records available for this mission under the current filters.")
@@ -1840,7 +1922,7 @@ def render_reports_dashboard():
         with c1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_actors.empty:
-                st.plotly_chart(make_actor_chart(filtered_actors), use_container_width=True)
+                st.plotly_chart(make_actor_chart(filtered_actors), width='content')
             else:
                 st.info("No actor data available.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1848,7 +1930,7 @@ def render_reports_dashboard():
         with c2:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_activities.empty:
-                st.plotly_chart(make_activity_chart(filtered_activities), use_container_width=True)
+                st.plotly_chart(make_activity_chart(filtered_activities), width='content')
             else:
                 st.info("No activity data available.")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -1883,7 +1965,7 @@ def render_reports_dashboard():
                 paper_bgcolor="white",
             )
 
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='content')
         else:
             st.info("No actor matrix available.")
 
@@ -1919,7 +2001,7 @@ def render_reports_dashboard():
                 paper_bgcolor="white",
             )
 
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='content')
         else:
             st.info("No activity matrix available.")
 
@@ -1932,22 +2014,22 @@ def render_reports_dashboard():
     with data_tab:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Mission Metadata</div>', unsafe_allow_html=True)
-        st.dataframe(filtered_missions, use_container_width=True, hide_index=True)
+        st.dataframe(filtered_missions, width='content', hide_index=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Activities</div>', unsafe_allow_html=True)
-        st.dataframe(filtered_activities, use_container_width=True, hide_index=True)
+        st.dataframe(filtered_activities, width='content', hide_index=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Actors Met</div>', unsafe_allow_html=True)
-        st.dataframe(filtered_actors, use_container_width=True, hide_index=True)
+        st.dataframe(filtered_actors, width='content', hide_index=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Substantive Records</div>', unsafe_allow_html=True)
-        st.dataframe(filtered_records, use_container_width=True, hide_index=True)
+        st.dataframe(filtered_records, width='content', hide_index=True)
 
         export_payload = {
             "missions": filtered_missions.to_dict(orient="records"),
