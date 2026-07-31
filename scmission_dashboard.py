@@ -1037,6 +1037,8 @@ def flatten_reports(reports):
                     "record_id": rec.get("record_id"),
                     "record_text": rec.get("record_text"),
                     "verb": rec.get("verb"),
+                    "mission_type": analytics.get("mission_type"),
+                    "mission_subtype": analytics.get("mission_subtype"),
                     "report_record_type": rec.get("report_record_type"),
                     "primary_theme": rec.get("primary_theme"),
                     "secondary_themes": rec.get("secondary_themes", []),
@@ -1151,7 +1153,7 @@ def make_record_type_donut(records_df):
         height=430,
         margin=dict(l=20, r=20, t=60, b=20),
         paper_bgcolor="white",
-        legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="left", x=1.02),
+        showlegend=False
     )
 
     fig.update_traces(textinfo="percent+label")
@@ -1387,39 +1389,28 @@ def make_report_timeline(missions_df):
 
     return fig
 
-
-def make_theme_heatmap(records_df):
-    if records_df.empty:
+def make_theme_sunburst(reports_df):
+    if reports_df.empty:
         return None
 
-    df = (
-        records_df.groupby(["document_symbol", "primary_theme"], dropna=False)
-        .size()
-        .reset_index(name="count")
+    df = reports_df.copy()
+
+    fig = px.sunburst(
+        df,
+        path=["mission_type",
+            "mission_subtype"
+        ],
+        title="Theme Distribution by Secondary Theme and Actor",
     )
 
-    pivot = df.pivot_table(
-        index="document_symbol",
-        columns="primary_theme",
-        values="count",
-        fill_value=0,
-        aggfunc="sum",
-    )
-
-    fig = px.imshow(
-        pivot,
-        text_auto=True,
-        aspect="auto",
-        color_continuous_scale="Blues",
-        title="Theme Concentration by Mission Report",
+    fig.update_traces(
+        textinfo="label+percent parent"
     )
 
     fig.update_layout(
-        height=max(380, 70 + 42 * len(pivot.index)),
-        margin=dict(l=20, r=20, t=60, b=80),
+        height=700,
+        margin=dict(l=20, r=20, t=60, b=20),
         paper_bgcolor="white",
-        xaxis_title=None,
-        yaxis_title=None,
     )
 
     return fig
@@ -3155,18 +3146,18 @@ def render_reports_dashboard():
                 st.info("No analytical records available.")
             st.markdown("</div>", unsafe_allow_html=True)
 
-        with c2:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            fig = make_theme_heatmap(filtered_records)
-            if fig is not None:
-                st.plotly_chart(fig, width='content')
-            else:
-                st.info("No heatmap data available.")
-            st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        fig = make_theme_sunburst(filtered_records)
+        if fig is not None:
+            st.plotly_chart(fig, width='stretch')
+        else:
+            st.info("No heatmap data available.")
+        st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         if not filtered_records.empty:
-            st.plotly_chart(make_sankey(filtered_records), width='content')
+            st.plotly_chart(make_sankey(filtered_records), width='stretch')
         else:
             st.info("No Sankey data available.")
         st.markdown("</div>", unsafe_allow_html=True)
