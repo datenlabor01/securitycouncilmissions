@@ -26,7 +26,7 @@ st.set_page_config(
 
 TOR_FILE = "tor_output_with_regions.json"
 
-REPORTS_FILE = "report_output.json"
+REPORTS_FILE = "report_output_with_regions.json"
 
 # --------------------------------------------------
 # Custom CSS
@@ -512,7 +512,7 @@ def render_tor_dashboard():
 
     with time_col:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">Missions Over Time</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">Mission Objectives Over Time</div>', unsafe_allow_html=True)
 
         temporal_df = (
             mission_df
@@ -536,14 +536,20 @@ def render_tor_dashboard():
         fig_time = px.area(
             temporal_df,
             x="Year",
-            y="Missions",
+            y="Objectives",
             color="Primary Region",
-            color_discrete_map=REGION_COLORS
+            color_discrete_map=REGION_COLORS,
+            hover_data={
+                "Year": True,
+                "Primary Region": True,
+                "Objectives": True,
+                "Missions": True
+            }
         )
 
-
         fig_time.update_traces(
-            opacity=0.45)
+            opacity=0.45
+        )
 
         fig_time.update_layout(
             height=430,
@@ -551,7 +557,7 @@ def render_tor_dashboard():
             paper_bgcolor="white",
             plot_bgcolor="white",
             xaxis_title=None,
-            yaxis_title="Number of Missions",
+            yaxis_title="Number of Objectives",
             hovermode="x unified"
         )
 
@@ -966,6 +972,13 @@ ACTION_COLORS = {
     "Not Applicable": "#CBD5E1",
 }
 
+REGION_COLORS = {
+    "Africa": "#2563EB",
+    "Asia": "#14B8A6",
+    "Europe": "#8B5CF6",
+    "Americas": "#F97316",
+    "Middle East": "#DC2626",
+}
 
 @st.cache_data
 def load_report_json(file_path: str):
@@ -996,6 +1009,7 @@ def flatten_reports(reports):
                 "document_date": report.get("document_date"),
                 "mission_country_or_region": report.get("mission_country_or_region"),
                 "related_tor_document_symbol": report.get("related_tor_document_symbol"),
+                "regions": ", ".join(report.get("regions", [])),
                 "mission_type": analytics.get("mission_type"),
                 "mission_subtype": analytics.get("mission_subtype"),
                 "field_exposure": analytics.get("field_exposure"),
@@ -1143,6 +1157,46 @@ def make_record_type_donut(records_df):
     fig.update_traces(textinfo="percent+label")
     return fig
 
+def make_mission_metadata_chart(
+    missions_df,
+    column,
+    title
+):
+
+    df = (
+        missions_df
+        .groupby([column, "regions"], dropna=False)
+        .size()
+        .reset_index(name='count')
+    )
+
+    fig = px.bar(
+        df.sort_values("count"),
+        x="count",
+        y=column,
+        orientation="h",
+        color_discrete_map=REGION_COLORS,
+        color="regions",
+        text="count",
+        title=title
+    )
+
+    fig.update_layout(
+        height=350,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=10, r=10, t=60, b=10),
+        xaxis_title="Missions",
+        yaxis_title=None,
+        showlegend=False,
+        coloraxis_showscale=False
+    )
+
+    fig.update_traces(
+        textposition="outside"
+    )
+
+    return fig
 
 def make_concern_chart(records_df):
     df = (
@@ -1185,6 +1239,87 @@ def make_concern_chart(records_df):
     fig.update_traces(textposition="outside")
     return fig
 
+def make_regional_engagement_df(missions_df):
+
+    return (
+        missions_df
+        .groupby("regions", dropna=False)
+        .agg(
+            Missions=("document_symbol", "nunique"),
+            Actors=("actors_count", "sum"),
+            Activities=("activities_count", "sum"),
+            Records=("records_count", "sum")
+        )
+        .reset_index()
+    )
+
+def make_region_actors_bubble(missions_df):
+
+    df = make_regional_engagement_df(missions_df)
+
+    fig = px.scatter(
+        df,
+        x="regions",
+        y="Actors",
+        size="Actors",
+        color="Actors",
+        text="Actors",
+        hover_data={
+            "Missions": True,
+            "Activities": True,
+            "Records": True
+        },
+        color_continuous_scale="Purples",
+        title="Actors Met by Region",
+        size_max=80
+    )
+
+    fig.update_traces(textposition="top center")
+
+    fig.update_layout(
+        height=420,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        xaxis_title=None,
+        yaxis_title="Actors Met",
+        coloraxis_showscale=False
+    )
+
+    return fig
+
+def make_region_activities_bubble(missions_df):
+
+    df = make_regional_engagement_df(missions_df)
+
+    fig = px.scatter(
+        df,
+        x="regions",
+        y="Activities",
+        size="Activities",
+        color="Activities",
+        text="Activities",
+        hover_data={
+            "Missions": True,
+            "Actors": True,
+            "Records": True
+        },
+        color_continuous_scale="Greens",
+        title="Activities by Region",
+        size_max=80
+    )
+
+    fig.update_traces(textposition="top center")
+
+    fig.update_layout(
+        height=420,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        xaxis_title=None,
+        yaxis_title="Activities Conducted",
+        coloraxis_showscale=False
+    )
+
+    return fig
 
 def make_action_treemap(records_df):
     df = (
@@ -1245,6 +1380,7 @@ def make_report_timeline(missions_df):
         margin=dict(l=20, r=20, t=60, b=20),
         xaxis_title=None,
         yaxis_title=None,
+        showlegend=False,
         paper_bgcolor="white",
         plot_bgcolor="white",
     )
@@ -1288,6 +1424,77 @@ def make_theme_heatmap(records_df):
 
     return fig
 
+def make_actors_met_chart(missions_df):
+
+    df = (
+        missions_df[
+            ["document_symbol", "actors_count"]
+        ]
+        .sort_values("actors_count", ascending=True)
+    )
+
+    fig = px.bar(
+        df,
+        x="actors_count",
+        y="document_symbol",
+        orientation="h",
+        color="actors_count",
+        text="actors_count",
+        color_continuous_scale="Purples",
+        title="Actors Met by Mission"
+    )
+
+    fig.update_layout(
+        height=420,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=20, r=20, t=60, b=20),
+        xaxis_title="Actors Met",
+        yaxis_title=None,
+        coloraxis_showscale=False
+    )
+
+    fig.update_traces(
+        textposition="outside"
+    )
+
+    return fig
+
+def make_activities_count_chart(missions_df):
+
+    df = (
+        missions_df[
+            ["document_symbol", "activities_count"]
+        ]
+        .sort_values("activities_count", ascending=True)
+    )
+
+    fig = px.bar(
+        df,
+        x="activities_count",
+        y="document_symbol",
+        orientation="h",
+        color="activities_count",
+        text="activities_count",
+        color_continuous_scale="Greens",
+        title="Activities Conducted by Mission"
+    )
+
+    fig.update_layout(
+        height=420,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(l=20, r=20, t=60, b=20),
+        xaxis_title="Activities",
+        yaxis_title=None,
+        coloraxis_showscale=False
+    )
+
+    fig.update_traces(
+        textposition="outside"
+    )
+
+    return fig
 
 def make_actor_chart(actors_df):
     df = (
@@ -2851,6 +3058,28 @@ def render_reports_dashboard():
                 st.info("No record-type data available.")
             st.markdown("</div>", unsafe_allow_html=True)
 
+        c5, c6 = st.columns(2)
+
+        with c5:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            st.plotly_chart(
+                make_region_actors_bubble(filtered_missions),
+                width='content'
+            )
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c6:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            st.plotly_chart(
+                make_region_activities_bubble(filtered_missions),
+                width='content'
+            )
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
         c3, c4 = st.columns([1, 1])
 
         with c3:
@@ -2868,6 +3097,47 @@ def render_reports_dashboard():
                 st.plotly_chart(make_concern_chart(filtered_records), width='content')
             else:
                 st.info("No concern data available.")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        c7, c8, c9 = st.columns(3)
+
+        with c7:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_mission_metadata_chart(
+                filtered_missions,
+                "mission_type",
+                "Mission Type"
+            )
+
+            st.plotly_chart(fig, width='content')
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c8:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_mission_metadata_chart(
+                filtered_missions,
+                "field_exposure",
+                "Field Exposure"
+            )
+
+            st.plotly_chart(fig, width='content')
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c9:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_mission_metadata_chart(
+                filtered_missions,
+                "overall_character",
+                "Mission Character"
+            )
+
+            st.plotly_chart(fig, width='content')
+
             st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------
@@ -3057,32 +3327,6 @@ def render_reports_dashboard():
         with c1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_actors.empty:
-                st.plotly_chart(
-                    make_actor_chart(filtered_actors),
-                    use_container_width=True,
-                    key="actor_category_bar_chart"
-                )
-            else:
-                st.info("No actor data available.")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        with c2:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            if not filtered_activities.empty:
-                st.plotly_chart(
-                    make_activity_chart(filtered_activities),
-                    use_container_width=True,
-                    key="activity_type_chart"
-                )
-            else:
-                st.info("No activity data available.")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            if not filtered_actors.empty:
                 st.plotly_chart(make_actor_chart(filtered_actors), width='content', key = "networkactors")
             else:
                 st.info("No actor data available.")
@@ -3092,22 +3336,6 @@ def render_reports_dashboard():
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
             if not filtered_activities.empty:
                 st.plotly_chart(make_activity_chart(filtered_activities), width='content', key = "activitychart")
-            else:
-                st.info("No activity data available.")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        with c1:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            if not filtered_actors.empty:
-                st.plotly_chart(make_actor_chart(filtered_actors), width='content')
-            else:
-                st.info("No actor data available.")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        with c2:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            if not filtered_activities.empty:
-                st.plotly_chart(make_activity_chart(filtered_activities), width='content')
             else:
                 st.info("No activity data available.")
             st.markdown("</div>", unsafe_allow_html=True)
