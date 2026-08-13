@@ -3,8 +3,8 @@ from pathlib import Path
 # --------------------------------------------------
 # File Paths
 # --------------------------------------------------
-TOR_FILE = r"C:\Users\PKOULOUBAN\OneDrive - United Nations\Documents\PycharmProjects\Security Council Missions\tor_output_with_regions.json"
-REPORTS_FILE = r"C:\Users\PKOULOUBAN\OneDrive - United Nations\Documents\PycharmProjects\Security Council Missions\SecurityCouncilAnalysis_MissionReports_v1.json"
+TOR_FILE = "tor_output_with_regions.json"
+REPORTS_FILE = "SecurityCouncilAnalysis_MissionReports_v1.json"
 
 # --------------------------------------------------
 # Custom CSS
