@@ -6,3 +6,4 @@ networkx
 pyvis
 streamlit-agraph
 networkx
+pyvis.network
