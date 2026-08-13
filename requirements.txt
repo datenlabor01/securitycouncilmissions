@@ -5,3 +5,4 @@ numpy
 networkx
 pyvis
 streamlit-agraph
+networkx
