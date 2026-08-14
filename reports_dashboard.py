@@ -142,7 +142,6 @@ def make_report_theme_bar(records_df):
     fig.update_traces(textposition="outside", cliponaxis=False)
     return fig
 
-
 def make_record_type_donut(records_df):
     df = records_df["report_record_type"].fillna("Unknown").value_counts().reset_index()
     df.columns = ["report_record_type", "count"]
@@ -430,7 +429,7 @@ def make_primary_theme_temporal_bar(
         bargap=0.22,
         bargroupgap=0.04,
         hovermode="closest",
-        xaxis_title="5-Year Period",
+        xaxis_title=None,
         yaxis_title="Records",
         margin=dict(
             l=20,
@@ -439,6 +438,12 @@ def make_primary_theme_temporal_bar(
             b=70
         ),
         font=dict(color="#111827")
+    )
+
+    fig.update_xaxes(
+        title_text="",
+        showgrid=False,
+        tickangle=-35
     )
 
     fig.update_xaxes(
@@ -574,6 +579,289 @@ def make_actor_category_temporal_bar(
         rangemode="tozero",
         gridcolor="rgba(148,163,184,0.25)",
         zerolinecolor="rgba(148,163,184,0.45)"
+    )
+
+    return fig
+
+ACTOR_DIVERSITY_MAP = {
+    "Low": 1,
+    "Moderate": 2,
+    "High": 3
+}
+
+
+def make_actor_diversity_temporal_line(missions_df, bucket_size=5):
+    df = missions_df.copy()
+
+    if df.empty:
+        return None
+
+    required_cols = [
+        "document_symbol",
+        "document_date",
+        "regions",
+        "actor_diversity_assessment"
+    ]
+
+    for col in required_cols:
+        if col not in df.columns:
+            return None
+
+    df = _explode_regions(df)
+
+    df["document_date"] = pd.to_datetime(
+        df["document_date"],
+        errors="coerce"
+    )
+
+    df = df.dropna(subset=["document_date"])
+
+    if df.empty:
+        return None
+
+    df["actor_diversity_assessment"] = (
+        df["actor_diversity_assessment"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown",
+            "nan": "Unknown",
+            "None": "Unknown"
+        })
+    )
+
+    df["year"] = df["document_date"].dt.year.astype(int)
+
+    df["year_bucket_start"] = (
+        df["year"] // bucket_size
+    ) * bucket_size
+
+    df["year_bucket_end"] = (
+        df["year_bucket_start"] + bucket_size - 1
+    )
+
+    df["year_bucket"] = (
+        df["year_bucket_start"].astype(str)
+        + "-"
+        + df["year_bucket_end"].astype(str)
+    )
+
+    # One mission should count once per region and period
+    base_df = df.drop_duplicates(
+        subset=[
+            "year_bucket",
+            "regions",
+            "document_symbol"
+        ]
+    )
+
+    trend_df = (
+        base_df
+        .groupby(
+            [
+                "year_bucket_start",
+                "year_bucket",
+                "regions"
+            ],
+            dropna=False
+        )
+        .agg(
+            Mission_Reports=("document_symbol", "nunique")
+        )
+        .reset_index()
+        .sort_values(["regions", "year_bucket_start"])
+    )
+
+    if trend_df.empty:
+        return None
+
+    # Assessment category breakdown for hover
+    breakdown_df = (
+        df
+        .drop_duplicates(
+            subset=[
+                "year_bucket",
+                "regions",
+                "document_symbol",
+                "actor_diversity_assessment"
+            ]
+        )
+        .groupby(
+            [
+                "year_bucket",
+                "regions",
+                "actor_diversity_assessment"
+            ],
+            dropna=False
+        )
+        .agg(
+            Count=("document_symbol", "nunique")
+        )
+        .reset_index()
+    )
+
+    hover_breakdown = (
+        breakdown_df
+        .pivot_table(
+            index=["year_bucket", "regions"],
+            columns="actor_diversity_assessment",
+            values="Count",
+            aggfunc="sum",
+            fill_value=0
+        )
+        .reset_index()
+    )
+
+    for col in ["Low", "Moderate", "High", "Unknown"]:
+        if col not in hover_breakdown.columns:
+            hover_breakdown[col] = 0
+
+    trend_df = trend_df.merge(
+        hover_breakdown,
+        on=["year_bucket", "regions"],
+        how="left"
+    )
+
+    for col in ["Low", "Moderate", "High", "Unknown"]:
+        trend_df[col] = trend_df[col].fillna(0).astype(int)
+
+    bucket_order = (
+        trend_df[
+            [
+                "year_bucket_start",
+                "year_bucket"
+            ]
+        ]
+        .drop_duplicates()
+        .sort_values("year_bucket_start")["year_bucket"]
+        .tolist()
+    )
+
+    fig = px.line(
+        trend_df,
+        x="year_bucket",
+        y="Mission_Reports",
+        color="regions",
+        markers=True,
+        color_discrete_map=REGION_COLORS,
+        title="Actor Diversity Assessment Over Time by Region",
+        category_orders={
+            "year_bucket": bucket_order
+        },
+        custom_data=[
+            "regions",
+            "Mission_Reports",
+            "Low",
+            "Moderate",
+            "High",
+            "Unknown"
+        ]
+    )
+
+    fig.update_traces(
+        mode="lines+markers",
+        line=dict(
+            width=2.8,
+            shape="linear"
+        ),
+        marker=dict(
+            size=6,
+            line=dict(
+                color="white",
+                width=1
+            ),
+            opacity=1
+        ),
+        opacity=1,
+        hovertemplate=(
+            "<b>%{customdata[0]}</b><br>"
+            "Period: %{x}<br>"
+            "Mission reports: %{customdata[1]}<br>"
+            "Low: %{customdata[2]}<br>"
+            "Moderate: %{customdata[3]}<br>"
+            "High: %{customdata[4]}<br>"
+            "Unknown: %{customdata[5]}"
+            "<extra></extra>"
+        )
+    )
+
+    total_df = (
+        base_df
+        .groupby(
+            [
+                "year_bucket_start",
+                "year_bucket"
+            ],
+            dropna=False
+        )
+        .agg(
+            Mission_Reports=("document_symbol", "nunique")
+        )
+        .reset_index()
+        .sort_values("year_bucket_start")
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=total_df["year_bucket"],
+            y=total_df["Mission_Reports"],
+            mode="lines",
+            name="Total",
+            line=dict(
+                color="rgba(17, 24, 39, 0.85)",
+                width=3,
+                shape="linear"
+            ),
+            hovertemplate=(
+                "<b>Total</b><br>"
+                "Period: %{x}<br>"
+                "Mission reports: %{y}"
+                "<extra></extra>"
+            )
+        )
+    )
+
+    fig.update_layout(
+        height=470,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        xaxis_title=None,
+        yaxis_title="Mission Reports",
+        hovermode="x unified",
+        margin=dict(
+            l=20,
+            r=150,
+            t=70,
+            b=50
+        ),
+        font=dict(color="#111827"),
+        legend_title_text="Region",
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=1.02,
+            bgcolor="rgba(0,0,0,0)",
+            borderwidth=0,
+            font=dict(size=12)
+        )
+    )
+
+    fig.update_xaxes(
+        type="category",
+        categoryorder="array",
+        categoryarray=bucket_order,
+        showgrid=False,
+        tickangle=-35,
+        title_text=""
+    )
+
+    fig.update_yaxes(
+        rangemode="tozero",
+        gridcolor="rgba(148, 163, 184, 0.25)",
+        zerolinecolor="rgba(148, 163, 184, 0.45)"
     )
 
     return fig
@@ -1556,9 +1844,7 @@ def make_mission_type_composition_region_chart(missions_df):
             ["regions", "mission_type"],
             dropna=False
         )
-        .agg(
-            Missions=("document_symbol", "nunique")
-        )
+        .agg(Missions=("document_symbol", "nunique"))
         .reset_index()
     )
 
@@ -1600,27 +1886,25 @@ def make_mission_type_composition_region_chart(missions_df):
     fig.update_traces(
         texttemplate="%{y:.0f}%",
         textposition="inside",
+        insidetextfont=dict(size=10),
         showlegend=False,
-        hovertemplate=
-        "<b>%{customdata[0]}</b><br>"
-        "Region: %{x}<br>"
-        "Mission reports: %{customdata[1]}<br>"
-        "<extra></extra>"
+        hovertemplate=(
+            "<b>%{customdata[0]}</b><br>"
+            "Region: %{x}<br>"
+            "Mission reports: %{customdata[1]}<br>"
+            "Share of regional missions: %{customdata.1f}%"
+            "<extra></extra>"
+        )
     )
 
     fig.update_layout(
-        height=500,
+        height=520,
         paper_bgcolor="white",
         plot_bgcolor="white",
         xaxis_title=None,
         yaxis_title="% of Mission Reports",
-        margin=dict(
-            l=20,
-            r=20,
-            t=60,
-            b=60
-        ),
-        hovermode="x unified",
+        margin=dict(l=20, r=20, t=60, b=70),
+        hovermode="closest",
         legend_title_text="Mission Type",
         legend=dict(
             orientation="h",
@@ -1628,13 +1912,15 @@ def make_mission_type_composition_region_chart(missions_df):
             y=1.02,
             xanchor="left",
             x=0
-        )
+        ),
+        font=dict(color="#111827")
     )
 
     fig.update_yaxes(
         range=[0, 100],
         ticksuffix="%",
-        gridcolor="rgba(148,163,184,0.25)"
+        gridcolor="rgba(148,163,184,0.25)",
+        zerolinecolor="rgba(148,163,184,0.45)"
     )
 
     fig.update_xaxes(
@@ -2906,6 +3192,232 @@ def render_mission_comparison_tab(
 
         st.markdown("</div>", unsafe_allow_html=True)
 
+def make_mission_assessment_temporal_bar(
+    missions_df,
+    assessment_col,
+    title,
+    selected_regions=None,
+    bucket_size=5
+):
+    df = missions_df.copy()
+
+    if df.empty:
+        return None
+
+    required_cols = [
+        "document_symbol",
+        "document_date",
+        "regions",
+        assessment_col
+    ]
+
+    for col in required_cols:
+        if col not in df.columns:
+            return None
+
+    df = _explode_regions(df)
+
+    if selected_regions and "All Regions" not in selected_regions:
+        df = df[df["regions"].isin(selected_regions)]
+
+    if df.empty:
+        return None
+
+    df["document_date"] = pd.to_datetime(
+        df["document_date"],
+        errors="coerce"
+    )
+
+    df = df.dropna(subset=["document_date"])
+
+    if df.empty:
+        return None
+
+    df[assessment_col] = (
+        df[assessment_col]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown",
+            "nan": "Unknown",
+            "None": "Unknown"
+        })
+    )
+
+    df["year"] = df["document_date"].dt.year.astype(int)
+
+    df["year_bucket_start"] = (
+        df["year"] // bucket_size
+    ) * bucket_size
+
+    df["year_bucket_end"] = (
+        df["year_bucket_start"] + bucket_size - 1
+    )
+
+    df["year_bucket"] = (
+        df["year_bucket_start"].astype(str)
+        + "-"
+        + df["year_bucket_end"].astype(str)
+    )
+
+    # Count unique mission reports by period, assessment category and region.
+    chart_df = (
+        df
+        .drop_duplicates(
+            subset=[
+                "year_bucket",
+                "regions",
+                assessment_col,
+                "document_symbol"
+            ]
+        )
+        .groupby(
+            [
+                "year_bucket_start",
+                "year_bucket",
+                assessment_col,
+                "regions"
+            ],
+            dropna=False
+        )
+        .agg(
+            Mission_Reports=("document_symbol", "nunique")
+        )
+        .reset_index()
+        .sort_values(
+            [
+                "year_bucket_start",
+                assessment_col,
+                "regions"
+            ]
+        )
+    )
+
+    if chart_df.empty:
+        return None
+
+    bucket_order = (
+        chart_df[
+            [
+                "year_bucket_start",
+                "year_bucket"
+            ]
+        ]
+        .drop_duplicates()
+        .sort_values("year_bucket_start")["year_bucket"]
+        .tolist()
+    )
+
+    assessment_order = (
+        chart_df
+        .groupby(assessment_col)["Mission_Reports"]
+        .sum()
+        .sort_values(ascending=False)
+        .index
+        .tolist()
+    )
+
+    fig = px.bar(
+        chart_df,
+        x="year_bucket",
+        y="Mission_Reports",
+        color="regions",
+        facet_col=assessment_col,
+        facet_col_wrap=3,
+        barmode="stack",
+        color_discrete_map=REGION_COLORS,
+        title=title,
+        category_orders={
+            "year_bucket": bucket_order,
+            assessment_col: assessment_order
+        },
+        custom_data=[
+            assessment_col,
+            "regions",
+            "Mission_Reports"
+        ]
+    )
+
+    fig.update_traces(
+        hovertemplate=(
+            "<b>%{customdata[0]}</b><br>"
+            "Region: %{customdata[1]}<br>"
+            "Period: %{x}<br>"
+            "Mission reports: %{customdata[2]}"
+            "<extra></extra>"
+        )
+    )
+
+    fig.update_layout(
+        height=520,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        showlegend=True,
+        legend_title_text="Region",
+        hovermode="closest",
+        xaxis_title=None,
+        yaxis_title="Mission Reports",
+        margin=dict(
+            l=20,
+            r=20,
+            t=75,
+            b=70
+        ),
+        font=dict(color="#111827")
+    )
+
+    fig.update_xaxes(
+        type="category",
+        categoryorder="array",
+        categoryarray=bucket_order,
+        tickangle=-35,
+        showgrid=False
+    )
+
+    fig.update_yaxes(
+        rangemode="tozero",
+        gridcolor="rgba(148,163,184,0.25)",
+        zerolinecolor="rgba(148,163,184,0.45)"
+    )
+
+    fig.for_each_annotation(
+        lambda a: a.update(
+            text=a.text.replace(f"{assessment_col}=", "")
+        )
+    )
+
+    fig.for_each_xaxis(
+        lambda axis: axis.update(title_text="")
+    )
+
+    return fig
+
+def make_field_exposure_temporal_bar(
+    missions_df,
+    selected_regions=None
+):
+    return make_mission_assessment_temporal_bar(
+        missions_df=missions_df,
+        assessment_col="field_exposure",
+        title="Field Exposure Over Time by Region",
+        selected_regions=selected_regions,
+        bucket_size=5
+    )
+
+
+def make_actor_diversity_temporal_bar(
+    missions_df,
+    selected_regions=None
+):
+    return make_mission_assessment_temporal_bar(
+        missions_df=missions_df,
+        assessment_col="actor_diversity_assessment",
+        title="Actor Diversity Assessment Over Time by Region",
+        selected_regions=selected_regions,
+        bucket_size=5
+    )
+
 def render_reports_dashboard():
     reports = load_report_json(REPORTS_FILE)
 
@@ -2958,21 +3470,32 @@ def render_reports_dashboard():
 
     with overview_tab:
         c1, c2 = st.columns([1.3, 1])
+
         with c1:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.plotly_chart(make_report_theme_bar(filtered_records), use_container_width=True, key="1")
+            st.plotly_chart(
+                make_report_theme_bar(filtered_records),
+                use_container_width=True,
+                key="overview_theme_bar"
+            )
             st.markdown("</div>", unsafe_allow_html=True)
 
         with c2:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.plotly_chart(make_record_type_donut(filtered_records), use_container_width=True, key="2")
+            st.plotly_chart(
+                make_record_type_donut(filtered_records),
+                use_container_width=True,
+                key="overview_record_type_donut"
+            )
             st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        c5, c6 = st.columns([1, 1])
 
-        c5, c6 = st.columns([1,1])
         with c5:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
             fig = make_region_actors_temporal_line(filtered_missions)
+
             if fig is not None:
                 st.plotly_chart(
                     fig,
@@ -2985,6 +3508,8 @@ def render_reports_dashboard():
             st.markdown("</div>", unsafe_allow_html=True)
 
         with c6:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
             fig = make_region_activities_temporal_line(filtered_missions)
 
             if fig is not None:
@@ -3015,6 +3540,8 @@ def render_reports_dashboard():
         c7, c8 = st.columns(2)
 
         with c7:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
             fig = make_primary_theme_temporal_bar(
                 records_df=filtered_records,
                 missions_df=filtered_missions,
@@ -3030,7 +3557,11 @@ def render_reports_dashboard():
             else:
                 st.info("No primary-theme temporal data available for the selected region filter.")
 
+            st.markdown("</div>", unsafe_allow_html=True)
+
         with c8:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
             fig = make_actor_category_temporal_bar(
                 actors_df=filtered_actors,
                 missions_df=filtered_missions,
@@ -3046,21 +3577,96 @@ def render_reports_dashboard():
             else:
                 st.info("No actor-category temporal data available for the selected region filter.")
 
-    with analytics_tab:
-        c1, c2 = st.columns([1, 1])
-        with c1:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
-            st.plotly_chart(make_action_treemap(filtered_records), use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        fig = make_theme_sunburst(filtered_records)
-        if fig is not None:
-            st.plotly_chart(fig, use_container_width=True, key="theme_sunburst")
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("### Mission Assessment Trends")
 
+        c11, c12 = st.columns(2)
+
+        with c11:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_field_exposure_temporal_bar(
+                missions_df=filtered_missions,
+                selected_regions=selected_temporal_regions
+            )
+
+            if fig is not None:
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    key="field_exposure_temporal_bar"
+                )
+            else:
+                st.info(
+                    "No field-exposure data available for the selected region filter."
+                )
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c12:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_actor_diversity_temporal_line(
+                filtered_missions
+            )
+
+            if fig is not None:
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    key="actor_diversity_temporal_line"
+                )
+            else:
+                st.info("No actor-diversity assessment data available.")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown("### Analytical Composition")
+
+        c9, c10 = st.columns([1, 1])
+
+        with c9:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_action_treemap(filtered_records)
+
+            if fig is not None:
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    key="overview_action_treemap"
+                )
+            else:
+                st.info("No action-orientation data available.")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        with c10:
+            st.markdown('<div class="section-card">', unsafe_allow_html=True)
+
+            fig = make_theme_sunburst(filtered_records)
+
+            if fig is not None:
+                st.plotly_chart(
+                    fig,
+                    use_container_width=True,
+                    key="overview_theme_sunburst"
+                )
+            else:
+                st.info("No theme drilldown data available.")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    with analytics_tab:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.plotly_chart(make_sankey(filtered_records), use_container_width=True)
+
+        st.plotly_chart(
+            make_sankey(filtered_records),
+            use_container_width=True,
+            key="analytics_sankey"
+        )
+
         st.markdown("</div>", unsafe_allow_html=True)
 
     with mission_tab:
