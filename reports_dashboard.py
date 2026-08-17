@@ -589,6 +589,19 @@ ACTOR_DIVERSITY_MAP = {
     "High": 3
 }
 
+ACTIVITY_TYPE_COLORS = {
+    "Meeting": "#2563EB",
+    "Site Visit": "#16A34A",
+    "Briefing": "#F97316",
+    "Consultation": "#9333EA",
+    "Engagement Session": "#0891B2",
+    "Dialogue": "#65A30D",
+    "Field Visit": "#64748B",
+    "Visit to UN Facility": "#DB2777",
+    "Press Stakeout": "#DC2626",
+    "Other": "#94A3B8",
+    "Unknown": "#CBD5E1",
+}
 
 def make_actor_diversity_temporal_line(missions_df, bucket_size=5):
     df = missions_df.copy()
@@ -1125,32 +1138,334 @@ def make_theme_sunburst(records_df):
     )
     return fig
 
-
-def make_pyvis_actor_network_html(missions_df, actors_df, selected_symbols, max_actors_per_category=5):
-    if missions_df.empty or actors_df.empty or not selected_symbols:
+def make_pyvis_actor_network_html(
+    missions_df,
+    actors_df,
+    selected_symbols=None,
+    show_actor_names=False,
+    max_actors_per_category=8
+):
+    if missions_df.empty or actors_df.empty:
         return None
 
-    selected_symbols = selected_symbols[:5]
-    mission_df = missions_df.copy()
     actor_df = actors_df.copy()
+    mission_df = missions_df.copy()
 
-    mission_df["document_symbol"] = mission_df["document_symbol"].fillna("Unknown mission")
-    mission_df["mission_title"] = mission_df["mission_title"].fillna(mission_df["document_symbol"])
+    required_actor_cols = [
+        "document_symbol",
+        "mission_title",
+        "actor_category",
+        "actor_name"
+    ]
 
-    actor_df["document_symbol"] = actor_df["document_symbol"].fillna("Unknown mission")
-    actor_df["mission_title"] = actor_df["mission_title"].fillna(actor_df["document_symbol"])
-    actor_df["actor_category"] = actor_df["actor_category"].fillna("Unknown")
-    actor_df["actor_name"] = actor_df["actor_name"].fillna("Unnamed actor")
+    for col in required_actor_cols:
+        if col not in actor_df.columns:
+            actor_df[col] = None
 
-    actor_df = actor_df[actor_df["document_symbol"].isin(selected_symbols)].copy()
-    mission_df = mission_df[mission_df["document_symbol"].isin(selected_symbols)].copy()
+    for col in ["document_symbol", "mission_title"]:
+        if col not in mission_df.columns:
+            mission_df[col] = None
+
+    actor_df["document_symbol"] = (
+        actor_df["document_symbol"]
+        .fillna("Unknown mission")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown mission",
+            "nan": "Unknown mission",
+            "None": "Unknown mission"
+        })
+    )
+
+    actor_df["mission_title"] = (
+        actor_df["mission_title"]
+        .fillna(actor_df["document_symbol"])
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown mission",
+            "nan": "Unknown mission",
+            "None": "Unknown mission"
+        })
+    )
+
+    actor_df["actor_category"] = (
+        actor_df["actor_category"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown",
+            "nan": "Unknown",
+            "None": "Unknown"
+        })
+    )
+
+    actor_df["actor_name"] = (
+        actor_df["actor_name"]
+        .fillna("Unnamed actor")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unnamed actor",
+            "nan": "Unnamed actor",
+            "None": "Unnamed actor",
+            "Unknown": "Unnamed actor"
+        })
+    )
+
+    mission_df["document_symbol"] = (
+        mission_df["document_symbol"]
+        .fillna("Unknown mission")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown mission",
+            "nan": "Unknown mission",
+            "None": "Unknown mission"
+        })
+    )
+
+    mission_df["mission_title"] = (
+        mission_df["mission_title"]
+        .fillna(mission_df["document_symbol"])
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown mission",
+            "nan": "Unknown mission",
+            "None": "Unknown mission"
+        })
+    )
+
+    if selected_symbols:
+        selected_symbols = [
+            str(symbol)
+            for symbol in selected_symbols
+            if symbol is not None
+        ]
+
+        actor_df = actor_df[
+            actor_df["document_symbol"].isin(selected_symbols)
+        ].copy()
+
+        mission_df = mission_df[
+            mission_df["document_symbol"].isin(selected_symbols)
+        ].copy()
 
     if actor_df.empty:
         return None
 
     def short_label(value, max_chars=34):
-        val_str = str(value)
-        return val_str if len(val_str) <= max_chars else val_str[:max_chars - 1] + "…"
+        value = str(value)
+
+        if len(value) <= max_chars:
+            return value
+
+        return value[: max_chars - 1] + "…"
+
+    def safe_html(value):
+        return html.escape(str(value))
+
+    def spread(items, top=300, bottom=-300):
+        if not items:
+            return {}
+
+        if len(items) == 1:
+            return {items[0]: 0}
+
+        step = (top - bottom) / (len(items) - 1)
+
+        return {
+            item: top - i * step
+            for i, item in enumerate(items)
+        }
+
+    net = Network(
+        height="820px",
+        width="100%",
+        bgcolor="#ffffff",
+        font_color="#111827",
+        directed=False,
+        cdn_resources="in_line"
+    )
+
+    net.set_options(
+        """
+        {
+          "physics": {
+            "enabled": false
+          },
+          "interaction": {
+            "dragNodes": true,
+            "dragView": true,
+            "zoomView": true,
+            "hover": true,
+            "navigationButtons": true,
+            "keyboard": true
+          },
+          "nodes": {
+            "font": {
+              "color": "#111827",
+              "size": 16,
+              "face": "Arial",
+              "strokeWidth": 3,
+              "strokeColor": "#ffffff"
+            },
+            "borderWidth": 2,
+            "shadow": {
+              "enabled": true,
+              "color": "rgba(15, 23, 42, 0.18)",
+              "size": 8,
+              "x": 2,
+              "y": 2
+            }
+          },
+          "edges": {
+            "smooth": {
+              "enabled": true,
+              "type": "continuous",
+              "roundness": 0.35
+            },
+            "color": {
+              "inherit": false
+            },
+            "selectionWidth": 2
+          }
+        }
+        """
+    )
+
+    # ---------------------------------------------------------------------
+    # MODE 1: Aggregate view
+    # All filtered missions -> actor categories only
+    # Triggered when no mission is selected in the multiselect.
+    # ---------------------------------------------------------------------
+    if not show_actor_names:
+        category_counts = (
+            actor_df
+            .groupby("actor_category", dropna=False)
+            .size()
+            .sort_values(ascending=False)
+        )
+
+        if category_counts.empty:
+            return None
+
+        category_order = category_counts.index.tolist()
+        category_y = spread(category_order, top=320, bottom=-320)
+
+        total_actors = int(category_counts.sum())
+        total_missions = int(actor_df["document_symbol"].nunique())
+
+        max_count = max(category_counts.max(), 1)
+        min_count = max(category_counts.min(), 1)
+
+        root_title = (
+            f"<b>All Filtered Missions</b><br>"
+            f"Mission reports: {total_missions}<br>"
+            f"Actor entries: {total_actors}<br>"
+            f"Actor categories: {len(category_order)}"
+        )
+
+        net.add_node(
+            "ALL_MISSIONS",
+            label="All Filtered Missions",
+            title=root_title,
+            x=-460,
+            y=0,
+            size=34,
+            color={
+                "background": "#2563EB",
+                "border": "#1D4ED8",
+                "highlight": {
+                    "background": "#1D4ED8",
+                    "border": "#1E40AF"
+                }
+            },
+            shape="dot"
+        )
+
+        for category in category_order:
+            count = int(category_counts[category])
+            color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+
+            # Nonlinear scaling makes differences visible without making large nodes too huge.
+            normalized = count / max_count
+            node_size = 14 + 42 * (normalized ** 0.55)
+            edge_width = 1.2 + 9 * (normalized ** 0.65)
+
+            # Optional: make very small categories still visible.
+            node_size = max(14, min(node_size, 56))
+            edge_width = max(1.2, min(edge_width, 10))
+
+            title = (
+                f"<b>{safe_html(category)}</b><br>"
+                f"Actor entries: {count}<br>"
+                f"Share: {count / total_actors:.1%}"
+            )
+
+            net.add_node(
+                f"CATEGORY::{category}",
+                label=short_label(category, 34),
+                title=title,
+                x=360,
+                y=category_y.get(category, 0),
+                size=node_size,
+                color={
+                    "background": color,
+                    "border": color,
+                    "highlight": {
+                        "background": color,
+                        "border": "#111827"
+                    }
+                },
+                shape="diamond"
+            )
+
+            net.add_edge(
+                "ALL_MISSIONS",
+                f"CATEGORY::{category}",
+                value=max(1, min(count, 18)),
+                width=edge_width,
+                color="rgba(100, 116, 139, 0.38)",
+                title=(
+                    f"<b>All Filtered Missions</b> → "
+                    f"<b>{safe_html(category)}</b><br>"
+                    f"Actor entries: {count}"
+                )
+            )
+
+        return net.generate_html()
+
+    # ---------------------------------------------------------------------
+    # MODE 2: Selected mission drilldown
+    # Selected mission(s) -> actor categories -> actor names
+    # Triggered when one or more missions are selected in the multiselect.
+    # ---------------------------------------------------------------------
+    if not selected_symbols:
+        return None
+
+    selected_symbols = [
+        str(symbol)
+        for symbol in selected_symbols
+        if symbol is not None
+    ]
+
+    if not selected_symbols:
+        return None
+
+    actor_df = actor_df[
+        actor_df["document_symbol"].isin(selected_symbols)
+    ].copy()
+
+    mission_df = mission_df[
+        mission_df["document_symbol"].isin(selected_symbols)
+    ].copy()
+
+    if actor_df.empty:
+        return None
 
     mission_lookup = (
         mission_df
@@ -1159,263 +1474,369 @@ def make_pyvis_actor_network_html(missions_df, actors_df, selected_symbols, max_
         .to_dict(orient="index")
     )
 
-    mission_order = [s for s in selected_symbols if s in actor_df["document_symbol"].unique()]
-    category_counts = actor_df.groupby("actor_category").size().sort_values(ascending=False)
-    category_order = category_counts.index.tolist()
+    mission_order = [
+        symbol
+        for symbol in selected_symbols
+        if symbol in actor_df["document_symbol"].unique()
+    ]
 
-    limited_actor_rows = []
-    for category in category_order:
-        sub = actor_df[actor_df["actor_category"] == category].copy()
-        actor_summary = (
-            sub.groupby(["actor_category", "actor_name"])
-            .agg(
-                count=("actor_name", "count"),
-                missions=("document_symbol", lambda x: ", ".join(sorted(x.dropna().astype(str).unique())))
-            )
-            .reset_index()
-            .sort_values(["count", "actor_name"], ascending=[False, True])
-            .head(max_actors_per_category)
-        )
-        limited_actor_rows.extend(actor_summary.to_dict(orient="records"))
-
-    limited_actor_df = pd.DataFrame(limited_actor_rows)
-    if limited_actor_df.empty:
+    if not mission_order:
         return None
 
-    mission_category_df = (
-        actor_df.groupby(["document_symbol", "actor_category"])
+    category_counts = (
+        actor_df
+        .groupby("actor_category", dropna=False)
         .size()
-        .reset_index(name="count")
+        .sort_values(ascending=False)
     )
 
-    net = Network(
-        height="760px",
-        width="100%",
-        bgcolor="#ffffff",
-        font_color="#000000",
-        directed=False,
-        cdn_resources="in_line"
-    )
+    if category_counts.empty:
+        return None
 
-    # Standard triple quotes prevent PyCharm from evaluating JSON braces as python expressions
-    net.set_options(
-        """
-        {
-          "physics": { "enabled": false },
-          "interaction": {
-            "dragNodes": true, "dragView": true, "zoomView": true,
-            "hover": true, "navigationButtons": true, "keyboard": true
-          },
-          "nodes": {
-            "font": { "color": "#000000", "size": 16, "face": "Arial", "strokeWidth": 3, "strokeColor": "#ffffff" },
-            "borderWidth": 2,
-            "shadow": { "enabled": true, "color": "rgba(15, 23, 42, 0.18)", "size": 8, "x": 2, "y": 2 }
-          },
-          "edges": {
-            "smooth": { "enabled": true, "type": "continuous", "roundness": 0.35 },
-            "color": { "inherit": false },
-            "selectionWidth": 2
-          }
-        }
-        """
-    )
+    category_order = category_counts.index.tolist()
 
-    def spread(items, top=260, bottom=-260):
-        if not items:
-            return {}
-        if len(items) == 1:
-            return {items[0]: 0}
-        step = (top - bottom) / (len(items) - 1)
-        return {item: top - i * step for i, item in enumerate(items)}
+    mission_y = spread(mission_order, top=260, bottom=-260)
+    category_y = spread(category_order, top=300, bottom=-300)
 
-    mission_y = spread(mission_order, top=220, bottom=-220)
-    category_y = spread(category_order, top=260, bottom=-260)
-
+    # Mission nodes
     for mission in mission_order:
         meta = mission_lookup.get(mission, {})
-        actor_cnt = actor_df[actor_df["document_symbol"] == mission].shape[0]
 
-        mission_title_str = html.escape(str(meta.get('mission_title', '')))
-        mission_country_str = html.escape(str(meta.get('mission_country_or_region', 'N/A')))
-        mission_type_str = html.escape(str(meta.get('mission_type', 'N/A')))
-        mission_symbol_str = html.escape(mission)
+        mission_title = meta.get("mission_title", mission)
+        mission_country = meta.get("mission_country_or_region", "N/A")
+        mission_type = meta.get("mission_type", "N/A")
 
-        title = (
-            f"<b>{mission_symbol_str}</b><br>"
-            f"{mission_title_str}<br><br>"
-            f"<b>Country/Region:</b> {mission_country_str}<br>"
-            f"<b>Mission type:</b> {mission_type_str}<br>"
-            f"<b>Actors met:</b> {actor_cnt}"
+        mission_actor_count = actor_df[
+            actor_df["document_symbol"] == mission
+        ].shape[0]
+
+        mission_node_title = (
+            f"<b>{safe_html(mission)}</b><br>"
+            f"{safe_html(mission_title)}<br><br>"
+            f"<b>Country/Region:</b> {safe_html(mission_country)}<br>"
+            f"<b>Mission type:</b> {safe_html(mission_type)}<br>"
+            f"<b>Actors met:</b> {mission_actor_count}"
         )
 
         net.add_node(
             f"MISSION::{mission}",
-            label=mission,
-            title=title,
-            x=-520,
+            label=short_label(mission, 30),
+            title=mission_node_title,
+            x=-560,
             y=mission_y.get(mission, 0),
-            size=18,
-            color={"background": "#2563EB", "border": "#1D4ED8", "highlight": {"background": "#1D4ED8", "border": "#1E40AF"}},
+            size=24,
+            color={
+                "background": "#2563EB",
+                "border": "#1D4ED8",
+                "highlight": {
+                    "background": "#1D4ED8",
+                    "border": "#1E40AF"
+                }
+            },
             shape="dot"
         )
 
+    # Category nodes
+    max_category_count = max(category_counts.max(), 1)
+
     for category in category_order:
+        count = int(category_counts[category])
         color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
-        cnt = int(category_counts[category])
-        category_str = html.escape(category)
 
         title = (
-            f"<b>{category_str}</b><br>"
-            f"<b>Actors across selected missions:</b> {cnt}"
+            f"<b>{safe_html(category)}</b><br>"
+            f"Actor entries across selected mission(s): {count}"
         )
+
+        node_size = 14 + 20 * (count / max_category_count)
 
         net.add_node(
             f"CATEGORY::{category}",
-            label=short_label(category, 28),
+            label=short_label(category, 32),
             title=title,
             x=0,
             y=category_y.get(category, 0),
-            size=16,
-            color={"background": color, "border": color, "highlight": {"background": color, "border": "#111827"}},
+            size=node_size,
+            color={
+                "background": color,
+                "border": color,
+                "highlight": {
+                    "background": color,
+                    "border": "#111827"
+                }
+            },
             shape="diamond"
         )
 
-    actor_positions = {}
-    for category in category_order:
-        sub = limited_actor_df[limited_actor_df["actor_category"] == category]
-        actors = sub["actor_name"].drop_duplicates().tolist()
-        center_y = category_y.get(category, 0)
-
-        if len(actors) == 1:
-            offsets = [0]
-        else:
-            local_step = min(52, 260 / max(len(actors) - 1, 1))
-            offsets = [((len(actors) - 1) / 2 - i) * local_step for i in range(len(actors))]
-
-        for actor_name, offset in zip(actors, offsets):
-            actor_positions[(category, actor_name)] = {"x": 520, "y": center_y + offset}
-
-    for _, row in limited_actor_df.iterrows():
-        category = row["actor_category"]
-        actor_name = row["actor_name"]
-        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
-        coords = actor_positions.get((category, actor_name), {"x": 520, "y": 0})
-
-        actor_name_str = html.escape(str(actor_name))
-        category_str = html.escape(str(category))
-        missions_str = html.escape(str(row.get('missions', '')))
-
-        title = (
-            f"<b>{actor_name_str}</b><br>"
-            f"<b>Category:</b> {category_str}<br>"
-            f"<b>Missions:</b> {missions_str}"
+    # Mission -> Category edges
+    mission_category_df = (
+        actor_df
+        .groupby(
+            ["document_symbol", "actor_category"],
+            dropna=False
         )
-
-        net.add_node(
-            f"ACTOR::{category}::{actor_name}",
-            label=short_label(actor_name, 42),
-            title=title,
-            x=coords["x"],
-            y=coords["y"],
-            size=8,
-            color={"background": color, "border": color, "highlight": {"background": color, "border": "#111827"}},
-            shape="dot"
-        )
+        .size()
+        .reset_index(name="count")
+    )
 
     for _, row in mission_category_df.iterrows():
         mission = row["document_symbol"]
         category = row["actor_category"]
         count = int(row["count"])
 
-        if mission in mission_order and category in category_order:
-            mission_str = html.escape(str(mission))
-            category_str = html.escape(str(category))
-            net.add_edge(
-                f"MISSION::{mission}",
-                f"CATEGORY::{category}",
-                value=max(1, min(count, 8)),
-                width=max(1, min(count * 0.45, 4)),
-                color="rgba(100, 116, 139, 0.35)",
-                title=f"<b>{mission_str}</b> &rarr; <b>{category_str}</b><br>Actors in category: {category}"
+        if mission not in mission_order:
+            continue
+
+        net.add_edge(
+            f"MISSION::{mission}",
+            f"CATEGORY::{category}",
+            value=max(1, min(count, 10)),
+            width=max(1.2, min(count * 0.45, 5)),
+            color="rgba(100, 116, 139, 0.35)",
+            title=(
+                f"<b>{safe_html(mission)}</b> → "
+                f"<b>{safe_html(category)}</b><br>"
+                f"Actors in category: {count}"
             )
+        )
+
+    # Actor names, limited per category
+    limited_actor_rows = []
+
+    for category in category_order:
+        sub = actor_df[
+            actor_df["actor_category"] == category
+        ].copy()
+
+        actor_summary = (
+            sub.groupby(
+                [
+                    "actor_category",
+                    "actor_name"
+                ],
+                dropna=False
+            )
+            .agg(
+                count=("actor_name", "count"),
+                missions=(
+                    "document_symbol",
+                    lambda x: ", ".join(
+                        sorted(
+                            x.dropna()
+                            .astype(str)
+                            .unique()
+                            .tolist()
+                        )
+                    )
+                )
+            )
+            .reset_index()
+            .sort_values(
+                ["count", "actor_name"],
+                ascending=[False, True]
+            )
+            .head(max_actors_per_category)
+        )
+
+        limited_actor_rows.extend(
+            actor_summary.to_dict(orient="records")
+        )
+
+    limited_actor_df = pd.DataFrame(limited_actor_rows)
+
+    if limited_actor_df.empty:
+        return net.generate_html()
+
+    actor_positions = {}
+
+    for category in category_order:
+        sub = limited_actor_df[
+            limited_actor_df["actor_category"] == category
+        ]
+
+        actors = sub["actor_name"].drop_duplicates().tolist()
+        center_y = category_y.get(category, 0)
+
+        if len(actors) == 1:
+            offsets = [0]
+        else:
+            local_step = min(52, 280 / max(len(actors) - 1, 1))
+            offsets = [
+                ((len(actors) - 1) / 2 - i) * local_step
+                for i in range(len(actors))
+            ]
+
+        for actor_name, offset in zip(actors, offsets):
+            actor_positions[(category, actor_name)] = {
+                "x": 520,
+                "y": center_y + offset
+            }
 
     for _, row in limited_actor_df.iterrows():
         category = row["actor_category"]
         actor_name = row["actor_name"]
-        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+        count = int(row["count"])
+        missions_str = row.get("missions", "")
 
-        category_str = html.escape(str(category))
-        actor_str = html.escape(str(actor_name))
-        missions_str = html.escape(str(row.get('missions', '')))
+        color = ACTOR_CATEGORY_COLORS.get(category, "#94A3B8")
+        coords = actor_positions.get(
+            (category, actor_name),
+            {
+                "x": 520,
+                "y": 0
+            }
+        )
+
+        actor_title = (
+            f"<b>{safe_html(actor_name)}</b><br>"
+            f"<b>Category:</b> {safe_html(category)}<br>"
+            f"<b>Entries:</b> {count}<br>"
+            f"<b>Missions:</b> {safe_html(missions_str)}"
+        )
+
+        net.add_node(
+            f"ACTOR::{category}::{actor_name}",
+            label=short_label(actor_name, 42),
+            title=actor_title,
+            x=coords["x"],
+            y=coords["y"],
+            size=8 + min(count, 5),
+            color={
+                "background": color,
+                "border": color,
+                "highlight": {
+                    "background": color,
+                    "border": "#111827"
+                }
+            },
+            shape="dot"
+        )
 
         net.add_edge(
             f"CATEGORY::{category}",
             f"ACTOR::{category}::{actor_name}",
             width=1.2,
             color=color,
-            title=f"<b>{category_str}</b> &rarr; <b>{actor_str}</b><br>Missions: {missions_str}"
+            title=(
+                f"<b>{safe_html(category)}</b> → "
+                f"<b>{safe_html(actor_name)}</b><br>"
+                f"Entries: {count}<br>"
+                f"Missions: {safe_html(missions_str)}"
+            )
         )
 
     return net.generate_html()
 
 def make_sankey(records_df):
     df = records_df.copy()
-    cols = ["report_record_type", "primary_theme", "action_orientation"]
+
+    if df.empty:
+        return None
+
+    cols = [
+        "report_record_type",
+        "primary_theme"
+    ]
+
     for col in cols:
-        df[col] = df[col].fillna("Unknown")
+        if col not in df.columns:
+            df[col] = "Unknown"
 
-    grouped = df.groupby(["report_record_type", "primary_theme", "action_orientation"]).size().reset_index(name="count")
+        df[col] = (
+            df[col]
+            .fillna("Unknown")
+            .astype(str)
+            .str.strip()
+            .replace({
+                "": "Unknown",
+                "nan": "Unknown",
+                "None": "Unknown"
+            })
+        )
 
-    labels, index = [], {}
+    grouped = (
+        df.groupby(
+            [
+                "report_record_type",
+                "primary_theme"
+            ],
+            dropna=False
+        )
+        .size()
+        .reset_index(name="count")
+    )
+
+    if grouped.empty:
+        return None
+
+    labels = []
+    index = {}
 
     def get_index(label):
         if label not in index:
             index[label] = len(labels)
             labels.append(label)
+
         return index[label]
 
-    sources, targets, values = [], [], []
+    sources = []
+    targets = []
+    values = []
 
     for _, row in grouped.iterrows():
-        rt = f"Type: {row['report_record_type']}"
-        th = f"Theme: {row['primary_theme']}"
-        ac = f"Action: {row['action_orientation']}"
+        record_type = f"Type: {row['report_record_type']}"
+        theme = f"Theme: {row['primary_theme']}"
 
-        sources.append(get_index(rt))
-        targets.append(get_index(th))
-        values.append(row["count"])
-
-        sources.append(get_index(th))
-        targets.append(get_index(ac))
+        sources.append(get_index(record_type))
+        targets.append(get_index(theme))
         values.append(row["count"])
 
     fig = go.Figure(
         go.Sankey(
             arrangement="snap",
             node=dict(
-                pad=25,
-                thickness=70,
-                line=dict(color="rgba(15,23,42,0.5)", width=1.5),
+                pad=42,
+                thickness=30,
+                line=dict(
+                    color="rgba(15,23,42,0.45)",
+                    width=1
+                ),
                 label=labels,
-                color="#7DD3FC",
+                color="#7DD3FC"
             ),
             link=dict(
                 source=sources,
                 target=targets,
                 value=values,
-                color="rgba(37, 99, 235, 0.08)",
-            ),
+                color="rgba(37, 99, 235, 0.12)"
+            )
         )
     )
-    fig.update_layout(
-        title_text="Analytical Flow: Record Type → Theme → Action Orientation",
-        height=640,
-        margin=dict(l=10, r=10, t=60, b=10),
-        paper_bgcolor="white",
-        font_size=11,
-    )
-    return fig
 
+    fig.update_layout(
+        title=dict(
+            text="Analytical Flow: Record Type → Primary Theme",
+            x=0.01,
+            y=0.98,
+            xanchor="left",
+            yanchor="top"
+        ),
+        height=760,
+        margin=dict(
+            l=10,
+            r=10,
+            t=120,
+            b=10
+        ),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        font=dict(
+            size=10,
+            color="#111827"
+        )
+    )
+
+    return fig
 
 def apply_report_filters(missions_df, records_df, activities_df, actors_df):
     st.sidebar.title("Report Filters")
@@ -2409,13 +2830,10 @@ def render_region_comparison(
         else:
             st.info("No mission-level theme prevalence data available for the current filters.")
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
     with c2:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         fig = make_avg_themes_region_chart(summary)
         st.plotly_chart(fig, use_container_width=True, key="regional_avg_themes")
-        st.markdown("</div>", unsafe_allow_html=True)
 
     c3, c4 = st.columns(2)
 
@@ -2432,8 +2850,6 @@ def render_region_comparison(
             )
         else:
             st.info("No actor engagement data available for the current filters.")
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with c4:
 
@@ -2469,7 +2885,6 @@ def render_region_comparison(
         else:
             st.info("No theme data available.")
 
-        st.markdown("</div>", unsafe_allow_html=True)
 
     c5, c6 = st.columns(2)
 
@@ -2508,7 +2923,6 @@ def render_region_comparison(
         else:
             st.info("No activity-type data available for the current filters.")
 
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with c6:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
@@ -2525,8 +2939,6 @@ def render_region_comparison(
             )
         else:
             st.info("No mission-type data available for the current filters.")
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
     display_summary = summary.rename(columns={
         "regions": "Region",
@@ -2634,6 +3046,38 @@ def render_mission_card(row):
     else:
         st.caption("No commitments recorded.")
 
+def get_mission_display_name(symbol, missions_df):
+    if not symbol or missions_df.empty:
+        return str(symbol or "Unknown mission")
+
+    row_df = missions_df[missions_df["document_symbol"] == symbol]
+
+    if row_df.empty:
+        return str(symbol)
+
+    row = row_df.iloc[0]
+    title = row.get("mission_title") or "Untitled mission"
+    doc_symbol = row.get("document_symbol") or symbol
+
+    return f"{title} ({doc_symbol})"
+
+def add_mission_display_names(mission_a, mission_b):
+    mission_a["display_name"] = get_mission_display_from_meta(mission_a)
+    mission_b["display_name"] = get_mission_display_from_meta(mission_b)
+    return mission_a, mission_b
+
+def get_mission_display_from_meta(mission):
+    meta = mission.get("meta")
+
+    if meta is None or meta.empty:
+        return str(mission.get("symbol", "Unknown mission"))
+
+    row = meta.iloc[0]
+    title = row.get("mission_title") or "Untitled mission"
+    symbol = row.get("document_symbol") or mission.get("symbol", "")
+
+    return f"{title} ({symbol})"
+
 def get_comparison_mission_data(
     selected_symbol,
     missions_df,
@@ -2664,7 +3108,6 @@ def get_comparison_mission_data(
         "activities": mission_activities,
         "actors": mission_actors,
     }
-
 
 def make_two_mission_metric_bar(mission_a, mission_b):
     rows = [
@@ -2713,58 +3156,6 @@ def make_two_mission_metric_bar(mission_a, mission_b):
     )
 
     return fig
-
-
-def make_two_mission_theme_comparison(mission_a, mission_b):
-    df_a = mission_a["records"].copy()
-    df_b = mission_b["records"].copy()
-
-    df_a["Mission"] = mission_a["symbol"]
-    df_b["Mission"] = mission_b["symbol"]
-
-    df = pd.concat([df_a, df_b], ignore_index=True)
-
-    if df.empty:
-        return None
-
-    theme_df = (
-        df["primary_theme"]
-        .fillna("Unknown")
-        .to_frame()
-    )
-
-    df["primary_theme"] = df["primary_theme"].fillna("Unknown")
-
-    chart_df = (
-        df.groupby(["Mission", "primary_theme"])
-        .size()
-        .reset_index(name="Records")
-    )
-
-    fig = px.bar(
-        chart_df,
-        x="Records",
-        y="primary_theme",
-        color="Mission",
-        barmode="group",
-        orientation="h",
-        text="Records",
-        title="Primary Themes Compared"
-    )
-
-    fig.update_traces(textposition="outside")
-
-    fig.update_layout(
-        height=520,
-        paper_bgcolor="white",
-        plot_bgcolor="white",
-        xaxis_title="Records",
-        yaxis_title=None,
-        margin=dict(l=20, r=20, t=60, b=20)
-    )
-
-    return fig
-
 
 def make_two_mission_concern_comparison(mission_a, mission_b):
     df_a = mission_a["records"].copy()
@@ -2821,51 +3212,381 @@ def make_two_mission_concern_comparison(mission_a, mission_b):
 
     return fig
 
-
-def make_two_mission_record_type_comparison(mission_a, mission_b):
+def make_two_mission_verb_comparison(mission_a, mission_b, top_n=15):
     df_a = mission_a["records"].copy()
     df_b = mission_b["records"].copy()
 
-    df_a["Mission"] = mission_a["symbol"]
-    df_b["Mission"] = mission_b["symbol"]
+    mission_a_label = mission_a.get("display_name", mission_a["symbol"])
+    mission_b_label = mission_b.get("display_name", mission_b["symbol"])
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
 
     df = pd.concat([df_a, df_b], ignore_index=True)
 
     if df.empty:
         return None
 
-    df["report_record_type"] = df["report_record_type"].fillna("Unknown")
+    df["verb"] = (
+        df["verb"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+    )
 
     chart_df = (
-        df.groupby(["Mission", "report_record_type"])
+        df.groupby(["Mission", "verb"])
         .size()
         .reset_index(name="Records")
     )
 
+    top_verbs = (
+        chart_df
+        .groupby("verb")["Records"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(top_n)
+        .index
+        .tolist()
+    )
+
+    chart_df = chart_df[
+        chart_df["verb"].isin(top_verbs)
+    ]
+
     fig = px.bar(
         chart_df,
+        y="verb",
         x="Records",
-        y="report_record_type",
         color="Mission",
         barmode="group",
         orientation="h",
         text="Records",
-        title="Record Types Compared"
+        title="Most Common Verbs Compared"
     )
 
-    fig.update_traces(textposition="outside")
-
     fig.update_layout(
-        height=420,
+        height=500,
         paper_bgcolor="white",
         plot_bgcolor="white",
-        xaxis_title="Records",
         yaxis_title=None,
+        showlegend=False,
         margin=dict(l=20, r=20, t=60, b=20)
     )
 
     return fig
 
+def make_two_mission_theme_radar(mission_a, mission_b):
+    df_a = mission_a["records"].copy()
+    df_b = mission_b["records"].copy()
+
+    mission_a_label = mission_a.get("display_name", mission_a["symbol"])
+    mission_b_label = mission_b.get("display_name", mission_b["symbol"])
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
+
+    df = pd.concat([df_a, df_b], ignore_index=True)
+
+    if df.empty:
+        return None
+
+    df["primary_theme"] = (
+        df["primary_theme"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({"": "Unknown", "nan": "Unknown", "None": "Unknown"})
+    )
+
+    chart_df = (
+        df.groupby(["Mission", "primary_theme"], dropna=False)
+        .size()
+        .reset_index(name="Records")
+    )
+
+    if chart_df.empty:
+        return None
+
+    theme_order = (
+        chart_df
+        .groupby("primary_theme")["Records"]
+        .sum()
+        .sort_values(ascending=False)
+        .index
+        .tolist()
+    )
+
+    # Ensure both missions have every theme so the radar shapes are comparable.
+    full_index = pd.MultiIndex.from_product(
+        [
+            [mission_a_label, mission_b_label],
+            theme_order
+        ],
+        names=["Mission", "primary_theme"]
+    )
+
+    chart_df = (
+        chart_df
+        .set_index(["Mission", "primary_theme"])
+        .reindex(full_index, fill_value=0)
+        .reset_index()
+    )
+
+    # Close the radar loop by repeating the first theme at the end for each mission.
+    closed_rows = []
+
+    for mission_label in [mission_a_label, mission_b_label]:
+        sub = chart_df[chart_df["Mission"] == mission_label].copy()
+
+        if not sub.empty:
+            closed_rows.append(sub)
+            closed_rows.append(sub.iloc[[0]])
+
+    radar_df = pd.concat(closed_rows, ignore_index=True)
+
+    colors = {
+        mission_a_label: "#2563EB",
+        mission_b_label: "#F97316"
+    }
+
+    fig = go.Figure()
+
+    for mission_label in [mission_a_label, mission_b_label]:
+        sub = radar_df[radar_df["Mission"] == mission_label]
+
+        fig.add_trace(
+            go.Scatterpolar(
+                r=sub["Records"],
+                theta=sub["primary_theme"],
+                fill="toself",
+                name=mission_label,
+                line=dict(
+                    color=colors.get(mission_label, "#64748B"),
+                    width=3
+                ),
+                fillcolor=(
+                    "rgba(37, 99, 235, 0.18)"
+                    if mission_label == mission_a_label
+                    else "rgba(249, 115, 22, 0.18)"
+                ),
+                marker=dict(size=6),
+                hovertemplate=(
+                    f"<b>{mission_label}</b><br>"
+                    "Theme: %{theta}<br>"
+                    "Records: %{r}"
+                    "<extra></extra>"
+                )
+            )
+        )
+
+    max_value = max(chart_df["Records"].max(), 1)
+
+    fig.update_layout(
+        title="Theme Profile Radar",
+        height=520,
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        polar=dict(
+            bgcolor="white",
+            radialaxis=dict(
+                visible=True,
+                range=[0, max_value + max(1, max_value * 0.15)],
+                gridcolor="rgba(148, 163, 184, 0.25)",
+                linecolor="rgba(148, 163, 184, 0.35)"
+            ),
+            angularaxis=dict(
+                gridcolor="rgba(148, 163, 184, 0.25)",
+                linecolor="rgba(148, 163, 184, 0.35)"
+            )
+        ),
+        showlegend=False,
+        margin=dict(l=30, r=30, t=70, b=30),
+        font=dict(color="#111827")
+    )
+
+    return fig
+
+def make_two_mission_record_type_dumbbell(
+    mission_a,
+    mission_b,
+    top_n=12
+):
+    df_a = mission_a["records"].copy()
+    df_b = mission_b["records"].copy()
+
+    mission_a_label = mission_a.get(
+        "display_name",
+        mission_a["symbol"]
+    )
+
+    mission_b_label = mission_b.get(
+        "display_name",
+        mission_b["symbol"]
+    )
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
+
+    df = pd.concat(
+        [df_a, df_b],
+        ignore_index=True
+    )
+
+    if df.empty:
+        return None
+
+    df["report_record_type"] = (
+        df["report_record_type"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({
+            "": "Unknown",
+            "nan": "Unknown",
+            "None": "Unknown"
+        })
+    )
+
+    chart_df = (
+        df.groupby(
+            [
+                "report_record_type",
+                "Mission"
+            ],
+            dropna=False
+        )
+        .size()
+        .reset_index(name="Records")
+    )
+
+    if chart_df.empty:
+        return None
+
+    pivot_df = (
+        chart_df
+        .pivot_table(
+            index="report_record_type",
+            columns="Mission",
+            values="Records",
+            fill_value=0
+        )
+        .reset_index()
+    )
+
+    for mission_label in [
+        mission_a_label,
+        mission_b_label
+    ]:
+        if mission_label not in pivot_df.columns:
+            pivot_df[mission_label] = 0
+
+    pivot_df["Difference"] = (
+        pivot_df[mission_b_label]
+        - pivot_df[mission_a_label]
+    ).abs()
+
+    pivot_df["Total"] = (
+        pivot_df[mission_a_label]
+        + pivot_df[mission_b_label]
+    )
+
+    pivot_df = (
+        pivot_df
+        .sort_values(
+            ["Difference", "Total"],
+            ascending=[False, False]
+        )
+        .head(top_n)
+        .sort_values("Total")
+    )
+
+    fig = go.Figure()
+
+    for _, row in pivot_df.iterrows():
+        fig.add_shape(
+            type="line",
+            x0=row[mission_a_label],
+            x1=row[mission_b_label],
+            y0=row["report_record_type"],
+            y1=row["report_record_type"],
+            line=dict(
+                color="rgba(148,163,184,0.55)",
+                width=3
+            ),
+            layer="below"
+        )
+
+    fig.add_trace(
+        go.Scatter(
+            x=pivot_df[mission_a_label],
+            y=pivot_df["report_record_type"],
+            mode="markers+text",
+            text=pivot_df[mission_a_label],
+            textposition="middle left",
+            marker=dict(
+                size=16,
+                color="#2563EB",
+                line=dict(
+                    color="white",
+                    width=2
+                )
+            ),
+            name=mission_a_label,
+            hovertemplate=(
+                f"<b>{mission_a_label}</b><br>"
+                "Record Type: %{y}<br>"
+                "Records: %{x}"
+                "<extra></extra>"
+            )
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=pivot_df[mission_b_label],
+            y=pivot_df["report_record_type"],
+            mode="markers+text",
+            text=pivot_df[mission_b_label],
+            textposition="middle right",
+            marker=dict(
+                size=16,
+                color="#F97316",
+                line=dict(
+                    color="white",
+                    width=2
+                )
+            ),
+            name=mission_b_label,
+            hovertemplate=(
+                f"<b>{mission_b_label}</b><br>"
+                "Record Type: %{y}<br>"
+                "Records: %{x}"
+                "<extra></extra>"
+            )
+        )
+    )
+
+    fig.update_layout(
+        title="Record Type Difference",
+        height=max(
+            520,
+            45 * len(pivot_df)
+        ),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        showlegend=False,
+        xaxis_title="Records",
+        yaxis_title=None,
+        margin=dict(
+            l=20,
+            r=20,
+            t=70,
+            b=30
+        )
+    )
+
+    return fig
 
 def make_two_mission_action_comparison(mission_a, mission_b):
     df_a = mission_a["records"].copy()
@@ -2911,47 +3632,262 @@ def make_two_mission_action_comparison(mission_a, mission_b):
 
     return fig
 
+def make_single_mission_record_theme_heatmap(
+    mission,
+    colorscale="Blues",
+    cmax=None
+):
+    df = mission["records"].copy()
 
-def make_two_mission_actor_category_comparison(mission_a, mission_b):
-    df_a = mission_a["actors"].copy()
-    df_b = mission_b["actors"].copy()
+    if df.empty:
+        return None
 
-    df_a["Mission"] = mission_a["symbol"]
-    df_b["Mission"] = mission_b["symbol"]
+    df["report_record_type"] = (
+        df["report_record_type"]
+        .fillna("Unknown")
+        .astype(str)
+    )
+
+    df["primary_theme"] = (
+        df["primary_theme"]
+        .fillna("Unknown")
+        .astype(str)
+    )
+
+    matrix = (
+        df.groupby(
+            [
+                "report_record_type",
+                "primary_theme"
+            ],
+            dropna=False
+        )
+        .size()
+        .reset_index(name="Records")
+        .pivot(
+            index="report_record_type",
+            columns="primary_theme",
+            values="Records"
+        )
+        .fillna(0)
+    )
+
+    if matrix.empty:
+        return None
+
+    fig = px.imshow(
+        matrix,
+        text_auto=True,
+        aspect="auto",
+        color_continuous_scale=colorscale,
+        title=mission.get(
+            "display_name",
+            mission["symbol"]
+        )
+    )
+
+    if cmax is not None:
+        fig.update_coloraxes(
+            cmin=0,
+            cmax=cmax
+        )
+
+    fig.update_layout(
+        height=max(
+            420,
+            45 * len(matrix.index)
+        ),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        coloraxis_showscale=False,
+        margin=dict(
+            l=20,
+            r=20,
+            t=70,
+            b=20
+        )
+    )
+
+    fig.update_xaxes(
+        tickangle=-35
+    )
+
+    return fig
+
+def make_two_mission_action_flow_sankey(mission_a, mission_b):
+
+    df_a = mission_a["records"].copy()
+    df_b = mission_b["records"].copy()
+
+    mission_a_label = mission_a.get("display_name", mission_a["symbol"])
+    mission_b_label = mission_b.get("display_name", mission_b["symbol"])
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
 
     df = pd.concat([df_a, df_b], ignore_index=True)
 
     if df.empty:
         return None
 
-    df["actor_category"] = df["actor_category"].fillna("Unknown")
+    for col in [
+        "Mission",
+        "action_orientation",
+        "primary_theme",
+        "level_of_concern"
+    ]:
+        df[col] = df[col].fillna("Unknown")
 
-    chart_df = (
-        df.groupby(["Mission", "actor_category"])
+    labels = []
+    index_map = {}
+
+    def get_idx(label):
+        if label not in index_map:
+            index_map[label] = len(labels)
+            labels.append(label)
+        return index_map[label]
+
+    source = []
+    target = []
+    value = []
+
+    grouped = (
+        df.groupby(
+            [
+                "Mission",
+                "action_orientation",
+                "primary_theme",
+                "level_of_concern"
+            ]
+        )
         .size()
-        .reset_index(name="Actors")
+        .reset_index(name="count")
     )
 
-    fig = px.bar(
-        chart_df,
-        x="Actors",
-        y="actor_category",
-        color="Mission",
-        barmode="group",
-        orientation="h",
-        text="Actors",
-        title="Actor Categories Compared"
-    )
+    for _, row in grouped.iterrows():
 
-    fig.update_traces(textposition="outside")
+        mission = f"Mission: {row['Mission']}"
+        action = f"Action: {row['action_orientation']}"
+        theme = f"Theme: {row['primary_theme']}"
+        concern = f"Concern: {row['level_of_concern']}"
+
+        source.append(get_idx(mission))
+        target.append(get_idx(action))
+        value.append(row["count"])
+
+        source.append(get_idx(action))
+        target.append(get_idx(theme))
+        value.append(row["count"])
+
+        source.append(get_idx(theme))
+        target.append(get_idx(concern))
+        value.append(row["count"])
+
+    fig = go.Figure(
+        go.Sankey(
+            arrangement="snap",
+            node=dict(
+                pad=18,
+                thickness=28,
+                line=dict(color="white", width=1),
+                label=labels,
+            ),
+            link=dict(
+                source=source,
+                target=target,
+                value=value,
+            )
+        )
+    )
 
     fig.update_layout(
-        height=500,
+        title="Action → Theme → Concern Flow",
+        height=600,
+        paper_bgcolor="white",
+        margin=dict(l=10, r=10, t=60, b=10)
+    )
+
+    return fig
+
+def make_two_mission_actor_category_comparison(mission_a, mission_b):
+    df_a = mission_a["actors"].copy()
+    df_b = mission_b["actors"].copy()
+
+    mission_a_label = mission_a.get("display_name", mission_a["symbol"])
+    mission_b_label = mission_b.get("display_name", mission_b["symbol"])
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
+
+    df = pd.concat([df_a, df_b], ignore_index=True)
+
+    if df.empty:
+        return None
+
+    df["actor_category"] = (
+        df["actor_category"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({"": "Unknown", "nan": "Unknown", "None": "Unknown"})
+    )
+
+    df["actor_name"] = (
+        df["actor_name"]
+        .fillna("Unnamed actor")
+        .astype(str)
+        .str.strip()
+        .replace({"": "Unnamed actor", "nan": "Unnamed actor", "None": "Unnamed actor"})
+    )
+
+    chart_df = (
+        df.groupby(
+            ["Mission", "actor_category", "actor_name"],
+            dropna=False
+        )
+        .size()
+        .reset_index(name="Meetings")
+    )
+
+    if chart_df.empty:
+        return None
+
+    fig = px.treemap(
+        chart_df,
+        path=[
+            "Mission",
+            "actor_category",
+            "actor_name"
+        ],
+        values="Meetings",
+        color="actor_category",
+        color_discrete_map=ACTOR_CATEGORY_COLORS,
+        title="Actors Met by Category and Mission",
+        custom_data=[
+            "Mission",
+            "actor_category",
+            "actor_name",
+            "Meetings"
+        ]
+    )
+
+    fig.update_traces(
+        textinfo="label+value",
+        hovertemplate=(
+            "<b>%{customdata[2]}</b><br>"
+            "Mission: %{customdata[0]}<br>"
+            "Actor category: %{customdata[1]}<br>"
+            "Meetings / mentions: %{customdata[3]}"
+            "<extra></extra>"
+        )
+    )
+
+    fig.update_layout(
+        height=560,
         paper_bgcolor="white",
         plot_bgcolor="white",
-        xaxis_title="Actors",
-        yaxis_title=None,
-        margin=dict(l=20, r=20, t=60, b=20)
+        margin=dict(l=10, r=10, t=70, b=10),
+        font=dict(color="#111827")
     )
 
     return fig
@@ -2961,42 +3897,162 @@ def make_two_mission_activity_type_comparison(mission_a, mission_b):
     df_a = mission_a["activities"].copy()
     df_b = mission_b["activities"].copy()
 
-    df_a["Mission"] = mission_a["symbol"]
-    df_b["Mission"] = mission_b["symbol"]
+    mission_a_label = mission_a.get("display_name", mission_a["symbol"])
+    mission_b_label = mission_b.get("display_name", mission_b["symbol"])
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
 
     df = pd.concat([df_a, df_b], ignore_index=True)
 
     if df.empty:
         return None
 
-    df["activity_type"] = df["activity_type"].fillna("Unknown")
+    df["activity_type"] = (
+        df["activity_type"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .replace({"": "Unknown", "nan": "Unknown", "None": "Unknown"})
+    )
 
     chart_df = (
-        df.groupby(["Mission", "activity_type"])
+        df.groupby(["Mission", "activity_type"], dropna=False)
         .size()
         .reset_index(name="Activities")
     )
 
-    fig = px.bar(
-        chart_df,
-        x="Activities",
-        y="activity_type",
-        color="Mission",
-        barmode="group",
-        orientation="h",
-        text="Activities",
-        title="Activity Types Compared"
+    activity_order = (
+        chart_df
+        .groupby("activity_type")["Activities"]
+        .sum()
+        .sort_values(ascending=False)
+        .index
+        .tolist()
     )
 
-    fig.update_traces(textposition="outside")
+    fallback_palette = px.colors.qualitative.Set3
+    updated_activity_colors = ACTIVITY_TYPE_COLORS.copy()
+
+    for i, activity_type in enumerate(activity_order):
+        if activity_type not in updated_activity_colors:
+            updated_activity_colors[activity_type] = fallback_palette[i % len(fallback_palette)]
+
+    fig = px.pie(
+        chart_df,
+        names="activity_type",
+        values="Activities",
+        facet_col="Mission",
+        color="activity_type",
+        color_discrete_map=updated_activity_colors,
+        category_orders={
+            "activity_type": activity_order,
+            "Mission": [mission_a_label, mission_b_label],
+        },
+        title="Activity-Type Distribution Compared",
+        hole=0.42,
+    )
+
+    fig.update_traces(
+        textinfo="percent+label",
+        textposition="inside",
+        sort=False,
+        hovertemplate=(
+            "<b>%{label}</b><br>"
+            "Activities: %{value}<br>"
+            "Share: %{percent}"
+            "<extra></extra>"
+        )
+    )
 
     fig.update_layout(
-        height=500,
+        height=470,
         paper_bgcolor="white",
         plot_bgcolor="white",
-        xaxis_title="Activities",
-        yaxis_title=None,
-        margin=dict(l=20, r=20, t=60, b=20)
+        showlegend=True,
+        legend_title_text="Activity Type",
+        margin=dict(l=20, r=20, t=80, b=30),
+        font=dict(color="#111827")
+    )
+
+    fig.for_each_annotation(
+        lambda a: a.update(
+            text=a.text.replace("Mission=", "")
+        )
+    )
+
+    return fig
+
+def make_two_mission_record_theme_heatmap(
+    mission_a,
+    mission_b
+):
+    df_a = mission_a["records"].copy()
+    df_b = mission_b["records"].copy()
+
+    mission_a_label = mission_a.get("display_name", mission_a["symbol"])
+    mission_b_label = mission_b.get("display_name", mission_b["symbol"])
+
+    df_a["Mission"] = mission_a_label
+    df_b["Mission"] = mission_b_label
+
+    df = pd.concat([df_a, df_b], ignore_index=True)
+
+    if df.empty:
+        return None
+
+    df["report_record_type"] = (
+        df["report_record_type"]
+        .fillna("Unknown")
+    )
+
+    df["primary_theme"] = (
+        df["primary_theme"]
+        .fillna("Unknown")
+    )
+
+    # combine missions
+    df["Cell"] = (
+        df["Mission"]
+        + "<br>"
+        + df["report_record_type"]
+    )
+
+    matrix = (
+        df.groupby(
+            [
+                "Cell",
+                "primary_theme"
+            ]
+        )
+        .size()
+        .reset_index(name="Records")
+        .pivot(
+            index="Cell",
+            columns="primary_theme",
+            values="Records"
+        )
+        .fillna(0)
+    )
+
+    fig = px.imshow(
+        matrix,
+        text_auto=True,
+        color_continuous_scale="Blues",
+        aspect="auto",
+        title="Record Type × Primary Theme"
+    )
+
+    fig.update_layout(
+        height=max(450, 40 * len(matrix.index)),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(
+            l=20,
+            r=20,
+            t=70,
+            b=20
+        )
     )
 
     return fig
@@ -3023,6 +4079,9 @@ def render_mission_comparison_tab(
         st.info("At least two mission reports are needed for comparison.")
         return
 
+    def format_comparison_mission(symbol):
+        return get_mission_display_name(symbol, filtered_missions)
+
     filter_col1, filter_col2 = st.columns(2)
 
     with filter_col1:
@@ -3030,6 +4089,7 @@ def render_mission_comparison_tab(
             "Mission A",
             options=mission_options,
             index=0,
+            format_func=format_comparison_mission,
             key="compare_mission_a"
         )
 
@@ -3040,6 +4100,7 @@ def render_mission_comparison_tab(
             "Mission B",
             options=mission_options,
             index=default_b_index,
+            format_func=format_comparison_mission,
             key="compare_mission_b"
         )
 
@@ -3062,70 +4123,80 @@ def render_mission_comparison_tab(
         filtered_activities,
         filtered_actors
     )
+    mission_a, mission_b = add_mission_display_names(mission_a, mission_b)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     c1, c2 = st.columns(2)
 
     with c1:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
         fig = make_two_mission_metric_bar(mission_a, mission_b)
         st.plotly_chart(fig, use_container_width=True, key="compare_metric_bar")
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with c2:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        fig = make_two_mission_concern_comparison(mission_a, mission_b)
+        fig = make_two_mission_activity_type_comparison(mission_a, mission_b)
         if fig is not None:
-            st.plotly_chart(fig, use_container_width=True, key="compare_concern")
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                key="compare_activity_type_pies"
+            )
         else:
-            st.info("No concern data available for the selected missions.")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.info("No activity-type data available for the selected missions.")
 
     c3, c4 = st.columns(2)
 
     with c3:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-
-        fig = make_two_mission_theme_comparison(mission_a, mission_b)
+        fig = make_two_mission_theme_radar(
+            mission_a,
+            mission_b
+        )
 
         if fig is not None:
             st.plotly_chart(
                 fig,
                 use_container_width=True,
-                key="compare_themes"
+                key="compare_theme_radar"
             )
         else:
             st.info("No theme data available for the selected missions.")
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
     with c4:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
 
-        fig = make_two_mission_record_type_comparison(mission_a, mission_b)
+        fig = make_two_mission_record_type_dumbbell(
+            mission_a,
+            mission_b,
+            top_n=12
+        )
 
         if fig is not None:
             st.plotly_chart(
                 fig,
                 use_container_width=True,
-                key="compare_record_types"
+                key="compare_record_type_dumbbell"
             )
         else:
-            st.info("No record-type data available for the selected missions.")
-
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.info("No theme comparison data available for the selected missions.")
 
     c5, c6 = st.columns(2)
 
     with c5:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        fig = make_two_mission_action_comparison(mission_a, mission_b)
+
+        fig = make_two_mission_verb_comparison(
+            mission_a,
+            mission_b
+        )
+
         if fig is not None:
-            st.plotly_chart(fig, use_container_width=True, key="compare_actions")
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                key="compare_actor_source_target_sankey"
+            )
         else:
-            st.info("No action-orientation data available for the selected missions.")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.info("No actor source/target data available for the selected missions.")
+
 
     with c6:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
@@ -3134,63 +4205,93 @@ def render_mission_comparison_tab(
             st.plotly_chart(fig, use_container_width=True, key="compare_actor_categories")
         else:
             st.info("No actor category data available for the selected missions.")
-        st.markdown("</div>", unsafe_allow_html=True)
 
-    c7, c8 = st.columns(2)
+    max_heatmap_value = max(
+        mission_a["records"]
+        .groupby(
+            ["report_record_type", "primary_theme"]
+        )
+        .size()
+        .max(),
 
-    with c7:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        fig = make_two_mission_activity_type_comparison(mission_a, mission_b)
-        if fig is not None:
-            st.plotly_chart(fig, use_container_width=True, key="compare_activity_types")
-        else:
-            st.info("No activity data available for the selected missions.")
-        st.markdown("</div>", unsafe_allow_html=True)
+        mission_b["records"]
+        .groupby(
+            ["report_record_type", "primary_theme"]
+        )
+        .size()
+        .max()
+    )
 
-    with c8:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    h1, h2 = st.columns(2)
 
-        summary_df = pd.DataFrame([
-            {
-                "Metric": "Records",
-                selected_mission_a: len(mission_a["records"]),
-                selected_mission_b: len(mission_b["records"]),
-            },
-            {
-                "Metric": "Activities",
-                selected_mission_a: len(mission_a["activities"]),
-                selected_mission_b: len(mission_b["activities"]),
-            },
-            {
-                "Metric": "Actors Met",
-                selected_mission_a: len(mission_a["actors"]),
-                selected_mission_b: len(mission_b["actors"]),
-            },
-            {
-                "Metric": "Unique Primary Themes",
-                selected_mission_a: mission_a["records"]["primary_theme"].nunique(),
-                selected_mission_b: mission_b["records"]["primary_theme"].nunique(),
-            },
-            {
-                "Metric": "High or Critical Records",
-                selected_mission_a: mission_a["records"][
-                    mission_a["records"]["level_of_concern"].isin(["High", "Critical"])
-                ].shape[0],
-                selected_mission_b: mission_b["records"][
-                    mission_b["records"]["level_of_concern"].isin(["High", "Critical"])
-                ].shape[0],
-            },
-        ])
-
-        st.markdown('<div class="section-title">Comparison Summary</div>', unsafe_allow_html=True)
-
-        st.dataframe(
-            summary_df,
-            use_container_width=True,
-            hide_index=True
+    with h1:
+        fig = make_single_mission_record_theme_heatmap(
+            mission_a,
+            colorscale="Blues",
+            cmax=max_heatmap_value
         )
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        if fig is not None:
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                key="mission_a_record_theme_heatmap"
+            )
+
+    with h2:
+        fig = make_single_mission_record_theme_heatmap(
+            mission_b,
+            colorscale="Oranges",
+            cmax=max_heatmap_value
+        )
+
+        if fig is not None:
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                key="mission_b_record_theme_heatmap"
+            )
+
+    selected_mission_a_label = mission_a.get("display_name", selected_mission_a)
+    selected_mission_b_label = mission_b.get("display_name", selected_mission_b)
+
+    summary_df = pd.DataFrame([
+        {
+            "Metric": "Records",
+            selected_mission_a_label: len(mission_a["records"]),
+            selected_mission_b_label: len(mission_b["records"]),
+        },
+        {
+            "Metric": "Activities",
+            selected_mission_a_label: len(mission_a["activities"]),
+            selected_mission_b_label: len(mission_b["activities"]),
+        },
+        {
+            "Metric": "Actors Met",
+            selected_mission_a_label: len(mission_a["actors"]),
+            selected_mission_b_label: len(mission_b["actors"]),
+        },
+        {
+            "Metric": "Unique Primary Themes",
+            selected_mission_a_label: mission_a["records"]["primary_theme"].nunique(),
+            selected_mission_b_label: mission_b["records"]["primary_theme"].nunique(),
+        },
+        {
+            "Metric": "High or Critical Records",
+            selected_mission_a_label: mission_a["records"][
+                mission_a["records"]["level_of_concern"].isin(["High", "Critical"])
+            ].shape[0],
+            selected_mission_b_label: mission_b["records"][
+                mission_b["records"]["level_of_concern"].isin(["High", "Critical"])
+            ].shape[0],
+        },
+    ])
+
+    st.dataframe(
+        summary_df,
+        use_container_width=True,
+        hide_index=True
+    )
 
 def make_mission_assessment_temporal_bar(
     missions_df,
@@ -3457,10 +4558,9 @@ def render_reports_dashboard():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    overview_tab, analytics_tab, mission_tab, regions_tab, actors_tab, compare_tab = st.tabs(
+    overview_tab, mission_tab, regions_tab, actors_tab, compare_tab = st.tabs(
         [
             "Overview",
-            "Analytical Flows",
             "Mission Deep Dive",
             "Regional Comparison",
             "Actors & Activities",
@@ -3472,22 +4572,18 @@ def render_reports_dashboard():
         c1, c2 = st.columns([1.3, 1])
 
         with c1:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
             st.plotly_chart(
                 make_report_theme_bar(filtered_records),
                 use_container_width=True,
                 key="overview_theme_bar"
             )
-            st.markdown("</div>", unsafe_allow_html=True)
 
         with c2:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
             st.plotly_chart(
                 make_record_type_donut(filtered_records),
                 use_container_width=True,
                 key="overview_record_type_donut"
             )
-            st.markdown("</div>", unsafe_allow_html=True)
 
         c5, c6 = st.columns([1, 1])
 
@@ -3505,7 +4601,6 @@ def render_reports_dashboard():
             else:
                 st.info("No dated actor engagement data available for the current filters.")
 
-            st.markdown("</div>", unsafe_allow_html=True)
 
         with c6:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
@@ -3521,7 +4616,6 @@ def render_reports_dashboard():
             else:
                 st.info("No dated activity data available for the current filters.")
 
-            st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown("### Temporal Composition")
 
@@ -3557,10 +4651,8 @@ def render_reports_dashboard():
             else:
                 st.info("No primary-theme temporal data available for the selected region filter.")
 
-            st.markdown("</div>", unsafe_allow_html=True)
 
         with c8:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
 
             fig = make_actor_category_temporal_bar(
                 actors_df=filtered_actors,
@@ -3577,14 +4669,11 @@ def render_reports_dashboard():
             else:
                 st.info("No actor-category temporal data available for the selected region filter.")
 
-            st.markdown("</div>", unsafe_allow_html=True)
-
         st.markdown("### Mission Assessment Trends")
 
         c11, c12 = st.columns(2)
 
         with c11:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
 
             fig = make_field_exposure_temporal_bar(
                 missions_df=filtered_missions,
@@ -3602,10 +4691,8 @@ def render_reports_dashboard():
                     "No field-exposure data available for the selected region filter."
                 )
 
-            st.markdown("</div>", unsafe_allow_html=True)
 
         with c12:
-            st.markdown('<div class="section-card">', unsafe_allow_html=True)
 
             fig = make_actor_diversity_temporal_line(
                 filtered_missions
@@ -3620,7 +4707,6 @@ def render_reports_dashboard():
             else:
                 st.info("No actor-diversity assessment data available.")
 
-            st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown("### Analytical Composition")
 
@@ -3640,8 +4726,6 @@ def render_reports_dashboard():
             else:
                 st.info("No action-orientation data available.")
 
-            st.markdown("</div>", unsafe_allow_html=True)
-
         with c10:
             st.markdown('<div class="section-card">', unsafe_allow_html=True)
 
@@ -3655,19 +4739,6 @@ def render_reports_dashboard():
                 )
             else:
                 st.info("No theme drilldown data available.")
-
-            st.markdown("</div>", unsafe_allow_html=True)
-
-    with analytics_tab:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-
-        st.plotly_chart(
-            make_sankey(filtered_records),
-            use_container_width=True,
-            key="analytics_sankey"
-        )
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with mission_tab:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
@@ -3691,31 +4762,97 @@ def render_reports_dashboard():
                 .to_dict()
             )
             render_mission_card(selected_row)
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with regions_tab:
         render_region_comparison(filtered_missions, filtered_records, filtered_activities, filtered_actors)
 
     with actors_tab:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        network_missions = filtered_actors["document_symbol"].dropna().drop_duplicates().tolist()
+        st.markdown("### Actors & Activities")
 
-        if network_missions:
-            selected_network_missions = st.multiselect(
-                "Select up to 5 missions for the actor network",
-                options=network_missions,
-                default=network_missions[:1],
-                max_selections=5,
-                key="pyvis_actor_network_mission_select"
+        st.caption(
+            "This tab combines the analytical flow view with the actor network. "
+            "Leave the mission selector empty to see the aggregate actor-category network. "
+            "Select one or more missions to drill down to named actors."
+        )
+
+        st.markdown("#### Analytical Flow")
+
+        sankey_fig = make_sankey(filtered_records)
+
+        if sankey_fig is not None:
+            st.plotly_chart(
+                sankey_fig,
+                use_container_width=True,
+                key="actors_activities_sankey"
+            )
+        else:
+            st.info("No analytical flow data available for the current filters.")
+
+        st.markdown("#### Actor Network")
+
+        mission_options_for_network = (
+            filtered_actors["document_symbol"]
+            .dropna()
+            .drop_duplicates()
+            .tolist()
+        )
+
+        if not mission_options_for_network:
+            st.info("No missions with actor data are available for the current filters.")
+        else:
+            selected_actor_network_missions = st.multiselect(
+                "Select mission(s) to show named actors",
+                options=mission_options_for_network,
+                default=[],
+                format_func=lambda symbol: get_mission_display_name(
+                    symbol,
+                    filtered_missions
+                ),
+                key="actor_network_multiselect"
             )
 
-            network_html = make_pyvis_actor_network_html(
-                filtered_missions, filtered_actors, selected_network_missions
-            )
+            if not selected_actor_network_missions:
+                st.caption(
+                    "Aggregate view: no mission selected. All currently filtered missions are summarized by actor category only."
+                )
 
-            if network_html:
-                components.html(network_html, height=820, scrolling=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+                aggregate_network_html = make_pyvis_actor_network_html(
+                    filtered_missions,
+                    filtered_actors,
+                    selected_symbols=None,
+                    show_actor_names=False
+                )
+
+                if aggregate_network_html:
+                    components.html(
+                        aggregate_network_html,
+                        height=860,
+                        scrolling=True
+                    )
+                else:
+                    st.info("No aggregate actor network data available for the current filters.")
+
+            else:
+                st.caption(
+                    "Mission drilldown: selected mission(s) are shown with actor categories and named actors."
+                )
+
+                detail_network_html = make_pyvis_actor_network_html(
+                    filtered_missions,
+                    filtered_actors,
+                    selected_symbols=selected_actor_network_missions,
+                    show_actor_names=True,
+                    max_actors_per_category=8
+                )
+
+                if detail_network_html:
+                    components.html(
+                        detail_network_html,
+                        height=920,
+                        scrolling=True
+                    )
+                else:
+                    st.info("No named actor network data available for the selected mission(s).")
 
     with compare_tab:
         render_mission_comparison_tab(
