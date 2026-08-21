@@ -317,7 +317,7 @@ def render_tor_dashboard():
                 color_continuous_scale="Viridis",
                 projection="natural earth"
             )
-            fig_map.update_traces(marker=dict(line=dict(width=1, color="white"), sizemin=8))
+            fig_map.update_traces(marker=dict(line=dict(width=1, color="white"), sizemin=3))
             fig_map.update_layout(
                 height=430,
                 margin=dict(l=10, r=10, t=10, b=10),
