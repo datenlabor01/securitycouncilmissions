@@ -35,7 +35,8 @@ def flatten_missions(data):
 
             rows.append({
                 "Mission": mission.get("mission_title"),
-                "Country": mission.get("mission_country_or_region"),
+                "Countries": mission.get("Countries", []),
+                "Countries Label": ", ".join(mission.get("Countries", [])),
                 "Regions": mission.get("regions", []),
                 "Primary Region": (
                     mission.get("regions", [None])[0]
@@ -71,7 +72,7 @@ def build_mission_level_df(df):
         df.groupby(
             [
                 "Mission",
-                "Country",
+                "Countries Label",
                 "Primary Region",
                 "Document Symbol",
                 "Document Date",
@@ -88,78 +89,34 @@ def build_mission_level_df(df):
         .reset_index()
     )
 
-    return mission_df.rename(columns={"Objective_Types": "Objective Types"})
+    return mission_df.rename(
+        columns={
+            "Objective_Types": "Objective Types"
+        }
+    )
 
-
-def normalize_country_name(country_name):
-    replacements = {
-        "the Niger": "Niger",
-        "the Syrian Arab Republic": "Syrian Arab Republic",
-        "Syrian Arab Republic": "Syria",
-        "Democratic Republic of the Congo": "Democratic Republic of the Congo",
-        "the Democratic Republic of the Congo": "Democratic Republic of the Congo"
-    }
-
-    country_name = country_name.strip()
-    return replacements.get(country_name, country_name)
-
-
-def split_country_region(country_region):
-    if not isinstance(country_region, str):
-        return []
-
-    text = country_region
-    text = text.replace("Lebanon and the Syrian Arab Republic", "Lebanon, Syrian Arab Republic")
-    text = text.replace("Mali and the Niger", "Mali, Niger")
-    text = text.replace("Mali and Niger", "Mali, Niger")
-
-    parts = re.split(r",| and ", text)
-
-    countries = []
-    for part in parts:
-        cleaned = normalize_country_name(part)
-        if cleaned:
-            countries.append(cleaned)
-
-    return countries
-
-
-def build_map_df(mission_df):
-    country_coordinates = {
-        "Lebanon": {"lat": 33.8547, "lon": 35.8623},
-        "Syria": {"lat": 34.8021, "lon": 38.9968},
-        "Syrian Arab Republic": {"lat": 34.8021, "lon": 38.9968},
-        "Ethiopia": {"lat": 9.1450, "lon": 40.4897},
-        "Colombia": {"lat": 4.5709, "lon": -74.2973},
-        "Mali": {"lat": 17.5707, "lon": -3.9962},
-        "Niger": {"lat": 17.6078, "lon": 8.0817},
-        "South Sudan": {"lat": 6.8770, "lon": 31.3070},
-        "Democratic Republic of the Congo": {"lat": -4.0383, "lon": 21.7587},
-        "Somalia": {"lat": 5.1521, "lon": 46.1996},
-        "Sudan": {"lat": 12.8628, "lon": 30.2176}
-    }
-
+def build_map_df(df):
     rows = []
 
-    for _, row in mission_df.iterrows():
-        countries = split_country_region(row["Country"])
+    for _, row in df.iterrows():
+        countries = row.get("Countries", [])
+
+        if not isinstance(countries, list):
+            continue
 
         for country in countries:
-            coords = country_coordinates.get(country)
+            country = str(country).strip()
 
-            if coords:
+            if country:
                 rows.append({
                     "Country": country,
                     "Mission": row["Mission"],
                     "Document Symbol": row["Document Symbol"],
                     "Year": row["Year"],
-                    "Objectives": row["Objectives"],
-                    "lat": coords["lat"],
-                    "lon": coords["lon"]
+                    "Objectives": 1
                 })
 
     return pd.DataFrame(rows)
-
 
 def render_tor_dashboard():
     data = load_tor_json(TOR_FILE)
@@ -173,7 +130,13 @@ def render_tor_dashboard():
     st.sidebar.title("Filters")
     st.sidebar.markdown("Use the filters below to explore Security Council field mission objectives.")
 
-    country_options = sorted(df["Country"].dropna().unique())
+    country_options = sorted(
+        {
+            country
+            for countries in df["Countries"]
+            for country in countries
+        }
+    )
     region_options = sorted(
         {
             region
@@ -198,7 +161,14 @@ def render_tor_dashboard():
     )
 
     if selected_countries:
-        country_filtered_df = df[df["Country"].isin(selected_countries)]
+        country_filtered_df = df[
+            df["Countries"].apply(
+                lambda countries: any(
+                    country in countries
+                    for country in selected_countries
+                )
+            )
+        ]
     else:
         country_filtered_df = df.copy()
 
@@ -240,11 +210,25 @@ def render_tor_dashboard():
 
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
-        metric_card("Missions (with written ToRs)", str(filtered_df["Mission"].nunique()))
+        metric_card(
+            "Missions (with written ToRs)",
+            str(filtered_df["Document Symbol"].nunique())
+        )
     with kpi2:
         metric_card("Objectives", str(len(filtered_df)))
     with kpi3:
-        metric_card("Countries", str(filtered_df["Country"].nunique()))
+        metric_card(
+            "Countries",
+            str(
+                len(
+                    {
+                        country
+                        for countries in filtered_df["Countries"]
+                        for country in countries
+                    }
+                )
+            )
+        )
     with kpi4:
         metric_card("Primary Themes", str(filtered_df["Primary Theme"].nunique()))
 
@@ -296,27 +280,31 @@ def render_tor_dashboard():
     with map_col:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown('<div class="section-title">Mission Countries Map</div>', unsafe_allow_html=True)
-
-        map_df = build_map_df(mission_df)
+        map_df = build_map_df(filtered_df)
 
         if map_df.empty:
             st.info("No map coordinates found for the selected countries/regions.")
         else:
             map_counts = (
                 map_df
-                .groupby(["Country", "lat", "lon"])
+                .groupby("Country")
                 .agg(
                     Missions=("Mission", "nunique"),
                     Objectives=("Objectives", "sum"),
-                    Years=("Year", lambda x: ", ".join(map(str, sorted(x.dropna().astype(int).unique()))))
+                    Years=(
+                        "Year",
+                        lambda x: ", ".join(
+                            map(str, sorted(x.dropna().astype(int).unique()))
+                        )
+                    )
                 )
                 .reset_index()
             )
 
             fig_map = px.scatter_geo(
                 map_counts,
-                lat="lat",
-                lon="lon",
+                locations="Country",
+                locationmode="country names",
                 size="Missions",
                 color="Objectives",
                 hover_name="Country",
@@ -324,8 +312,7 @@ def render_tor_dashboard():
                     "Missions": True,
                     "Objectives": True,
                     "Years": True,
-                    "lat": False,
-                    "lon": False
+                    "Country": False
                 },
                 color_continuous_scale="Blues",
                 projection="natural earth"
@@ -478,10 +465,11 @@ def render_tor_dashboard():
         mission_df
         .sort_values(["Year", "Mission"], ascending=[False, True], na_position="last")
         [[
-            "Mission", "Country", "Document Symbol", "Document Date",
+            "Mission", "Countries Label", "Document Symbol", "Document Date",
             "Objectives", "Themes", "Objective Types"
         ]]
     )
+    mission_summary["Countries Label"] = mission_summary["Countries Label"].fillna("")
     st.dataframe(mission_summary, use_container_width=True, hide_index=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -535,7 +523,7 @@ def render_tor_dashboard():
         ]
 
     display_columns = [
-        "Mission", "Country", "Document Symbol", "Document Date",
+        "Mission", "Countries Label", "Document Symbol", "Document Date",
         "Objective ID", "Primary Theme", "Objective Type", "Verb",
         "Secondary Themes", "Objective Text"
     ]
