@@ -3,7 +3,7 @@ from pathlib import Path
 # --------------------------------------------------
 # File Paths
 # --------------------------------------------------
-TOR_FILE = "tor_output_analysis.json"
+TOR_FILE = "tor_output_analysis_v1.json"
 REPORTS_FILE = "SecurityCouncilAnalysis_MissionReports_v1.json"
 
 # --------------------------------------------------
