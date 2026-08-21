@@ -127,8 +127,8 @@ def render_tor_dashboard():
         st.warning("The TOR JSON file was loaded, but no objectives were found.")
         return
 
-    st.sidebar.title("Filters")
-    st.sidebar.markdown("Use the filters below to explore Security Council field mission objectives.")
+    st.sidebar.title("Filters for ToR Analysis")
+    st.sidebar.markdown("Use the filters below to the ToRs.")
 
     country_options = sorted(
         {
