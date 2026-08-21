@@ -314,7 +314,7 @@ def render_tor_dashboard():
                     "Years": True,
                     "Country": False
                 },
-                color_continuous_scale="Blues",
+                color_continuous_scale="Viridis",
                 projection="natural earth"
             )
             fig_map.update_traces(marker=dict(line=dict(width=1, color="white"), sizemin=8))
