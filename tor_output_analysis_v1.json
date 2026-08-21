@@ -6069,7 +6069,7 @@
       }
     ],
     "tor_url": "S/2010/187 ",
-    "Countries": []
+    "Countries": ["Democratic Republic of the Congo"]
   },
   {
     "mission_title": "Report of the Security Council mission to the African Union, Rwanda and the Democratic Republic of the Congo, and Liberia",
@@ -7148,7 +7148,7 @@
       }
     ],
     "tor_url": "S/2007/647",
-    "Countries": []
+    "Countries": ["Timor-Leste"]
   },
   {
     "mission_title": "Security Council mission to Africa",
@@ -7385,7 +7385,7 @@
       }
     ],
     "tor_url": "S/2007/347 ",
-    "Countries": []
+    "Countries": ["Ethiopia", "Sudan", "Ghana", "Côte d'Ivoire", "Democratic Republic of the Congo"]
   },
   {
     "mission_title": "Security Council mission on the Kosovo issue",
@@ -8194,7 +8194,7 @@
       }
     ],
     "tor_url": "S/2006/341",
-    "Countries": []
+    "Countries": ["Democratic Republic of the Congo"]
   },
   {
     "mission_title": "Visit to Ethiopia and Eritrea by Japan",
@@ -8575,7 +8575,7 @@
       }
     ],
     "tor_url": "S/2005/220\n",
-    "Countries": []
+    "Countries": ["Haiti"]
   },
   {
     "mission_title": "Security Council mission to Central Africa",
@@ -9073,7 +9073,7 @@
       }
     ],
     "tor_url": "S/2004/891\n",
-    "Countries": []
+    "Countries": ["Burundi", "Democratic Republic of the Congo", "Kenya", "Rwanda", "Uganda"]
   },
   {
     "mission_title": "Security Council mission to Afghanistan",
@@ -9156,7 +9156,7 @@
       }
     ],
     "tor_url": "S/2003/930",
-    "Countries": []
+    "Countries": ["Afghanistan", "Pakistan"]
   },
   {
     "mission_title": "Security Council mission to West Africa",
@@ -9592,7 +9592,7 @@
       }
     ],
     "tor_url": "S/2003/558",
-    "Countries": []
+    "Countries": ["Angola", "Burundi", "Democratic Republic of the Congo", "Rwanda", "South Africa", "Tanzania", "Uganda"]
   },
   {
     "mission_title": "Security Council Mission to Kosovo and Belgrade, Federal Republic of Yugoslavia",
@@ -9899,7 +9899,7 @@
       }
     ],
     "tor_url": "S/2002/129",
-    "Countries": []
+    "Countries": ["Eritrea", "Ethiopia"]
   },
   {
     "mission_title": "Security Council mission to Kosovo",
@@ -9960,7 +9960,7 @@
       }
     ],
     "tor_url": "S/2001/482",
-    "Countries": []
+    "Countries": ["Federal Republic of Yugoslavia"]
   },
   {
     "mission_title": "Security Council mission to the Great Lakes region",
@@ -10434,7 +10434,7 @@
       }
     ],
     "tor_url": "S/2000/320 ",
-    "Countries": []
+    "Countries": ["Federal Republic of Yugoslavia"]
   },
   {
     "mission_title": "Security Council Mission to Jakarta and Dili",
@@ -11119,7 +11119,7 @@
       }
     ],
     "tor_url": "S/2004/491 \n",
-    "Countries": []
+    "Countries": ["Côte d'Ivoire", "Ghana", "Guinea", "Guinea-Bissau", "Liberia", "Nigeria", "Sierra Leone"]
   },
   {
     "mission_title": "Security Council mission to the Great Lakes region",
