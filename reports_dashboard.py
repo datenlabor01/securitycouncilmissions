@@ -8,11 +8,10 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from config import (
-    REPORTS_FILE, THEME_COLORS, CONCERN_ORDER, CONCERN_COLORS,
+    REPORTS_FILE, THEME_COLORS, CONCERN_ORDER, CONCERN_COLORS, LOCATIONS_FILE,
     ACTION_COLORS, REGION_COLORS, ACTOR_CATEGORY_COLORS
 )
 from utils import load_json_file, normalize_json_payload, metric_card, render_pills
-
 
 @st.cache_data
 def load_report_json(file_path: str):
@@ -23,6 +22,14 @@ def load_report_json(file_path: str):
 
     return normalize_json_payload(data)
 
+@st.cache_data
+def load_locations(file_path: str):
+    df = pd.read_excel(file_path)
+
+    df["Latitude"] = pd.to_numeric(df["Latitude"], errors="coerce")
+    df["Longitude"] = pd.to_numeric(df["Longitude"], errors="coerce")
+
+    return df.dropna(subset=["Latitude", "Longitude"])
 
 @st.cache_data
 def flatten_reports(reports):
@@ -4568,7 +4575,67 @@ def render_reports_dashboard():
         ]
     )
 
-    with overview_tab:
+   with overview_tab:
+
+    locations_df = load_locations(LOCATIONS_FILE)
+
+    if not locations_df.empty:
+
+        map_df = locations_df.copy()
+
+        # Keep map aligned with currently filtered missions
+        if (
+            filtered_missions is not None
+            and not filtered_missions.empty
+            and "Mission Title" in filtered_missions.columns
+        ):
+            visible_missions = set(
+                filtered_missions["Mission Title"].dropna()
+            )
+
+            map_df = map_df[
+                map_df["Mission Title"].isin(visible_missions)
+            ]
+
+        if not map_df.empty:
+
+            st.markdown("### Mission Locations")
+
+            fig_map = px.scatter_map(
+                map_df,
+                lat="Latitude",
+                lon="Longitude",
+                color="Country",
+                hover_name="Location",
+                hover_data=[
+                    "Country",
+                    "Mission Title",
+                ],
+                zoom=1,
+                height=550,
+            )
+
+            fig_map.update_traces(
+                marker=dict(size=10)
+            )
+
+            fig_map.update_layout(
+                map_style="open-street-map",
+                margin=dict(l=0, r=0, t=0, b=0),
+                legend_title="Country",
+            )
+
+            st.plotly_chart(
+                fig_map,
+                use_container_width=True,
+                key="overview_locations_map",
+            )
+
+        else:
+            st.info(
+                "No mission locations available for the selected filters."
+            )
+
         c1, c2 = st.columns([1.3, 1])
 
         with c1:
