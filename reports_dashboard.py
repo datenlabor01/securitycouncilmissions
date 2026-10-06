@@ -4580,7 +4580,7 @@ def render_reports_dashboard():
 
         if not locations_df.empty:
 
-        map_df = locations_df.copy()
+            map_df = locations_df.copy()
 
         # Keep map aligned with currently filtered missions
             if (
