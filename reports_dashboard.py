@@ -4612,10 +4612,12 @@ def render_reports_dashboard():
             )
 
             fig_map.update_traces(
-                marker=dict(size=10)
+                marker=dict(size=8, opacity=0.6
+                           )
             )
 
             fig_map.update_layout(
+                clickmode="event+select",
                 map_style="carto-positron",
                 margin=dict(l=0, r=0, t=0, b=0),
                 showlegend=False,
