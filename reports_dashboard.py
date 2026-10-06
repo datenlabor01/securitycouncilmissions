@@ -4579,80 +4579,96 @@ def render_reports_dashboard():
         locations_df = load_locations(LOCATIONS_FILE)
 
         if not locations_df.empty:
-
             map_df = locations_df.copy()
 
-        # Keep map aligned with currently filtered missions
+            # Keep map aligned with currently filtered missions
             if (
-            filtered_missions is not None
-            and not filtered_missions.empty
-            and "Mission Title" in filtered_missions.columns
+                filtered_missions is not None
+                and not filtered_missions.empty
+                and "Mission Title" in filtered_missions.columns
             ):
                 visible_missions = set(
-                filtered_missions["Mission Title"].dropna()
-            )
-
-                map_df = map_df[map_df["Mission Title"].isin(visible_missions)]
-                location_missions = (
-                    map_df.groupby(["Latitude", "Longitude"])["Mission Title"]
-                    .apply(lambda x: "<br>".join(sorted(set(x))))
-                    .reset_index(name="All Missions")
+                    filtered_missions["Mission Title"].dropna()
                 )
-                map_df = map_df.merge(location_missions,
-                                      on=["Latitude", "Longitude"], how="left"
-                                     )
-                location_counts = (map_df.groupby(
-                    ["Latitude", "Longitude"])["Mission Title"]
-                                   .nunique().reset_index(name="Mission Count")
-                                  )
+
+                map_df = map_df[
+                    map_df["Mission Title"].isin(visible_missions)
+                ]
+
+            # Create location-level mission lists and counts
+            # This must remain outside the optional filter block.
+            if not map_df.empty:
+                location_summary = (
+                    map_df.groupby(
+                        ["Latitude", "Longitude"],
+                        as_index=False,
+                    )
+                    .agg(
+                        **{
+                            "All Missions": (
+                                "Mission Title",
+                                lambda values: "<br>".join(
+                                    sorted(set(values.dropna()))
+                                ),
+                            ),
+                            "Mission Count": (
+                                "Mission Title",
+                                lambda values: values.dropna().nunique(),
+                            ),
+                        }
+                    )
+                )
+
                 map_df = map_df.merge(
-                    location_counts,on=["Latitude", "Longitude"],
-                    how="left")
+                    location_summary,
+                    on=["Latitude", "Longitude"],
+                    how="left",
+                )
 
-        if not map_df.empty:
+                st.markdown("### Mission Locations")
 
-            st.markdown("### Mission Locations")
+                fig_map = px.scatter_map(
+                    map_df,
+                    lat="Latitude",
+                    lon="Longitude",
+                    color="Mission Title",
+                    size="Mission Count",
+                    size_max=35,
+                    hover_name="Location",
+                    hover_data={
+                        "Mission Title": True,
+                        "All Missions": True,
+                        "Mission Count": True,
+                        "Country": False,
+                        "Latitude": False,
+                        "Longitude": False,
+                    },
+                    zoom=1,
+                    height=400,
+                )
 
-            fig_map = px.scatter_map(
-                map_df,
-                lat="Latitude",
-                lon="Longitude",
-                color="Mission Title",
-                size="Mission Count",
-                size_max=35,
-                hover_name="Location",
-                hover_data={
-        "Mission Title": True,
-        "All Missions": True,
-        "Mission Count": True,
-        "Country": False,
-        "Latitude": False,
-        "Longitude": False,
-    },
-                zoom=1,
-                height=400,
-)
+                fig_map.update_traces(
+                    marker=dict(opacity=0.75)
+                )
 
-            fig_map.update_traces(
-                marker=dict(opacity=0.75)
-            )
+                fig_map.update_layout(
+                    map_style="carto-positron",
+                    margin=dict(l=0, r=0, t=0, b=0),
+                    showlegend=False,
+                )
 
-            fig_map.update_layout(
-                map_style="carto-positron",
-                margin=dict(l=0, r=0, t=0, b=0),
-                showlegend=False,
-            )
+                st.plotly_chart(
+                    fig_map,
+                    use_container_width=True,
+                    key="overview_locations_map",
+                )
 
-            st.plotly_chart(
-                fig_map,
-                use_container_width=True,
-                key="overview_locations_map",
-            )
-
+            else:
+                st.info(
+                    "No mission locations available for the selected filters."
+                )
         else:
-            st.info(
-                "No mission locations available for the selected filters."
-            )
+            st.info("No mission location data is available.")
 
         c1, c2 = st.columns([1.3, 1])
 
