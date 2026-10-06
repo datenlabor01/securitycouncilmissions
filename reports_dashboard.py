@@ -4587,8 +4587,8 @@ def render_reports_dashboard():
             filtered_missions is not None
             and not filtered_missions.empty
             and "Mission Title" in filtered_missions.columns
-        ):
-            visible_missions = set(
+            ):
+                visible_missions = set(
                 filtered_missions["Mission Title"].dropna()
             )
 
