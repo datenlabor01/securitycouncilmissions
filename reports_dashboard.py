@@ -4574,17 +4574,16 @@ def render_reports_dashboard():
             "Mission Comparison",
         ]
     )
+    
+    with overview_tab:
+        locations_df = load_locations(LOCATIONS_FILE)
 
-   with overview_tab:
-
-    locations_df = load_locations(LOCATIONS_FILE)
-
-    if not locations_df.empty:
+        if not locations_df.empty:
 
         map_df = locations_df.copy()
 
         # Keep map aligned with currently filtered missions
-        if (
+            if (
             filtered_missions is not None
             and not filtered_missions.empty
             and "Mission Title" in filtered_missions.columns
@@ -4636,7 +4635,7 @@ def render_reports_dashboard():
                 "No mission locations available for the selected filters."
             )
 
-    c1, c2 = st.columns([1.3, 1])
+        c1, c2 = st.columns([1.3, 1])
 
         with c1:
             st.plotly_chart(
