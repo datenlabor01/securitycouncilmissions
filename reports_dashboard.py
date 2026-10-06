@@ -4602,11 +4602,10 @@ def render_reports_dashboard():
                 map_df,
                 lat="Latitude",
                 lon="Longitude",
-                color="Country",
+                color="Mission Title",
                 hover_name="Location",
                 hover_data=[
-                    "Country",
-                    "Mission Title",
+                    "Mission Title"
                 ],
                 zoom=1,
                 height=550,
@@ -4617,9 +4616,9 @@ def render_reports_dashboard():
             )
 
             fig_map.update_layout(
-                map_style="open-street-map",
+                map_style="carto-positron",
                 margin=dict(l=0, r=0, t=0, b=0),
-                legend_title="Country",
+                showlegend=False,
             )
 
             st.plotly_chart(
