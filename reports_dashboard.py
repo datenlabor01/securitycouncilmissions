@@ -4593,6 +4593,21 @@ def render_reports_dashboard():
             )
 
                 map_df = map_df[map_df["Mission Title"].isin(visible_missions)]
+                location_missions = (
+                    map_df.groupby(["Latitude", "Longitude"])["Mission Title"]
+                    .apply(lambda x: "<br>".join(sorted(set(x))))
+                    .reset_index(name="All Missions")
+                )
+                map_df = map_df.merge(location_missions,
+                                      on=["Latitude", "Longitude"], how="left"
+                                     )
+                location_counts = (map_df.groupby(
+                    ["Latitude", "Longitude"])["Mission Title"]
+                                   .nunique().reset_index(name="Mission Count")
+                                  )
+                map_df = map_df.merge(
+                    location_counts,on=["Latitude", "Longitude"],
+                    how="left")
 
         if not map_df.empty:
 
@@ -4603,17 +4618,23 @@ def render_reports_dashboard():
                 lat="Latitude",
                 lon="Longitude",
                 color="Mission Title",
+                size="Mission Count",
+                size_max=35,
                 hover_name="Location",
-                hover_data=[
-                    "Mission Title"
-                ],
+                hover_data={
+        "Mission Title": True,
+        "All Missions": True,
+        "Mission Count": True,
+        "Country": False,
+        "Latitude": False,
+        "Longitude": False,
+    },
                 zoom=1,
-                height=550,
-            )
+                height=400,
+)
 
             fig_map.update_traces(
-                marker=dict(size=8, opacity=0.4
-                           )
+                marker=dict(opacity=0.75)
             )
 
             fig_map.update_layout(
