@@ -4626,6 +4626,9 @@ def render_reports_dashboard():
                 )
 
                 st.markdown("### Mission Locations")
+                st.caption(
+                    "Locations visited by Security Council missions as indicated in the report, whereby coordinates have been extracted with AI and can be erroneous. The dot size reflects the number of missions recorded at a location; hover to view mission details."
+                )
 
                 fig_map = px.scatter_map(
                     map_df,
@@ -4633,7 +4636,7 @@ def render_reports_dashboard():
                     lon="Longitude",
                     color="Mission Title",
                     size="Mission Count",
-                    size_max=35,
+                    size_max=20,
                     hover_name="Location",
                     hover_data={
                         "Mission Title": True,
