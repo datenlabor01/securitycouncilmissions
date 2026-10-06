@@ -4576,29 +4576,22 @@ def render_reports_dashboard():
     )
 
    with overview_tab:
-
-    locations_df = load_locations(LOCATIONS_FILE)
-
-    if not locations_df.empty:
-
-        map_df = locations_df.copy()
-
-        # Keep map aligned with currently filtered missions
+       locations_df = load_locations(LOCATIONS_FILE)
+       if not locations_df.empty:
+           map_df = locations_df.copy()
+           
         if (
             filtered_missions is not None
             and not filtered_missions.empty
             and "Mission Title" in filtered_missions.columns
         ):
-            visible_missions = set(
-                filtered_missions["Mission Title"].dropna()
-            )
+            visible_missions = set(filtered_missions["Mission Title"].dropna())
 
             map_df = map_df[
                 map_df["Mission Title"].isin(visible_missions)
             ]
 
         if not map_df.empty:
-
             st.markdown("### Mission Locations")
 
             fig_map = px.scatter_map(
