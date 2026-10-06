@@ -4592,9 +4592,7 @@ def render_reports_dashboard():
                 filtered_missions["Mission Title"].dropna()
             )
 
-            map_df = map_df[
-                map_df["Mission Title"].isin(visible_missions)
-            ]
+                map_df = map_df[map_df["Mission Title"].isin(visible_missions)]
 
         if not map_df.empty:
 
