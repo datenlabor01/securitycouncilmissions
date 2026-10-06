@@ -4576,22 +4576,29 @@ def render_reports_dashboard():
     )
 
    with overview_tab:
-       locations_df = load_locations(LOCATIONS_FILE)
-       if not locations_df.empty:
-           map_df = locations_df.copy()
-           
+
+    locations_df = load_locations(LOCATIONS_FILE)
+
+    if not locations_df.empty:
+
+        map_df = locations_df.copy()
+
+        # Keep map aligned with currently filtered missions
         if (
             filtered_missions is not None
             and not filtered_missions.empty
             and "Mission Title" in filtered_missions.columns
         ):
-            visible_missions = set(filtered_missions["Mission Title"].dropna())
+            visible_missions = set(
+                filtered_missions["Mission Title"].dropna()
+            )
 
             map_df = map_df[
                 map_df["Mission Title"].isin(visible_missions)
             ]
 
         if not map_df.empty:
+
             st.markdown("### Mission Locations")
 
             fig_map = px.scatter_map(
@@ -4629,7 +4636,7 @@ def render_reports_dashboard():
                 "No mission locations available for the selected filters."
             )
 
-        c1, c2 = st.columns([1.3, 1])
+    c1, c2 = st.columns([1.3, 1])
 
         with c1:
             st.plotly_chart(
