@@ -7,3 +7,4 @@ pyvis
 streamlit-agraph
 networkx
 pyvis.network
+openpyxl
