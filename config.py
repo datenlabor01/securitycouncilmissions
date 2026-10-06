@@ -5,6 +5,7 @@ from pathlib import Path
 # --------------------------------------------------
 TOR_FILE = "tor_output_analysis_v1.json"
 REPORTS_FILE = "SecurityCouncilAnalysis_MissionReports_v1.json"
+LOCATIONS_FILE = "SC_Missions_Locations_Coordinates.xlsx"
 
 # --------------------------------------------------
 # Custom CSS
