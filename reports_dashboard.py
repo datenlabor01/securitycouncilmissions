@@ -4630,7 +4630,41 @@ def render_reports_dashboard():
                     "Locations visited by Security Council missions as indicated in the report, whereby coordinates have been extracted with AI and can be erroneous. The dot size reflects the number of missions recorded at a location; hover to view mission details."
                 )
 
-                
+                fig_map = px.scatter_map(
+                    map_df,
+                    lat="Latitude",
+                    lon="Longitude",
+                    color="Mission Title",
+                    size="Mission Count",
+                    size_max=20,
+                    hover_name="Location",
+                    hover_data={
+                        "Mission Title": True,
+                        "All Missions": True,
+                        "Mission Count": True,
+                        "Country": False,
+                        "Latitude": False,
+                        "Longitude": False,
+                    },
+                    zoom=1,
+                    height=400,
+                )
+
+                fig_map.update_traces(
+                    marker=dict(opacity=0.75)
+                )
+
+                fig_map.update_layout(
+                    map_style="carto-positron",
+                    margin=dict(l=0, r=0, t=0, b=0),
+                    showlegend=False,
+                )
+
+                st.plotly_chart(
+                    fig_map,
+                    use_container_width=True,
+                    key="overview_locations_map",
+                )
 
             else:
                 st.info(
