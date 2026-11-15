@@ -988,21 +988,55 @@ def make_region_temporal_line(
         )
     )
 
-    # Total line across all regions
+    # Total across all missions - before region explosion
+    total_source = missions_df.copy()
+
+    total_source["document_date"] = pd.to_datetime(
+    total_source["document_date"],
+    errors="coerce"
+    )
+
+    total_source = total_source.dropna(subset=["document_date"])
+
+    if period == "Q":
+        total_source["period"] = (
+            total_source["document_date"].dt.to_period("Q").dt.to_timestamp()
+        )
+    elif period == "M":
+        total_source["period"] = (
+            total_source["document_date"].dt.to_period("M").dt.to_timestamp()
+        )
+    else:
+        total_source["period"] = (
+            total_source["document_date"].dt.to_period("Y").dt.to_timestamp()
+    )
+
     total_df = (
-        trend_df
-        .groupby("period", dropna=False)
+        total_source
+        .groupby("period")
         .agg(
-            Value=("Value", "sum"),
-            Display_Value=("Display_Value", "sum"),
-            Mission_Reports=("Mission_Reports", "sum"),
-            Actors_Met=("Actors_Met", "sum"),
-            Activities=("Activities", "sum"),
-            Records=("Records", "sum")
+            Value=(value_col, "sum"),
+            Mission_Reports=("document_symbol", "nunique"),
+            Actors_Met=("actors_count", "sum"),
+            Activities=("activities_count", "sum"),
+            Records=("records_count", "sum")
         )
         .reset_index()
         .sort_values("period")
     )
+
+    if smooth_window and smooth_window > 1:
+        total_df["Display_Value"] = (
+            total_df["Value"]
+            .rolling(
+                window=smooth_window,
+                min_periods=1,
+                center=True
+            )
+            .mean()
+        )
+    else:
+        total_df["Display_Value"] = total_df["Value"]
 
     # Total: straight line, no dots, visually secondary but still clear
     fig.add_trace(
